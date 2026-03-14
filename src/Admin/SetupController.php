@@ -156,6 +156,7 @@ final class SetupController extends AbstractAdminController {
 		$waba_id      = get_option( \TMASD_OPTION_WABA_ID, '' );
 		$access_token = get_option( \TMASD_OPTION_ACCESS_TOKEN, '' );
 		$verify_token = get_option( \TMASD_OPTION_WEBHOOK_VERIFY_TOKEN, '' );
+		$app_secret   = get_option( \TMASD_OPTION_APP_SECRET, '' );
 
 		echo '<form method="post" action="' . esc_url( admin_url( 'admin-post.php' ) ) . '">';
 		wp_nonce_field( 'tmasd_save_setup' );
@@ -166,6 +167,7 @@ final class SetupController extends AbstractAdminController {
 		$this->render_text_field( \TMASD_OPTION_WABA_ID, __( 'WABA ID', 'signals-dispatch-woocommerce' ), $waba_id );
 		$this->render_password_field( \TMASD_OPTION_ACCESS_TOKEN, __( 'Access Token', 'signals-dispatch-woocommerce' ), $access_token );
 		$this->render_text_field( \TMASD_OPTION_WEBHOOK_VERIFY_TOKEN, __( 'Webhook Verify Token', 'signals-dispatch-woocommerce' ), $verify_token );
+		$this->render_password_field( \TMASD_OPTION_APP_SECRET, __( 'App Secret', 'signals-dispatch-woocommerce' ), $app_secret );
 		echo '</table>';
 
 		submit_button( __( 'Save Settings', 'signals-dispatch-woocommerce' ) );
@@ -280,6 +282,7 @@ final class SetupController extends AbstractAdminController {
 			\TMASD_OPTION_WABA_ID,
 			\TMASD_OPTION_ACCESS_TOKEN,
 			\TMASD_OPTION_WEBHOOK_VERIFY_TOKEN,
+			\TMASD_OPTION_APP_SECRET,
 		);
 
 		foreach ( $fields as $field ) {

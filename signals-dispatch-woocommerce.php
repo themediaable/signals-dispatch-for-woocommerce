@@ -26,6 +26,7 @@ define( 'TMASD_OPTION_PHONE_NUMBER_ID', 'tmasd_phone_number_id' );
 define( 'TMASD_OPTION_WABA_ID', 'tmasd_waba_id' );
 define( 'TMASD_OPTION_ACCESS_TOKEN', 'tmasd_access_token' );
 define( 'TMASD_OPTION_WEBHOOK_VERIFY_TOKEN', 'tmasd_webhook_verify_token' );
+define( 'TMASD_OPTION_APP_SECRET', 'tmasd_app_secret' );
 define( 'TMASD_ACTION_SEND_TEMPLATE', 'tmasd_send_template_message' );
 define( 'TMASD_CAPABILITY', 'manage_woocommerce' );
 

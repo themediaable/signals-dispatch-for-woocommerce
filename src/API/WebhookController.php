@@ -133,6 +133,10 @@ final class WebhookController extends AbstractService {
 	 * @return WP_REST_Response Response object.
 	 */
 	public function handle_webhook( WP_REST_Request $request ): WP_REST_Response {
+		if ( ! $this->verify_signature( $request ) ) {
+			return new WP_REST_Response( 'Unauthorized', 401 );
+		}
+
 		$body = $request->get_json_params();
 
 		if ( ! $this->is_valid_webhook_body( $body ) ) {
@@ -142,6 +146,33 @@ final class WebhookController extends AbstractService {
 		$this->process_webhook_entries( $body );
 
 		return new WP_REST_Response( 'OK', 200 );
+	}
+
+	/**
+	 * Verify the X-Hub-Signature-256 header from Meta.
+	 *
+	 * @param WP_REST_Request $request REST request object.
+	 * @return bool True if signature is valid or app secret is not configured.
+	 */
+	private function verify_signature( WP_REST_Request $request ): bool {
+		$app_secret = $this->get_option( \TMASD_OPTION_APP_SECRET );
+
+		// Skip verification if app secret is not configured.
+		if ( '' === $app_secret ) {
+			return true;
+		}
+
+		$signature_header = $request->get_header( 'X-Hub-Signature-256' );
+
+		if ( empty( $signature_header ) ) {
+			return false;
+		}
+
+		$raw_body      = $request->get_body();
+		$expected_hash = hash_hmac( 'sha256', $raw_body, $app_secret );
+		$expected_sig  = 'sha256=' . $expected_hash;
+
+		return hash_equals( $expected_sig, $signature_header );
 	}
 
 	/**

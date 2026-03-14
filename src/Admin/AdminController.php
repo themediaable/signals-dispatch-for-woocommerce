@@ -195,6 +195,7 @@ final class AdminController extends AbstractAdminController {
 			\TMASD_OPTION_WABA_ID,
 			\TMASD_OPTION_ACCESS_TOKEN,
 			\TMASD_OPTION_WEBHOOK_VERIFY_TOKEN,
+			\TMASD_OPTION_APP_SECRET,
 		);
 
 		foreach ( $options as $option ) {
