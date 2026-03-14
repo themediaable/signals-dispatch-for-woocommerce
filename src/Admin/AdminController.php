@@ -119,6 +119,8 @@ final class AdminController extends AbstractAdminController {
 		add_action( 'admin_post_tmasd_send_test', array( $this->setup_controller, 'handle_test' ) );
 		add_action( 'admin_post_tmasd_save_mapping', array( $this->dispatch_controller, 'handle_save' ) );
 		add_action( 'admin_post_tmasd_delete_mapping', array( $this->dispatch_controller, 'handle_delete' ) );
+		add_action( 'admin_post_tmasd_delete_log', array( $this->logs_controller, 'handle_delete' ) );
+		add_action( 'admin_post_tmasd_delete_all_logs', array( $this->logs_controller, 'handle_delete_all' ) );
 	}
 
 	/**

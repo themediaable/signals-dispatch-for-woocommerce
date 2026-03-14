@@ -226,4 +226,16 @@ final class LogRepository extends AbstractRepository {
 
 		return $counts;
 	}
+
+	/**
+	 * Delete all log entries.
+	 *
+	 * @return int Number of rows deleted.
+	 */
+	public function delete_all(): int {
+		$table = $this->get_table_name();
+
+		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Table name is safe internal value.
+		return (int) $this->wpdb->query( "DELETE FROM {$table}" );
+	}
 }
