@@ -85,6 +85,11 @@ final class LogsController extends AbstractAdminController {
 			$this->render_notice_success( __( 'All logs deleted.', 'signals-dispatch-woocommerce' ) );
 		}
 
+		$this->render_notice_info(
+			__( 'Messages are sent via Action Scheduler and may take up to a minute to appear here.', 'signals-dispatch-woocommerce' ),
+			'logs-delay-info'
+		);
+
 		$this->render_search_form( $search );
 		$this->render_delete_all_form( $result['total'] );
 		$this->render_logs_table( $result['rows'] );

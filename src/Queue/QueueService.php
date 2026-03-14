@@ -113,11 +113,13 @@ final class QueueService extends AbstractService implements QueueInterface {
 	 * @return void
 	 */
 	public function handle_order_status_changed(
-		int $order_id,
+		$order_id,
 		string $old_status,
 		string $new_status,
 		WC_Order $order
 	): void {
+		$order_id = (int) $order_id;
+
 		$event_key = $this->map_status_to_event( $new_status );
 
 		if ( '' === $event_key ) {
@@ -156,6 +158,7 @@ final class QueueService extends AbstractService implements QueueInterface {
 				$args,
 				'tmasd'
 			);
+			return;
 		}
 	}
 
@@ -167,25 +170,38 @@ final class QueueService extends AbstractService implements QueueInterface {
 	 * @param int    $attempts  Retry count.
 	 * @return void
 	 */
-	public function handle_send_template_message( int $order_id, string $event_key, int $attempts = 0 ): void {
+	public function handle_send_template_message( $order_id, $event_key, $attempts = 0 ): void {
+		$order_id  = (int) $order_id;
+		$event_key = (string) $event_key;
+		$attempts  = (int) $attempts;
+
 		if ( ! $this->validate_send_request( $order_id, $event_key ) ) {
+			$this->log_skipped( $order_id, $event_key, 'Invalid request: missing order ID or event key.' );
 			return;
 		}
 
 		$mapping = $this->mapping_repo->find_by_event( $event_key );
 
 		if ( null === $mapping ) {
+			$this->log_skipped( $order_id, $event_key, 'No enabled dispatch rule found for event: ' . $event_key );
 			return;
 		}
 
 		$payload = $this->template_mapper->build_from_order( $order_id, $mapping );
 
 		if ( $this->is_payload_invalid( $payload ) ) {
+			$this->log_skipped(
+				$order_id,
+				$event_key,
+				'Order has no valid billing phone number.',
+				$payload['template_name'] ?? ''
+			);
 			return;
 		}
 
 		$log_id = $this->create_log_entry( $order_id, $payload );
 		$result = $this->send_message( $payload );
+
 		$this->update_log_with_result( $log_id, $result, $order_id, $event_key, $attempts );
 	}
 
@@ -228,6 +244,29 @@ final class QueueService extends AbstractService implements QueueInterface {
 				'payload_json'  => $payload_json ? $payload_json : '{}',
 				'response_json' => '{}',
 				'status'        => 'queued',
+			)
+		);
+	}
+
+	/**
+	 * Log a skipped dispatch attempt so the admin can see why a message was not sent.
+	 *
+	 * @param int    $order_id      Order ID.
+	 * @param string $event_key     Event key.
+	 * @param string $reason        Human-readable reason the message was skipped.
+	 * @param string $template_name Template name if known.
+	 * @return void
+	 */
+	private function log_skipped( int $order_id, string $event_key, string $reason, string $template_name = '' ): void {
+		$this->log_repo->insert(
+			array(
+				'order_id'      => $order_id > 0 ? $order_id : 0,
+				'phone_e164'    => '',
+				'template_name' => $template_name,
+				'payload_json'  => wp_json_encode( array( 'event_key' => $event_key ) ),
+				'response_json' => '{}',
+				'status'        => 'failed',
+				'error_message' => $reason,
 			)
 		);
 	}

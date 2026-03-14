@@ -230,6 +230,14 @@ final class AdminController extends AbstractAdminController {
 			array(),
 			\TMASD_VERSION
 		);
+
+		wp_enqueue_script(
+			'tmasd-admin',
+			\TMASD_PLUGIN_URL . 'assets/admin.js',
+			array(),
+			\TMASD_VERSION,
+			true
+		);
 	}
 
 	/**

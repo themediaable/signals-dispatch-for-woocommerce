@@ -21,7 +21,7 @@
 
 /* ---------- Page wrapper ---------- */
 .tmasd-admin {
-	max-width: 1200px;
+	max-width: 100%;
 	margin: 20px 0;
 }
 
@@ -56,6 +56,29 @@
 	box-shadow: var(--tmasd-shadow);
 	padding: 12px 16px;
 	margin: 0 0 16px;
+	position: relative;
+	padding-right: 40px;
+}
+
+.tmasd-notice-dismiss {
+	position: absolute;
+	top: 50%;
+	right: 12px;
+	transform: translateY(-50%);
+	background: none;
+	border: none;
+	cursor: pointer;
+	font-size: 20px;
+	line-height: 1;
+	color: #787c82;
+	padding: 4px 8px;
+	border-radius: 4px;
+	transition: color 0.15s, background 0.15s;
+}
+
+.tmasd-notice-dismiss:hover {
+	color: #1d2327;
+	background: rgba(0, 0, 0, 0.05);
 }
 
 .tmasd-admin .notice-success {
@@ -318,6 +341,9 @@
 .tmasd-admin .form-table input.regular-text,
 .tmasd-admin .form-table textarea,
 .tmasd-admin .form-table select {
+	width: 100%;
+	max-width: 100%;
+	box-sizing: border-box;
 	border: 1px solid var(--tmasd-border);
 	border-radius: 6px;
 	padding: 8px 12px;
@@ -452,7 +478,7 @@
 	box-shadow: var(--tmasd-shadow);
 	border-color: var(--tmasd-border);
 	padding: 28px 32px;
-	max-width: 860px;
+	max-width: 100%;
 }
 
 .tmasd-admin .card h2 {

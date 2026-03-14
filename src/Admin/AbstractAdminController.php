@@ -126,7 +126,7 @@ abstract class AbstractAdminController {
 	 * @return void
 	 */
 	protected function render_notice_success( string $message ): void {
-		echo '<div class="notice notice-success"><p>' . esc_html( $message ) . '</p></div>';
+		$this->render_notice( 'success', $message );
 	}
 
 	/**
@@ -136,7 +136,37 @@ abstract class AbstractAdminController {
 	 * @return void
 	 */
 	protected function render_notice_error( string $message ): void {
-		echo '<div class="notice notice-error"><p>' . esc_html( $message ) . '</p></div>';
+		$this->render_notice( 'error', $message );
+	}
+
+	/**
+	 * Render an info notice.
+	 *
+	 * @param string $message    Notice message.
+	 * @param string $dismiss_key Optional key for persistent dismissal.
+	 * @return void
+	 */
+	protected function render_notice_info( string $message, string $dismiss_key = '' ): void {
+		$this->render_notice( 'info', $message, $dismiss_key );
+	}
+
+	/**
+	 * Render a dismissible notice.
+	 *
+	 * @param string $type        Notice type (success, error, info).
+	 * @param string $message     Notice message.
+	 * @param string $dismiss_key Optional key for persistent dismissal via localStorage.
+	 * @return void
+	 */
+	private function render_notice( string $type, string $message, string $dismiss_key = '' ): void {
+		$extra = '';
+		if ( '' !== $dismiss_key ) {
+			$extra = ' data-dismiss-key="' . esc_attr( $dismiss_key ) . '" style="display:none"';
+		}
+		echo '<div class="notice notice-' . esc_attr( $type ) . ' tmasd-notice"' . $extra . '>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $extra is built from esc_attr calls.
+		echo '<p>' . esc_html( $message ) . '</p>';
+		echo '<button type="button" class="tmasd-notice-dismiss" aria-label="' . esc_attr__( 'Dismiss', 'signals-dispatch-woocommerce' ) . '">&times;</button>';
+		echo '</div>';
 	}
 
 	/**
