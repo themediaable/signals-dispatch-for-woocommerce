@@ -157,10 +157,12 @@ final class DispatchController extends AbstractAdminController {
 		echo '<td>' . esc_html( (string) $mapping['event_key'] ) . '</td>';
 		echo '<td>' . esc_html( (string) $mapping['template_name'] ) . '</td>';
 		echo '<td>' . esc_html( (string) $mapping['language'] ) . '</td>';
-		echo '<td>' . esc_html( $enabled_text ) . '</td>';
-		echo '<td>';
-		echo '<a href="' . esc_url( $edit_url ) . '">' . esc_html__( 'Edit', 'signals-dispatch-woocommerce' ) . '</a> | ';
-		echo '<a href="' . esc_url( $delete_url ) . '" onclick="return confirm(\'' . esc_js( __( 'Delete this mapping?', 'signals-dispatch-woocommerce' ) ) . '\')">';
+		$badge_class = ! empty( $mapping['enabled'] ) ? 'tmasd-badge tmasd-badge--yes' : 'tmasd-badge tmasd-badge--no';
+		echo '<td><span class="' . esc_attr( $badge_class ) . '">' . esc_html( $enabled_text ) . '</span></td>';
+		echo '<td class="tmasd-row-actions">';
+		echo '<a class="tmasd-action-edit" href="' . esc_url( $edit_url ) . '">' . esc_html__( 'Edit', 'signals-dispatch-woocommerce' ) . '</a>';
+		echo '<span class="tmasd-separator">|</span>';
+		echo '<a class="tmasd-action-delete" href="' . esc_url( $delete_url ) . '" onclick="return confirm(\'' . esc_js( __( 'Delete this mapping?', 'signals-dispatch-woocommerce' ) ) . '\')">';
 		echo esc_html__( 'Delete', 'signals-dispatch-woocommerce' );
 		echo '</a>';
 		echo '</td>';

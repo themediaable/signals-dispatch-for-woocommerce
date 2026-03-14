@@ -174,7 +174,7 @@ final class SetupController extends AbstractAdminController {
 
 		echo '<table class="form-table">';
 		$this->render_text_field( \TMASD_OPTION_PHONE_NUMBER_ID, __( 'Phone Number ID', 'signals-dispatch-woocommerce' ), $phone_id );
-		$this->render_text_field( \TMASD_OPTION_WABA_ID, __( 'WABA ID', 'signals-dispatch-woocommerce' ), $waba_id );
+		$this->render_text_field( \TMASD_OPTION_WABA_ID, __( 'WhatsApp Business Account ID', 'signals-dispatch-woocommerce' ), $waba_id );
 		$this->render_password_field( \TMASD_OPTION_ACCESS_TOKEN, __( 'Access Token', 'signals-dispatch-woocommerce' ), $access_token );
 		$this->render_text_field( \TMASD_OPTION_WEBHOOK_VERIFY_TOKEN, __( 'Webhook Verify Token', 'signals-dispatch-woocommerce' ), $verify_token );
 		$this->render_password_field( \TMASD_OPTION_APP_SECRET, __( 'App Secret', 'signals-dispatch-woocommerce' ), $app_secret );
@@ -223,7 +223,7 @@ final class SetupController extends AbstractAdminController {
 		echo '<div class="tmasd-card">';
 		echo '<h2>' . esc_html__( 'Webhook Configuration', 'signals-dispatch-woocommerce' ) . '</h2>';
 		echo '<p>' . esc_html__( 'Use this URL in your WhatsApp Business App settings:', 'signals-dispatch-woocommerce' ) . '</p>';
-		echo '<code>' . esc_url( $webhook_url ) . '</code>';
+		echo '<code class="tmasd-webhook-url">' . esc_url( $webhook_url ) . '</code>';
 		echo '</div>';
 	}
 

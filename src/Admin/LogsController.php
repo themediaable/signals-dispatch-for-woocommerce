@@ -221,21 +221,22 @@ final class LogsController extends AbstractAdminController {
 		echo '<td>' . esc_html( $order_display ) . '</td>';
 		echo '<td>' . esc_html( (string) $row['phone_e164'] ) . '</td>';
 		echo '<td>' . esc_html( (string) $row['template_name'] ) . '</td>';
-		echo '<td>' . esc_html( (string) $row['status'] ) . '</td>';
-		echo '<td style="max-width:200px;word-wrap:break-word;">' . esc_html( $error_display ) . '</td>';
+		$status_class = 'tmasd-badge tmasd-badge--' . sanitize_html_class( (string) $row['status'] );
+		echo '<td><span class="' . esc_attr( $status_class ) . '">' . esc_html( (string) $row['status'] ) . '</span></td>';
+		echo '<td class="tmasd-error-cell">' . esc_html( $error_display ) . '</td>';
 		echo '<td>' . esc_html( $wa_id_display ) . '</td>';
 		echo '<td>' . esc_html( (string) $row['created_at'] ) . '</td>';
-		echo '<td>';
+		echo '<td class="tmasd-row-actions">';
 		$delete_url = wp_nonce_url(
 			admin_url( 'admin-post.php?action=tmasd_delete_log&log_id=' . (int) $row['id'] ),
 			'tmasd_delete_log_' . (int) $row['id']
 		);
 
-		echo '<a href="#" onclick="document.getElementById(\'' . esc_attr( $row_id ) . '\').style.display = document.getElementById(\'' . esc_attr( $row_id ) . '\').style.display === \'none\' ? \'table-row\' : \'none\'; return false;">';
+		echo '<a class="tmasd-action-view" href="#" onclick="document.getElementById(\'' . esc_attr( $row_id ) . '\').style.display = document.getElementById(\'' . esc_attr( $row_id ) . '\').style.display === \'none\' ? \'table-row\' : \'none\'; return false;">';
 		echo esc_html__( 'View', 'signals-dispatch-woocommerce' );
 		echo '</a>';
-		echo ' | ';
-		echo '<a href="' . esc_url( $delete_url ) . '" style="color:#b32d2e;" onclick="return confirm(\'' . esc_js( __( 'Delete this log entry?', 'signals-dispatch-woocommerce' ) ) . '\');">';
+		echo '<span class="tmasd-separator">|</span>';
+		echo '<a class="tmasd-action-delete" href="' . esc_url( $delete_url ) . '" onclick="return confirm(\'' . esc_js( __( 'Delete this log entry?', 'signals-dispatch-woocommerce' ) ) . '\');">';
 		echo esc_html__( 'Delete', 'signals-dispatch-woocommerce' );
 		echo '</a>';
 		echo '</td>';
@@ -255,7 +256,7 @@ final class LogsController extends AbstractAdminController {
 			return;
 		}
 
-		echo '<form method="post" action="' . esc_url( admin_url( 'admin-post.php' ) ) . '" style="margin:10px 0;">';
+		echo '<form method="post" action="' . esc_url( admin_url( 'admin-post.php' ) ) . '" class="tmasd-toolbar">';
 		wp_nonce_field( 'tmasd_delete_all_logs' );
 		echo '<input type="hidden" name="action" value="tmasd_delete_all_logs" />';
 		echo '<button type="submit" class="button button-link-delete" onclick="return confirm(\'' . esc_js( __( 'Delete all log entries? This cannot be undone.', 'signals-dispatch-woocommerce' ) ) . '\');">';
@@ -275,21 +276,23 @@ final class LogsController extends AbstractAdminController {
 		$payload  = $this->format_json( $row['payload_json'] ?? '{}' );
 		$response = $this->format_json( $row['response_json'] ?? '{}' );
 
-		echo '<tr id="' . esc_attr( $row_id ) . '" style="display:none; background:#f9f9f9;">';
-		echo '<td colspan="9" style="padding:15px;">';
+		echo '<tr id="' . esc_attr( $row_id ) . '" class="tmasd-detail-row" style="display:none;">';
+		echo '<td colspan="9">';
 
 		if ( ! empty( $row['error_code'] ) ) {
-			echo '<strong>' . esc_html__( 'Error Code:', 'signals-dispatch-woocommerce' ) . '</strong> ';
-			echo esc_html( (string) $row['error_code'] ) . '<br>';
+			echo '<span class="tmasd-error-badge">';
+			echo esc_html__( 'Error Code:', 'signals-dispatch-woocommerce' ) . ' ';
+			echo esc_html( (string) $row['error_code'] );
+			echo '</span><br>';
 		}
 
-		echo '<strong>' . esc_html__( 'Payload:', 'signals-dispatch-woocommerce' ) . '</strong>';
-		echo '<pre style="background:#fff;padding:10px;border:1px solid #ddd;overflow:auto;max-height:200px;">';
+		echo '<span class="tmasd-detail-label">' . esc_html__( 'Payload', 'signals-dispatch-woocommerce' ) . '</span>';
+		echo '<pre class="tmasd-json-block">';
 		echo esc_html( $payload );
 		echo '</pre>';
 
-		echo '<strong>' . esc_html__( 'Response:', 'signals-dispatch-woocommerce' ) . '</strong>';
-		echo '<pre style="background:#fff;padding:10px;border:1px solid #ddd;overflow:auto;max-height:200px;">';
+		echo '<span class="tmasd-detail-label">' . esc_html__( 'Response', 'signals-dispatch-woocommerce' ) . '</span>';
+		echo '<pre class="tmasd-json-block">';
 		echo esc_html( $response );
 		echo '</pre>';
 

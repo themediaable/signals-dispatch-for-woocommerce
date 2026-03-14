@@ -109,7 +109,7 @@ final class HelpController extends AbstractAdminController {
 	private function render_tab_content(): void {
 		$current_tab = $this->get_current_tab();
 
-		echo '<div class="tmasd-tab-content" style="margin-top: 20px;">';
+		echo '<div class="tmasd-tab-content">';
 
 		switch ( $current_tab ) {
 			case 'templates':
@@ -136,7 +136,7 @@ final class HelpController extends AbstractAdminController {
 	 */
 	private function render_setup_tab(): void {
 		?>
-		<div class="card" style="max-width: 800px;">
+		<div class="card">
 			<h2><?php esc_html_e( 'WhatsApp Business API Setup', 'signals-dispatch-woocommerce' ); ?></h2>
 			
 			<h3><?php esc_html_e( 'Step 1: Create a Meta Developer Account', 'signals-dispatch-woocommerce' ); ?></h3>
@@ -180,7 +180,7 @@ final class HelpController extends AbstractAdminController {
 						<td><?php esc_html_e( 'Under "From" phone number dropdown - a numeric ID like 1234567890123456', 'signals-dispatch-woocommerce' ); ?></td>
 					</tr>
 					<tr>
-						<td><strong><?php esc_html_e( 'WABA ID', 'signals-dispatch-woocommerce' ); ?></strong></td>
+						<td><strong><?php esc_html_e( 'WhatsApp Business Account ID', 'signals-dispatch-woocommerce' ); ?></strong></td>
 						<td><?php esc_html_e( 'Shown as "WhatsApp Business Account ID" on the API Setup page', 'signals-dispatch-woocommerce' ); ?></td>
 					</tr>
 					<tr>
@@ -194,7 +194,7 @@ final class HelpController extends AbstractAdminController {
 				</tbody>
 			</table>
 
-			<h3 style="margin-top: 20px;"><?php esc_html_e( 'Step 5: Create a Permanent Access Token', 'signals-dispatch-woocommerce' ); ?></h3>
+			<h3><?php esc_html_e( 'Step 5: Create a Permanent Access Token', 'signals-dispatch-woocommerce' ); ?></h3>
 			<ol>
 				<li><?php esc_html_e( 'Go to business.facebook.com/settings', 'signals-dispatch-woocommerce' ); ?></li>
 				<li><?php esc_html_e( 'Navigate to Users → System Users', 'signals-dispatch-woocommerce' ); ?></li>
@@ -219,7 +219,7 @@ final class HelpController extends AbstractAdminController {
 				<li><?php esc_html_e( 'Subscribe to webhook field: messages', 'signals-dispatch-woocommerce' ); ?></li>
 			</ol>
 
-			<div class="notice notice-info inline" style="margin-top: 20px;">
+			<div class="notice notice-info inline">
 				<p>
 					<strong><?php esc_html_e( 'Tip:', 'signals-dispatch-woocommerce' ); ?></strong>
 					<?php esc_html_e( 'For local development, use a tunneling service like ngrok to expose your local WordPress to the internet.', 'signals-dispatch-woocommerce' ); ?>
@@ -236,7 +236,7 @@ final class HelpController extends AbstractAdminController {
 	 */
 	private function render_templates_tab(): void {
 		?>
-		<div class="card" style="max-width: 800px;">
+		<div class="card">
 			<h2><?php esc_html_e( 'Creating WhatsApp Message Templates', 'signals-dispatch-woocommerce' ); ?></h2>
 			
 			<p><?php esc_html_e( 'WhatsApp requires pre-approved templates for business-initiated messages. Here\'s how to create them:', 'signals-dispatch-woocommerce' ); ?></p>
@@ -252,16 +252,16 @@ final class HelpController extends AbstractAdminController {
 			</ol>
 
 			<h3><?php esc_html_e( 'Template Example', 'signals-dispatch-woocommerce' ); ?></h3>
-			<div style="background: #f0f0f0; padding: 15px; border-radius: 4px; font-family: monospace;">
+			<div class="tmasd-code-block">
 				<?php esc_html_e( 'Hello {{1}}, your order #{{2}} for {{3}} has been confirmed!', 'signals-dispatch-woocommerce' ); ?>
 			</div>
 
-			<h3 style="margin-top: 20px;"><?php esc_html_e( 'Variable Mapping', 'signals-dispatch-woocommerce' ); ?></h3>
+			<h3><?php esc_html_e( 'Variable Mapping', 'signals-dispatch-woocommerce' ); ?></h3>
 			<p><?php esc_html_e( 'In Dispatch Rules, map variables using a JSON array:', 'signals-dispatch-woocommerce' ); ?></p>
-			<div style="background: #f0f0f0; padding: 15px; border-radius: 4px; font-family: monospace;">
+			<div class="tmasd-code-block">
 				["billing_first_name", "order_number", "order_total"]
 			</div>
-			<p style="margin-top: 10px;">
+			<p>
 				<?php esc_html_e( 'This maps: {{1}} → Customer first name, {{2}} → Order number, {{3}} → Order total', 'signals-dispatch-woocommerce' ); ?>
 			</p>
 
@@ -333,7 +333,7 @@ final class HelpController extends AbstractAdminController {
 			),
 		);
 
-		echo '<div class="card" style="max-width: 800px;">';
+		echo '<div class="card">';
 		echo '<h2>' . esc_html__( 'Frequently Asked Questions', 'signals-dispatch-woocommerce' ) . '</h2>';
 
 		foreach ( $faqs as $index => $faq ) {
@@ -354,12 +354,12 @@ final class HelpController extends AbstractAdminController {
 	private function render_faq_item( string $question, string $answer, int $index ): void {
 		$faq_id = 'faq-' . $index;
 		?>
-		<div class="tmasd-faq-item" style="margin-bottom: 15px; border-bottom: 1px solid #ddd; padding-bottom: 15px;">
-			<h3 style="margin-bottom: 8px; cursor: pointer;" onclick="document.getElementById('<?php echo esc_attr( $faq_id ); ?>').style.display = document.getElementById('<?php echo esc_attr( $faq_id ); ?>').style.display === 'none' ? 'block' : 'none';">
-				<span class="dashicons dashicons-arrow-right-alt2" style="vertical-align: middle;"></span>
+		<div class="tmasd-faq-item">
+			<h3 class="tmasd-faq-header" onclick="document.getElementById('<?php echo esc_attr( $faq_id ); ?>').style.display = document.getElementById('<?php echo esc_attr( $faq_id ); ?>').style.display === 'none' ? 'block' : 'none';">
+				<span class="dashicons dashicons-arrow-right-alt2"></span>
 				<?php echo esc_html( $question ); ?>
 			</h3>
-			<div id="<?php echo esc_attr( $faq_id ); ?>" style="margin-left: 25px; color: #666;">
+			<div id="<?php echo esc_attr( $faq_id ); ?>" class="tmasd-faq-answer">
 				<p><?php echo esc_html( $answer ); ?></p>
 			</div>
 		</div>
@@ -407,12 +407,12 @@ final class HelpController extends AbstractAdminController {
 			),
 		);
 
-		echo '<div class="card" style="max-width: 800px;">';
+		echo '<div class="card">';
 		echo '<h2>' . esc_html__( 'Troubleshooting Guide', 'signals-dispatch-woocommerce' ) . '</h2>';
 
 		echo '<table class="wp-list-table widefat fixed striped">';
 		echo '<thead><tr>';
-		echo '<th style="width: 30%;">' . esc_html__( 'Issue', 'signals-dispatch-woocommerce' ) . '</th>';
+		echo '<th>' . esc_html__( 'Issue', 'signals-dispatch-woocommerce' ) . '</th>';
 		echo '<th>' . esc_html__( 'Solution', 'signals-dispatch-woocommerce' ) . '</th>';
 		echo '</tr></thead>';
 		echo '<tbody>';
@@ -438,9 +438,9 @@ final class HelpController extends AbstractAdminController {
 	 */
 	private function render_support_section(): void {
 		?>
-		<div class="notice notice-info inline" style="margin-top: 20px;">
+		<div class="notice notice-info inline">
 			<h3><?php esc_html_e( 'Need More Help?', 'signals-dispatch-woocommerce' ); ?></h3>
-			<ul style="list-style: disc; margin-left: 20px;">
+			<ul>
 				<li>
 					<a href="https://github.com/themediaable/signals-dispatch-woocommerce/issues" target="_blank">
 						<?php esc_html_e( 'Report an issue on GitHub', 'signals-dispatch-woocommerce' ); ?>

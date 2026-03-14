@@ -97,7 +97,8 @@ final class HealthController extends AbstractAdminController {
 	private function render_configuration_card(): void {
 		$configured = $this->is_configured();
 
-		echo '<div class="tmasd-card">';
+		$class = $configured ? 'tmasd-card tmasd-card--ok' : 'tmasd-card tmasd-card--error';
+		echo '<div class="' . esc_attr( $class ) . '">';
 		echo '<h2>' . esc_html__( 'Configuration', 'signals-dispatch-woocommerce' ) . '</h2>';
 		echo '<p>';
 		echo $configured
@@ -128,7 +129,8 @@ final class HealthController extends AbstractAdminController {
 	private function render_webhook_card(): void {
 		$has_token = ! empty( get_option( \TMASD_OPTION_WEBHOOK_VERIFY_TOKEN, '' ) );
 
-		echo '<div class="tmasd-card">';
+		$class = $has_token ? 'tmasd-card tmasd-card--ok' : 'tmasd-card tmasd-card--error';
+		echo '<div class="' . esc_attr( $class ) . '">';
 		echo '<h2>' . esc_html__( 'Webhook Token', 'signals-dispatch-woocommerce' ) . '</h2>';
 		echo '<p>';
 		echo $has_token
@@ -146,7 +148,8 @@ final class HealthController extends AbstractAdminController {
 	private function render_scheduler_card(): void {
 		$available = $this->is_scheduler_available();
 
-		echo '<div class="tmasd-card">';
+		$class = $available ? 'tmasd-card tmasd-card--ok' : 'tmasd-card tmasd-card--error';
+		echo '<div class="' . esc_attr( $class ) . '">';
 		echo '<h2>' . esc_html__( 'Action Scheduler', 'signals-dispatch-woocommerce' ) . '</h2>';
 		echo '<p>';
 		echo $available
