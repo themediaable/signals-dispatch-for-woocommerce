@@ -128,7 +128,7 @@ final class LogsController extends AbstractAdminController {
 		echo '<tbody>';
 
 		if ( empty( $rows ) ) {
-			echo '<tr><td colspan="7">';
+			echo '<tr><td colspan="9">';
 			echo esc_html__( 'No logs found.', 'signals-dispatch-woocommerce' );
 			echo '</td></tr>';
 		} else {
@@ -152,8 +152,10 @@ final class LogsController extends AbstractAdminController {
 		echo '<th>' . esc_html__( 'Phone', 'signals-dispatch-woocommerce' ) . '</th>';
 		echo '<th>' . esc_html__( 'Template', 'signals-dispatch-woocommerce' ) . '</th>';
 		echo '<th>' . esc_html__( 'Status', 'signals-dispatch-woocommerce' ) . '</th>';
+		echo '<th>' . esc_html__( 'Error', 'signals-dispatch-woocommerce' ) . '</th>';
 		echo '<th>' . esc_html__( 'Message ID', 'signals-dispatch-woocommerce' ) . '</th>';
-		echo '<th>' . esc_html__( 'Updated', 'signals-dispatch-woocommerce' ) . '</th>';
+		echo '<th>' . esc_html__( 'Date', 'signals-dispatch-woocommerce' ) . '</th>';
+		echo '<th>' . esc_html__( 'Details', 'signals-dispatch-woocommerce' ) . '</th>';
 		echo '</tr></thead>';
 	}
 
@@ -166,6 +168,8 @@ final class LogsController extends AbstractAdminController {
 	private function render_log_row( array $row ): void {
 		$order_display = ! empty( $row['order_id'] ) ? (string) $row['order_id'] : '-';
 		$wa_id_display = ! empty( $row['wa_message_id'] ) ? (string) $row['wa_message_id'] : '-';
+		$error_display = ! empty( $row['error_message'] ) ? (string) $row['error_message'] : '-';
+		$row_id        = 'tmasd-detail-' . (int) $row['id'];
 
 		echo '<tr>';
 		echo '<td>' . esc_html( (string) $row['id'] ) . '</td>';
@@ -173,9 +177,67 @@ final class LogsController extends AbstractAdminController {
 		echo '<td>' . esc_html( (string) $row['phone_e164'] ) . '</td>';
 		echo '<td>' . esc_html( (string) $row['template_name'] ) . '</td>';
 		echo '<td>' . esc_html( (string) $row['status'] ) . '</td>';
+		echo '<td style="max-width:200px;word-wrap:break-word;">' . esc_html( $error_display ) . '</td>';
 		echo '<td>' . esc_html( $wa_id_display ) . '</td>';
-		echo '<td>' . esc_html( (string) $row['updated_at'] ) . '</td>';
+		echo '<td>' . esc_html( (string) $row['created_at'] ) . '</td>';
+		echo '<td>';
+		echo '<a href="#" onclick="document.getElementById(\'' . esc_attr( $row_id ) . '\').style.display = document.getElementById(\'' . esc_attr( $row_id ) . '\').style.display === \'none\' ? \'table-row\' : \'none\'; return false;">';
+		echo esc_html__( 'View', 'signals-dispatch-woocommerce' );
+		echo '</a>';
+		echo '</td>';
 		echo '</tr>';
+
+		$this->render_detail_row( $row, $row_id );
+	}
+
+	/**
+	 * Render expandable detail row with full payload and response.
+	 *
+	 * @param array<string, mixed> $row    Log data.
+	 * @param string               $row_id HTML element ID.
+	 * @return void
+	 */
+	private function render_detail_row( array $row, string $row_id ): void {
+		$payload  = $this->format_json( $row['payload_json'] ?? '{}' );
+		$response = $this->format_json( $row['response_json'] ?? '{}' );
+
+		echo '<tr id="' . esc_attr( $row_id ) . '" style="display:none; background:#f9f9f9;">';
+		echo '<td colspan="9" style="padding:15px;">';
+
+		if ( ! empty( $row['error_code'] ) ) {
+			echo '<strong>' . esc_html__( 'Error Code:', 'signals-dispatch-woocommerce' ) . '</strong> ';
+			echo esc_html( (string) $row['error_code'] ) . '<br>';
+		}
+
+		echo '<strong>' . esc_html__( 'Payload:', 'signals-dispatch-woocommerce' ) . '</strong>';
+		echo '<pre style="background:#fff;padding:10px;border:1px solid #ddd;overflow:auto;max-height:200px;">';
+		echo esc_html( $payload );
+		echo '</pre>';
+
+		echo '<strong>' . esc_html__( 'Response:', 'signals-dispatch-woocommerce' ) . '</strong>';
+		echo '<pre style="background:#fff;padding:10px;border:1px solid #ddd;overflow:auto;max-height:200px;">';
+		echo esc_html( $response );
+		echo '</pre>';
+
+		echo '</td></tr>';
+	}
+
+	/**
+	 * Pretty-print a JSON string.
+	 *
+	 * @param string $json JSON string.
+	 * @return string Formatted JSON.
+	 */
+	private function format_json( string $json ): string {
+		$decoded = json_decode( $json, true );
+
+		if ( ! is_array( $decoded ) ) {
+			return $json;
+		}
+
+		$encoded = wp_json_encode( $decoded, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES );
+
+		return is_string( $encoded ) ? $encoded : $json;
 	}
 
 	/**
