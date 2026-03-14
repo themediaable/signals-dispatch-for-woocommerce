@@ -99,7 +99,7 @@ final class AdminController extends AbstractAdminController {
 		$this->mapping_repo = $mapping_repo;
 		$this->api_client   = $api_client;
 
-		$this->setup_controller    = new SetupController( $api_client );
+		$this->setup_controller    = new SetupController( $api_client, $log_repo );
 		$this->dispatch_controller = new DispatchController( $mapping_repo );
 		$this->logs_controller     = new LogsController( $log_repo );
 		$this->health_controller   = new HealthController( $log_repo );

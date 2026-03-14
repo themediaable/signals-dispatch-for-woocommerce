@@ -10,6 +10,7 @@ declare(strict_types=1);
 namespace TMASD\Signals\Dispatch\Admin;
 
 use TMASD\Signals\Dispatch\Contracts\ApiClientInterface;
+use TMASD\Signals\Dispatch\Database\LogRepository;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -40,12 +41,21 @@ final class SetupController extends AbstractAdminController {
 	private ApiClientInterface $api_client;
 
 	/**
+	 * Log repository.
+	 *
+	 * @var LogRepository
+	 */
+	private LogRepository $log_repo;
+
+	/**
 	 * Constructor.
 	 *
 	 * @param ApiClientInterface $api_client API client service.
+	 * @param LogRepository      $log_repo   Log repository.
 	 */
-	public function __construct( ApiClientInterface $api_client ) {
+	public function __construct( ApiClientInterface $api_client, LogRepository $log_repo ) {
 		$this->api_client = $api_client;
+		$this->log_repo   = $log_repo;
 	}
 
 	/**
@@ -311,10 +321,51 @@ final class SetupController extends AbstractAdminController {
 		$vars   = is_array( $vars ) ? $vars : array();
 		$result = $this->api_client->send_template_message( $phone, $template, $language, $vars );
 
+		$this->log_test_message( $phone, $template, $result );
+
 		if ( ! empty( $result['success'] ) ) {
 			$this->redirect_with_status( 'tmasd-setup&tab=test', 'test_success' );
 		} else {
 			$this->redirect_with_status( 'tmasd-setup&tab=test', 'test_error' );
 		}
+	}
+
+	/**
+	 * Log a test message result.
+	 *
+	 * @param string               $phone    Phone number.
+	 * @param string               $template Template name.
+	 * @param array<string, mixed> $result   API result.
+	 * @return void
+	 */
+	private function log_test_message( string $phone, string $template, array $result ): void {
+		$success    = ! empty( $result['success'] );
+		$response   = $result['response'] ?? array();
+		$message_id = null;
+		$error_code = null;
+		$error_msg  = null;
+
+		if ( $success && ! empty( $response['messages'][0]['id'] ) ) {
+			$message_id = (string) $response['messages'][0]['id'];
+		}
+
+		if ( ! $success ) {
+			$error_code = (string) ( $response['error']['code'] ?? '' );
+			$error_msg  = $result['error'] ?? ( $response['error']['message'] ?? 'Unknown error' );
+		}
+
+		$this->log_repo->insert(
+			array(
+				'order_id'      => 0,
+				'phone_e164'    => $phone,
+				'template_name' => $template,
+				'payload_json'  => wp_json_encode( $result['payload'] ?? array() ),
+				'response_json' => wp_json_encode( $response ),
+				'status'        => $success ? 'sent' : 'failed',
+				'wa_message_id' => $message_id,
+				'error_code'    => $error_code,
+				'error_message' => $error_msg,
+			)
+		);
 	}
 }
