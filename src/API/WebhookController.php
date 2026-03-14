@@ -94,19 +94,47 @@ final class WebhookController extends AbstractService {
 	/**
 	 * Handle webhook verification (GET request).
 	 *
+	 * Meta expects the raw hub.challenge value as plain text, not JSON.
+	 * Using WP_REST_Response would JSON-encode the string (e.g. "12345"),
+	 * which Meta rejects. We output the challenge directly and exit.
+	 *
 	 * @param WP_REST_Request $request REST request object.
-	 * @return WP_REST_Response Response object.
+	 * @return WP_REST_Response Response object (only on failure).
 	 */
 	public function handle_verify( WP_REST_Request $request ): WP_REST_Response {
-		$mode      = $request->get_param( 'hub_mode' );
-		$token     = $request->get_param( 'hub_verify_token' );
-		$challenge = $request->get_param( 'hub_challenge' );
+		$mode      = $this->get_hub_param( $request, 'mode' );
+		$token     = $this->get_hub_param( $request, 'verify_token' );
+		$challenge = $this->get_hub_param( $request, 'challenge' );
 
 		if ( ! $this->verify_token( $mode, $token ) ) {
 			return new WP_REST_Response( 'Forbidden', 403 );
 		}
 
-		return new WP_REST_Response( $challenge, 200 );
+		// Return raw plain-text challenge for Meta verification.
+		status_header( 200 );
+		header( 'Content-Type: text/plain; charset=utf-8' );
+		echo esc_html( (string) $challenge );
+		exit;
+	}
+
+	/**
+	 * Get a hub.* parameter from the request.
+	 *
+	 * Meta sends query params as hub.mode, hub.verify_token, etc.
+	 * PHP converts dots to underscores, so both forms are checked.
+	 *
+	 * @param WP_REST_Request $request REST request object.
+	 * @param string          $name    Parameter name without hub prefix.
+	 * @return string|null Parameter value or null.
+	 */
+	private function get_hub_param( WP_REST_Request $request, string $name ): ?string {
+		$value = $request->get_param( 'hub_' . $name );
+
+		if ( null === $value ) {
+			$value = $request->get_param( 'hub.' . $name );
+		}
+
+		return $value;
 	}
 
 	/**
@@ -123,7 +151,7 @@ final class WebhookController extends AbstractService {
 
 		$stored_token = $this->get_option( \TMASD_OPTION_WEBHOOK_VERIFY_TOKEN );
 
-		return '' !== $stored_token && $token === $stored_token;
+		return '' !== $stored_token && hash_equals( $stored_token, (string) $token );
 	}
 
 	/**
