@@ -192,7 +192,7 @@ composer dump-autoload
 
 | Endpoint | Method | Purpose |
 |----------|--------|---------|
-| `/wp-json/tmasd/v1/webhook` | GET/POST | Meta webhook verification & callbacks |
+| `/wp-json/signals/v1/webhook` | GET/POST | Meta webhook verification & callbacks |
 
 ### Webhook Security
 

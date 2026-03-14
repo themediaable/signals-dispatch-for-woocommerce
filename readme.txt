@@ -62,7 +62,7 @@ Navigate to Signals → Setup and enter your WhatsApp Business API credentials:
 
 Configure your WhatsApp Business App to send webhooks to:
 
-`https://yoursite.com/wp-json/tmasd/v1/webhook`
+`https://yoursite.com/wp-json/signals/v1/webhook`
 
 Use the Verify Token you configured in Step 1.
 

@@ -93,7 +93,7 @@ Before your app is approved for production, you can only message phone numbers y
 2. Click **Edit** on the Webhook section
 3. Enter your callback URL:
    ```
-   https://yoursite.com/wp-json/tmasd/v1/webhook
+   https://yoursite.com/wp-json/signals/v1/webhook
    ```
 4. Enter the **Verify Token** you created
 5. Click **Verify and Save**

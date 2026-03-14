@@ -212,7 +212,7 @@ final class HelpController extends AbstractAdminController {
 				<li><?php esc_html_e( 'Click "Edit" on the Webhook section', 'signals-dispatch-woocommerce' ); ?></li>
 				<li>
 					<?php esc_html_e( 'Enter your callback URL:', 'signals-dispatch-woocommerce' ); ?>
-					<code><?php echo esc_html( home_url( '/wp-json/tmasd/v1/webhook' ) ); ?></code>
+					<code><?php echo esc_html( home_url( '/wp-json/signals/v1/webhook' ) ); ?></code>
 				</li>
 				<li><?php esc_html_e( 'Enter the Verify Token you configured in this plugin', 'signals-dispatch-woocommerce' ); ?></li>
 				<li><?php esc_html_e( 'Click "Verify and Save"', 'signals-dispatch-woocommerce' ); ?></li>

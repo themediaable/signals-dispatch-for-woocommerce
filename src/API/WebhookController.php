@@ -33,7 +33,7 @@ final class WebhookController extends AbstractService {
 	 *
 	 * @var string
 	 */
-	private const API_NAMESPACE = 'tmasd/v1';
+	private const API_NAMESPACE = 'signals/v1';
 
 	/**
 	 * REST API route.
