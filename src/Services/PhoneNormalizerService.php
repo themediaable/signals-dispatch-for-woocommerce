@@ -90,7 +90,7 @@ final class PhoneNormalizerService extends AbstractService implements PhoneNorma
 	 * @return bool True if has plus prefix.
 	 */
 	private function has_plus_prefix( string $phone ): bool {
-		return str_starts_with( $phone, '+' );
+		return '' !== $phone && '+' === $phone[0];
 	}
 
 	/**
@@ -124,7 +124,7 @@ final class PhoneNormalizerService extends AbstractService implements PhoneNorma
 	 */
 	private function format_e164( string $digits, bool $had_plus ): string {
 		// Remove leading 00 for international format.
-		if ( ! $had_plus && str_starts_with( $digits, '00' ) ) {
+		if ( ! $had_plus && substr( $digits, 0, 2 ) === '00' ) {
 			$digits = substr( $digits, 2 );
 		}
 

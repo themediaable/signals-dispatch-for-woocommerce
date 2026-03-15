@@ -15,6 +15,7 @@ use TMASD\Signals\Dispatch\Contracts\TemplateMapperInterface;
 use TMASD\Signals\Dispatch\Core\AbstractService;
 use TMASD\Signals\Dispatch\Database\LogRepository;
 use TMASD\Signals\Dispatch\Database\MappingRepository;
+use TMASD\Signals\Dispatch\Database\OptinRepository;
 use WC_Order;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -60,6 +61,13 @@ final class QueueService extends AbstractService implements QueueInterface {
 	private MappingRepository $mapping_repo;
 
 	/**
+	 * Opt-in repository.
+	 *
+	 * @var OptinRepository
+	 */
+	private OptinRepository $optin_repo;
+
+	/**
 	 * API client service.
 	 *
 	 * @var ApiClientInterface
@@ -78,17 +86,20 @@ final class QueueService extends AbstractService implements QueueInterface {
 	 *
 	 * @param LogRepository           $log_repo        Log repository.
 	 * @param MappingRepository       $mapping_repo    Mapping repository.
+	 * @param OptinRepository         $optin_repo      Opt-in repository.
 	 * @param ApiClientInterface      $api_client      API client service.
 	 * @param TemplateMapperInterface $template_mapper Template mapper service.
 	 */
 	public function __construct(
 		LogRepository $log_repo,
 		MappingRepository $mapping_repo,
+		OptinRepository $optin_repo,
 		ApiClientInterface $api_client,
 		TemplateMapperInterface $template_mapper
 	) {
 		$this->log_repo        = $log_repo;
 		$this->mapping_repo    = $mapping_repo;
+		$this->optin_repo      = $optin_repo;
 		$this->api_client      = $api_client;
 		$this->template_mapper = $template_mapper;
 	}
@@ -194,6 +205,17 @@ final class QueueService extends AbstractService implements QueueInterface {
 				$order_id,
 				$event_key,
 				'Order has no valid billing phone number.',
+				$payload['template_name'] ?? ''
+			);
+			return;
+		}
+
+		// Enforce consent when the setting is enabled.
+		if ( $this->consent_required() && ! $this->optin_repo->has_consent( $payload['phone_e164'] ) ) {
+			$this->log_skipped(
+				$order_id,
+				$event_key,
+				'Skipped: no consent record found for this phone number.',
 				$payload['template_name'] ?? ''
 			);
 			return;
@@ -338,7 +360,7 @@ final class QueueService extends AbstractService implements QueueInterface {
 			$update['error_message'] = $result['error'] ?? 'Unknown error';
 			$update['error_code']    = $result['response']['error']['code'] ?? null;
 
-			if ( $attempts < self::MAX_RETRY_ATTEMPTS ) {
+			if ( $attempts < self::MAX_RETRY_ATTEMPTS && $this->is_retryable_failure( $result ) ) {
 				$this->schedule_send( $order_id, $event_key, $attempts + 1 );
 			}
 		}
@@ -361,5 +383,36 @@ final class QueueService extends AbstractService implements QueueInterface {
 		);
 
 		return $map[ $status ] ?? '';
+	}
+
+	/**
+	 * Check whether the failure is a transient condition worth retrying.
+	 *
+	 * Network errors (http_code = 0), rate limits (429), and server errors
+	 * (5xx) are retried. Permanent client errors (4xx, invalid template,
+	 * bad recipient, etc.) are not.
+	 *
+	 * @param array<string, mixed> $result API result.
+	 * @return bool True if the failure is retryable.
+	 */
+	private function is_retryable_failure( array $result ): bool {
+		$code = (int) ( $result['http_code'] ?? 0 );
+
+		// http_code 0 means WP_Error / network timeout — always retryable.
+		if ( 0 === $code ) {
+			return true;
+		}
+
+		// Rate limit or server-side error.
+		return 429 === $code || $code >= 500;
+	}
+
+	/**
+	 * Check whether sending requires a local consent record.
+	 *
+	 * @return bool True when consent enforcement is enabled.
+	 */
+	private function consent_required(): bool {
+		return (bool) get_option( \TMASD_OPTION_REQUIRE_CONSENT, false );
 	}
 }

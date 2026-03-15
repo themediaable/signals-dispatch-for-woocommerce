@@ -27,6 +27,7 @@ define( 'TMASD_OPTION_WABA_ID', 'tmasd_waba_id' );
 define( 'TMASD_OPTION_ACCESS_TOKEN', 'tmasd_access_token' );
 define( 'TMASD_OPTION_WEBHOOK_VERIFY_TOKEN', 'tmasd_webhook_verify_token' );
 define( 'TMASD_OPTION_APP_SECRET', 'tmasd_app_secret' );
+define( 'TMASD_OPTION_REQUIRE_CONSENT', 'tmasd_require_consent' );
 define( 'TMASD_ACTION_SEND_TEMPLATE', 'tmasd_send_template_message' );
 define( 'TMASD_CAPABILITY', 'manage_woocommerce' );
 
@@ -59,6 +60,19 @@ register_deactivation_hook(
 add_action(
 	'plugins_loaded',
 	static function (): void {
+		// Require WooCommerce — show a clear admin notice and abort if missing.
+		if ( ! class_exists( 'WooCommerce' ) ) {
+			add_action(
+				'admin_notices',
+				static function (): void {
+					echo '<div class="notice notice-error"><p>';
+					echo esc_html__( 'Signals Dispatch for WooCommerce requires WooCommerce to be installed and active.', 'signals-dispatch-woocommerce' );
+					echo '</p></div>';
+				}
+			);
+			return;
+		}
+
 		Container::get_instance()->boot();
 	}
 );

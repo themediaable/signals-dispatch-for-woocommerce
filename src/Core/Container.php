@@ -10,6 +10,7 @@ declare(strict_types=1);
 namespace TMASD\Signals\Dispatch\Core;
 
 use TMASD\Signals\Dispatch\Admin\AdminController;
+use TMASD\Signals\Dispatch\Admin\PrivacyController;
 use TMASD\Signals\Dispatch\API\WebhookController;
 use TMASD\Signals\Dispatch\Contracts\ApiClientInterface;
 use TMASD\Signals\Dispatch\Contracts\PhoneNormalizerInterface;
@@ -111,6 +112,7 @@ final class Container {
 		$this->services['queue'] = new QueueService(
 			$this->services['log_repo'],
 			$this->services['mapping_repo'],
+			$this->services['optin_repo'],
 			$this->services['api_client'],
 			$this->services['template_mapper']
 		);
@@ -125,6 +127,12 @@ final class Container {
 			$this->services['log_repo'],
 			$this->services['mapping_repo'],
 			$this->services['api_client']
+		);
+
+		// Privacy.
+		$this->services['privacy'] = new PrivacyController(
+			$this->services['log_repo'],
+			$this->services['optin_repo']
 		);
 	}
 
@@ -143,6 +151,7 @@ final class Container {
 		// Boot admin in admin context.
 		if ( is_admin() ) {
 			$this->services['admin']->boot();
+			$this->services['privacy']->boot();
 		}
 	}
 

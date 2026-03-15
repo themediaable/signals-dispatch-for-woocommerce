@@ -238,4 +238,55 @@ final class LogRepository extends AbstractRepository {
 		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Table name is safe internal value.
 		return (int) $this->wpdb->query( "DELETE FROM {$table}" );
 	}
+
+	/**
+	 * Find log rows associated with WooCommerce orders belonging to a user.
+	 *
+	 * @param int $user_id WordPress user ID.
+	 * @return array<int, array<string, mixed>> Log rows.
+	 */
+	public function find_by_user_id( int $user_id ): array {
+		$table = $this->get_table_name();
+		$sql   = $this->wpdb->prepare(
+			// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Table name is safe.
+			"SELECT l.* FROM {$table} l
+			INNER JOIN {$this->wpdb->posts} p ON p.ID = l.order_id
+			WHERE p.post_author = %d AND l.order_id > 0
+			ORDER BY l.id DESC",
+			$user_id
+		);
+		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- SQL is prepared above.
+		$rows = $this->wpdb->get_results( $sql, ARRAY_A );
+
+		return is_array( $rows ) ? $rows : array();
+	}
+
+	/**
+	 * Anonymise the phone_e164 field in log rows owned by a user.
+	 *
+	 * The order records are retained for business/accounting purposes;
+	 * only the personal phone number is anonymised.
+	 *
+	 * @param int $user_id WordPress user ID.
+	 * @return int Number of rows updated.
+	 */
+	public function anonymise_phone_by_user_id( int $user_id ): int {
+		$table   = $this->get_table_name();
+		$wp_posts = $this->wpdb->posts;
+
+		$sql = $this->wpdb->prepare(
+			// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Table names are safe internal values.
+			"UPDATE {$table} l
+			INNER JOIN {$wp_posts} p ON p.ID = l.order_id
+			SET l.phone_e164 = 'ANONYMISED', l.updated_at = %s
+			WHERE p.post_author = %d AND l.order_id > 0 AND l.phone_e164 != 'ANONYMISED'",
+			current_time( 'mysql' ),
+			$user_id
+		);
+
+		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- SQL is prepared above.
+		$result = $this->wpdb->query( $sql );
+
+		return is_int( $result ) ? $result : 0;
+	}
 }

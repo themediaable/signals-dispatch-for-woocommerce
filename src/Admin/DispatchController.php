@@ -239,13 +239,39 @@ final class DispatchController extends AbstractAdminController {
 		$this->assert_access();
 		$this->verify_nonce( 'tmasd_save_mapping' );
 
-		$mapping_id = (int) $this->get_post_param( 'mapping_id', '0' );
+		$mapping_id    = (int) $this->get_post_param( 'mapping_id', '0' );
+		$event_key     = $this->get_post_param( 'event_key' );
+		$template_name = $this->get_post_param( 'template_name' );
+		$language      = $this->get_post_param( 'language', 'en_US' );
+		$mapping_json  = $this->get_post_param( 'mapping_json', '[]' );
+
+		// Validate event_key against allowed values.
+		$allowed_events = array_keys( $this->mapping_repo->get_available_events() );
+		if ( ! in_array( $event_key, $allowed_events, true ) ) {
+			$this->redirect_with_status( 'tmasd-dispatch', 'error' );
+			return;
+		}
+
+		// Validate template name format (alphanumeric, underscores, hyphens).
+		if ( ! preg_match( '/^[a-z0-9_\-]{1,512}$/i', $template_name ) ) {
+			$this->redirect_with_status( 'tmasd-dispatch', 'error' );
+			return;
+		}
+
+		// Validate language code format (e.g. en_US, pt_BR).
+		if ( ! preg_match( '/^[a-z]{2,3}(_[A-Z]{2})?$/', $language ) ) {
+			$this->redirect_with_status( 'tmasd-dispatch', 'error' );
+			return;
+		}
+
+		// Validate mapping_json is a JSON array of allowed resolver keys only.
+		$mapping_json = $this->validate_mapping_json( $mapping_json );
 
 		$data = array(
-			'event_key'     => $this->get_post_param( 'event_key' ),
-			'template_name' => $this->get_post_param( 'template_name' ),
-			'language'      => $this->get_post_param( 'language', 'en_US' ),
-			'mapping_json'  => $this->get_post_param( 'mapping_json', '[]' ),
+			'event_key'     => $event_key,
+			'template_name' => $template_name,
+			'language'      => $language,
+			'mapping_json'  => $mapping_json,
 			// phpcs:ignore WordPress.Security.NonceVerification.Missing -- Nonce verified above.
 			'enabled'       => isset( $_POST['enabled'] ) ? 1 : 0,
 		);
@@ -253,6 +279,32 @@ final class DispatchController extends AbstractAdminController {
 		$this->mapping_repo->upsert( $data, $mapping_id );
 
 		$this->redirect_with_status( 'tmasd-dispatch', 'saved' );
+	}
+
+	/**
+	 * Sanitise and validate mapping_json — only allow known resolver keys.
+	 *
+	 * @param string $raw Raw JSON string from POST input.
+	 * @return string Safe JSON string (array of resolver key strings).
+	 */
+	private function validate_mapping_json( string $raw ): string {
+		$allowed = array_keys( $this->mapping_repo->get_available_variables() );
+		$decoded = json_decode( $raw, true );
+
+		if ( ! is_array( $decoded ) ) {
+			return '[]';
+		}
+
+		// Only keep values that are scalar strings matching an allowed resolver key.
+		$safe = array();
+		foreach ( $decoded as $value ) {
+			if ( is_string( $value ) && in_array( $value, $allowed, true ) ) {
+				$safe[] = $value;
+			}
+		}
+
+		$encoded = wp_json_encode( $safe );
+		return $encoded ? $encoded : '[]';
 	}
 
 	/**

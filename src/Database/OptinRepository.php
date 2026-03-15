@@ -142,4 +142,39 @@ final class OptinRepository extends AbstractRepository {
 			'opted_out' => (int) $row['opted_out'],
 		);
 	}
+
+	/**
+	 * Find consent records by WordPress user ID.
+	 *
+	 * @param int $user_id WordPress user ID.
+	 * @return array<int, array<string, mixed>> Consent records.
+	 */
+	public function find_by_user_id( int $user_id ): array {
+		$table = $this->get_table_name();
+		$sql   = $this->wpdb->prepare(
+			// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Table name is safe.
+			"SELECT * FROM {$table} WHERE user_id = %d ORDER BY id DESC",
+			$user_id
+		);
+		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- SQL is prepared above.
+		$rows = $this->wpdb->get_results( $sql, ARRAY_A );
+
+		return is_array( $rows ) ? $rows : array();
+	}
+
+	/**
+	 * Delete consent records for a given WordPress user.
+	 *
+	 * @param int $user_id WordPress user ID.
+	 * @return int Number of rows deleted.
+	 */
+	public function delete_by_user_id( int $user_id ): int {
+		$result = $this->wpdb->delete(
+			$this->get_table_name(),
+			array( 'user_id' => $user_id ),
+			array( '%d' )
+		);
+
+		return is_int( $result ) ? $result : 0;
+	}
 }

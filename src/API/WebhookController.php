@@ -185,9 +185,9 @@ final class WebhookController extends AbstractService {
 	private function verify_signature( WP_REST_Request $request ): bool {
 		$app_secret = $this->get_option( \TMASD_OPTION_APP_SECRET );
 
-		// Skip verification if app secret is not configured.
+		// Fail closed: reject all POST requests when app secret is not configured.
 		if ( '' === $app_secret ) {
-			return true;
+			return false;
 		}
 
 		$signature_header = $request->get_header( 'X-Hub-Signature-256' );
@@ -210,7 +210,16 @@ final class WebhookController extends AbstractService {
 	 * @return bool True if valid.
 	 */
 	private function is_valid_webhook_body( ?array $body ): bool {
-		return ! empty( $body['entry'] ) && is_array( $body['entry'] );
+		if ( empty( $body['entry'] ) || ! is_array( $body['entry'] ) ) {
+			return false;
+		}
+
+		// Reject payloads that are not from the WhatsApp Business Account object type.
+		if ( isset( $body['object'] ) && 'whatsapp_business_account' !== $body['object'] ) {
+			return false;
+		}
+
+		return true;
 	}
 
 	/**
@@ -271,6 +280,10 @@ final class WebhookController extends AbstractService {
 		$wa_message_id = (string) $status['id'];
 		$new_status    = $this->map_whatsapp_status( (string) $status['status'] );
 
+		if ( '' === $new_status ) {
+			return;
+		}
+
 		$this->log_repo->update_by_message_id(
 			$wa_message_id,
 			array( 'status' => $new_status )
@@ -291,6 +304,6 @@ final class WebhookController extends AbstractService {
 			'failed'    => 'failed',
 		);
 
-		return $status_map[ $wa_status ] ?? 'sent';
+		return $status_map[ $wa_status ] ?? '';
 	}
 }

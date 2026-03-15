@@ -2,7 +2,7 @@
 Contributors: themediaable
 Tags: woocommerce, whatsapp, notifications, order-notifications, business-api
 Requires at least: 6.0
-Tested up to: 6.7
+Tested up to: 6.8
 Requires PHP: 7.4
 Stable tag: 0.2.0
 License: GPLv2 or later
@@ -41,9 +41,8 @@ This plugin connects to the Meta WhatsApp Business Cloud API to send messages. B
 == Installation ==
 
 1. Upload the `signals-dispatch-woocommerce` folder to the `/wp-content/plugins/` directory
-2. Run `composer install` in the plugin directory
-3. Activate the plugin through the 'Plugins' menu in WordPress
-4. Navigate to **Signals → Setup** to configure your WhatsApp Business API credentials
+2. Activate the plugin through the 'Plugins' menu in WordPress
+3. Navigate to **Signals → Setup** to configure your WhatsApp Business API credentials
 
 = Configuration =
 

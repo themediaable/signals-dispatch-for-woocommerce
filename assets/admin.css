@@ -618,3 +618,9 @@
 		font-size: 13px;
 	}
 }
+/* ---------- Required field marker ---------- */
+.tmasd-required {
+        color: var(--tmasd-red);
+        font-weight: 700;
+        margin-left: 2px;
+}

@@ -260,7 +260,8 @@ final class ApiClientService extends AbstractService implements ApiClientInterfa
 			return $this->build_error_response(
 				$response->get_error_message(),
 				$payload,
-				array( 'error' => $response->get_error_message() )
+				array( 'error' => $response->get_error_message() ),
+				0 // http_code 0 signals a network/WP_Error — always retryable.
 			);
 		}
 
@@ -273,7 +274,7 @@ final class ApiClientService extends AbstractService implements ApiClientInterfa
 		}
 
 		$error_message = $this->extract_error_message( $json );
-		return $this->build_error_response( $error_message, $payload, $json );
+		return $this->build_error_response( $error_message, $payload, $json, (int) $code );
 	}
 
 	/**
@@ -325,21 +326,24 @@ final class ApiClientService extends AbstractService implements ApiClientInterfa
 	/**
 	 * Build error response array.
 	 *
-	 * @param string               $message  Error message.
-	 * @param array<string, mixed> $payload  Request payload.
-	 * @param array<string, mixed> $response API response.
+	 * @param string               $message   Error message.
+	 * @param array<string, mixed> $payload   Request payload.
+	 * @param array<string, mixed> $response  API response.
+	 * @param int                  $http_code HTTP status code (0 = network error).
 	 * @return array<string, mixed> Error response.
 	 */
 	private function build_error_response(
 		string $message,
 		array $payload = array(),
-		array $response = array()
+		array $response = array(),
+		int $http_code = 0
 	): array {
 		return array(
-			'success'  => false,
-			'error'    => $message,
-			'payload'  => $payload,
-			'response' => $response,
+			'success'   => false,
+			'error'     => $message,
+			'http_code' => $http_code,
+			'payload'   => $payload,
+			'response'  => $response,
 		);
 	}
 }

@@ -1,0 +1,28 @@
+# -----------------------------------------------------------------------------
+# Git export-ignore — files/dirs listed here are excluded from
+# `git archive` and any release ZIP built from it.
+# They are still tracked in Git; they just don't ship to end-users.
+# -----------------------------------------------------------------------------
+
+# Dev tooling & config
+/.gitattributes           export-ignore
+/.gitignore               export-ignore
+/composer.json            export-ignore
+/composer.lock            export-ignore
+/phpcs.xml.dist           export-ignore
+/phpunit.xml              export-ignore
+/.editorconfig            export-ignore
+/.phpcs-cache             export-ignore
+
+# Internal docs / planning
+/README.md                export-ignore
+/signals-project-spec.md  export-ignore
+/docs/                    export-ignore
+
+# macOS junk (belt-and-suspenders; also excluded by .gitignore)
+**/.DS_Store              export-ignore
+**/__MACOSX               export-ignore
+**/._*                    export-ignore
+
+# Tests (not needed at runtime)
+/tests/                   export-ignore

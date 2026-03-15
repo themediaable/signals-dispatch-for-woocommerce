@@ -1,19 +1,35 @@
 # Composer
 /vendor/
 
-# IDE
+# macOS metadata (never commit these)
+.DS_Store
+__MACOSX/
+._*
+
+# IDE / Editor
 .idea/
 .vscode/
 *.swp
 *.swo
-.DS_Store
+*.sublime-project
+*.sublime-workspace
+
+# PHP tools cache
+.phpcs-cache
+.phpunit.result.cache
+phpunit.xml
 
 # Logs
 *.log
 
-# Environment
+# Environment / local config
 .env
 .env.local
+wp-config.php
+
+# Release artefacts
+*.zip
+*.tar.gz
 
 # Build
 /node_modules/
