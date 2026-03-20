@@ -308,8 +308,8 @@ final class HelpController extends AbstractAdminController {
 				'answer'   => __( 'Go to Business Settings → System Users → Create a new system user → Add WhatsApp Business Account assets → Generate Token with whatsapp_business_messaging and whatsapp_business_management permissions.', 'signals-dispatch-woocommerce' ),
 			),
 			array(
-				'question' => __( 'Can customers opt out of WhatsApp messages?', 'signals-dispatch-woocommerce' ),
-				'answer'   => __( 'Yes, the plugin tracks customer opt-in/opt-out preferences and respects them when sending messages.', 'signals-dispatch-woocommerce' ),
+				'question' => __( 'Does the plugin support customer consent management?', 'signals-dispatch-woocommerce' ),
+				'answer'   => __( 'The plugin enforces opt-in/opt-out records when they exist. Consent records can be created by the site owner or via a custom integration. When consent enforcement is enabled and a customer has opted out, messages will not be sent to that customer.', 'signals-dispatch-woocommerce' ),
 			),
 			array(
 				'question' => __( 'How many test recipients can I add?', 'signals-dispatch-woocommerce' ),

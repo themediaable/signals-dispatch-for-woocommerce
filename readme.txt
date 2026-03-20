@@ -2,7 +2,7 @@
 Contributors: themediaable
 Tags: woocommerce, whatsapp, notifications, order-notifications, business-api
 Requires at least: 6.0
-Tested up to: 6.8
+Tested up to: 6.9
 Requires PHP: 7.4
 Stable tag: 0.2.0
 License: GPLv2 or later
@@ -21,7 +21,7 @@ Signals Dispatch for WooCommerce integrates your WooCommerce store with the What
 * **Message Queue** – Reliable message delivery using WooCommerce Action Scheduler with automatic retry on failure
 * **Delivery Tracking** – Real-time message status updates via webhooks (sent, delivered, read, failed)
 * **Comprehensive Logs** – Full message history with payload and response details
-* **Customer Opt-in/Opt-out** – Respect customer preferences for WhatsApp notifications
+* **Consent Enforcement** – Honors opt-in/opt-out records when present, allowing site owners or integrations to manage customer messaging consent
 
 = Requirements =
 
@@ -95,9 +95,9 @@ Check the following:
 
 Configure your WhatsApp Business App to send webhooks to your site's endpoint. The plugin will automatically update message status as sent, delivered, read, or failed.
 
-= Can customers opt out of WhatsApp messages? =
+= Does the plugin support customer consent management? =
 
-Yes, the plugin tracks customer opt-in/opt-out preferences and respects them when sending messages.
+The plugin enforces opt-in/opt-out records when they exist. Consent records can be created by the site owner or via a custom integration. When consent enforcement is enabled and a customer has opted out, messages will not be sent to that customer.
 
 == Screenshots ==
 
