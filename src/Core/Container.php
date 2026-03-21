@@ -10,8 +10,10 @@ declare(strict_types=1);
 namespace TMASD\Signals\Dispatch\Core;
 
 use TMASD\Signals\Dispatch\Admin\AdminController;
+use TMASD\Signals\Dispatch\Admin\OrderController;
 use TMASD\Signals\Dispatch\Admin\PrivacyController;
 use TMASD\Signals\Dispatch\API\WebhookController;
+use TMASD\Signals\Dispatch\Checkout\CheckoutController;
 use TMASD\Signals\Dispatch\Contracts\ApiClientInterface;
 use TMASD\Signals\Dispatch\Contracts\PhoneNormalizerInterface;
 use TMASD\Signals\Dispatch\Contracts\TemplateMapperInterface;
@@ -122,11 +124,25 @@ final class Container {
 			$this->services['log_repo']
 		);
 
+		// Checkout opt-in (runs on frontend).
+		$this->services['checkout'] = new CheckoutController(
+			$this->services['optin_repo'],
+			$this->services['phone_normalizer']
+		);
+
+		// Order admin (manual send meta box).
+		$this->services['order_admin'] = new OrderController(
+			$this->services['queue'],
+			$this->services['mapping_repo'],
+			$this->services['log_repo']
+		);
+
 		// Admin.
 		$this->services['admin'] = new AdminController(
 			$this->services['log_repo'],
 			$this->services['mapping_repo'],
-			$this->services['api_client']
+			$this->services['api_client'],
+			$this->services['order_admin']
 		);
 
 		// Privacy.
@@ -148,10 +164,14 @@ final class Container {
 		// Boot webhook controller.
 		$this->services['webhook']->boot();
 
+		// Boot checkout opt-in (frontend).
+		$this->services['checkout']->boot();
+
 		// Boot admin in admin context.
 		if ( is_admin() ) {
 			$this->services['admin']->boot();
 			$this->services['privacy']->boot();
+			$this->services['order_admin']->boot();
 		}
 	}
 

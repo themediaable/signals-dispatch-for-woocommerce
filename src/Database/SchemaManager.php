@@ -106,6 +106,7 @@ final class SchemaManager {
 			wa_message_id varchar(191) NULL,
 			error_code varchar(191) NULL,
 			error_message text NULL,
+			trigger_source varchar(50) NOT NULL DEFAULT '',
 			created_at datetime NOT NULL,
 			updated_at datetime NOT NULL,
 			PRIMARY KEY  (id),

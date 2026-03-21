@@ -381,7 +381,7 @@ final class SetupController extends AbstractAdminController {
 	 * @return void
 	 */
 	private function render_webhook_info(): void {
-		$webhook_url = rest_url( 'signals/v1/webhook' );
+		$webhook_url = rest_url( 'tmasignals/v1/webhook' );
 
 		echo '<div class="tmasd-card">';
 		echo '<h2>' . esc_html__( 'Webhook Configuration', 'signals-dispatch-woocommerce' ) . '</h2>';

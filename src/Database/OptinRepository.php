@@ -163,6 +163,25 @@ final class OptinRepository extends AbstractRepository {
 	}
 
 	/**
+	 * Find consent record by order ID.
+	 *
+	 * @param int $order_id WooCommerce order ID.
+	 * @return array<string, mixed>|null Consent record or null.
+	 */
+	public function find_by_order_id( int $order_id ): ?array {
+		$table = $this->get_table_name();
+		$sql   = $this->wpdb->prepare(
+			// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Table name is safe internal value.
+			"SELECT * FROM {$table} WHERE order_id = %d ORDER BY id DESC LIMIT 1",
+			$order_id
+		);
+		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- SQL is prepared above.
+		$row = $this->wpdb->get_row( $sql, ARRAY_A );
+
+		return is_array( $row ) ? $row : null;
+	}
+
+	/**
 	 * Delete consent records for a given WordPress user.
 	 *
 	 * @param int $user_id WordPress user ID.

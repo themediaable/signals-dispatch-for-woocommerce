@@ -14,14 +14,7 @@
   },
   "autoload": {
     "psr-4": {
-      "TMASD\\Signals\\Dispatch\\": "src/",
-      "TMASD\\Signals\\Dispatch\\Contracts\\": "src/Contracts/",
-      "TMASD\\Signals\\Dispatch\\Core\\": "src/Core/",
-      "TMASD\\Signals\\Dispatch\\Services\\": "src/Services/",
-      "TMASD\\Signals\\Dispatch\\Database\\": "src/Database/",
-      "TMASD\\Signals\\Dispatch\\Admin\\": "src/Admin/",
-      "TMASD\\Signals\\Dispatch\\API\\": "src/API/",
-      "TMASD\\Signals\\Dispatch\\Queue\\": "src/Queue/"
+      "TMASD\\Signals\\Dispatch\\": "src/"
     }
   },
   "scripts": {

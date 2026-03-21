@@ -4,7 +4,7 @@ Tags: woocommerce, whatsapp, notifications, order-notifications, business-api
 Requires at least: 6.0
 Tested up to: 6.9
 Requires PHP: 7.4
-Stable tag: 0.2.0
+Stable tag: 1.0.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -14,14 +14,23 @@ Send WooCommerce order notifications via WhatsApp Business Cloud API with automa
 
 Signals Dispatch for WooCommerce integrates your WooCommerce store with the WhatsApp Business Cloud API, enabling automated order notification messages to customers.
 
-= Features =
+= Free Features =
 
 * **Automated Order Notifications** – Send WhatsApp messages when order status changes (processing, completed, on-hold, cancelled)
 * **Template-Based Messaging** – Use pre-approved WhatsApp message templates with dynamic order variables
-* **Message Queue** – Reliable message delivery using WooCommerce Action Scheduler with automatic retry on failure
+* **Message Queue** – Reliable message delivery using WooCommerce Action Scheduler
 * **Delivery Tracking** – Real-time message status updates via webhooks (sent, delivered, read, failed)
 * **Comprehensive Logs** – Full message history with payload and response details
-* **Consent Enforcement** – Honors opt-in/opt-out records when present, allowing site owners or integrations to manage customer messaging consent
+* **Checkout Opt-in** – WhatsApp consent checkbox on checkout (classic and block checkout)
+* **Manual Send** – Send a template message from any WooCommerce order page
+* **Consent Enforcement** – Honors opt-in/opt-out records, with built-in checkout opt-in capture
+
+= Pro Features (Coming Soon) =
+
+* **Auto Retries** – Failed messages are automatically retried via Action Scheduler
+* **Bulk Messaging** – Send messages to multiple customers at once
+* **Advanced Analytics** – Delivery rate dashboards and insights
+* **Priority Support** – Dedicated support channel
 
 = Requirements =
 
@@ -97,7 +106,11 @@ Configure your WhatsApp Business App to send webhooks to your site's endpoint. T
 
 = Does the plugin support customer consent management? =
 
-The plugin enforces opt-in/opt-out records when they exist. Consent records can be created by the site owner or via a custom integration. When consent enforcement is enabled and a customer has opted out, messages will not be sent to that customer.
+Yes. A "Send me order updates on WhatsApp" checkbox is displayed at checkout. When checked, a consent record is saved automatically. You can also enable consent enforcement in Settings to ensure messages are only sent to customers who opted in.
+
+= Can I manually send a WhatsApp message from an order? =
+
+Yes. A "Send WhatsApp Message" meta box appears on the WooCommerce order page. Choose a dispatch rule and click "Send Now" to send a template message immediately.
 
 == Screenshots ==
 
@@ -107,6 +120,15 @@ The plugin enforces opt-in/opt-out records when they exist. Consent records can 
 4. System health check
 
 == Changelog ==
+
+= 1.0.0 =
+* Added WhatsApp opt-in checkbox on checkout (classic and block checkout)
+* Added manual send meta box on WooCommerce order page
+* Added Upgrade page with free vs. pro feature comparison
+* Added upgrade promotion card on Help page
+* Updated consent FAQ to reflect built-in checkout opt-in
+* Webhook delivery status tracking confirmed as free feature
+* HPOS (High-Performance Order Storage) compatible
 
 = 0.2.0 =
 * Refactored to OOP architecture with proper abstraction and encapsulation
@@ -124,6 +146,9 @@ The plugin enforces opt-in/opt-out records when they exist. Consent records can 
 * Admin setup wizard
 
 == Upgrade Notice ==
+
+= 1.0.0 =
+New: checkout opt-in, manual send from order page, and upgrade page. Safe to update.
 
 = 0.2.0 =
 Major refactoring with improved code architecture. Database structure unchanged – safe to update.

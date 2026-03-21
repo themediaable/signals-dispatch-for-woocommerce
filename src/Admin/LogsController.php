@@ -178,7 +178,7 @@ final class LogsController extends AbstractAdminController {
 		echo '<tbody>';
 
 		if ( empty( $rows ) ) {
-			echo '<tr><td colspan="9">';
+			echo '<tr><td colspan="10">';
 			echo esc_html__( 'No logs found.', 'signals-dispatch-woocommerce' );
 			echo '</td></tr>';
 		} else {
@@ -201,6 +201,7 @@ final class LogsController extends AbstractAdminController {
 		echo '<th>' . esc_html__( 'Order', 'signals-dispatch-woocommerce' ) . '</th>';
 		echo '<th>' . esc_html__( 'Phone', 'signals-dispatch-woocommerce' ) . '</th>';
 		echo '<th>' . esc_html__( 'Template', 'signals-dispatch-woocommerce' ) . '</th>';
+		echo '<th>' . esc_html__( 'Source', 'signals-dispatch-woocommerce' ) . '</th>';
 		echo '<th>' . esc_html__( 'Status', 'signals-dispatch-woocommerce' ) . '</th>';
 		echo '<th>' . esc_html__( 'Error', 'signals-dispatch-woocommerce' ) . '</th>';
 		echo '<th>' . esc_html__( 'Message ID', 'signals-dispatch-woocommerce' ) . '</th>';
@@ -226,10 +227,12 @@ final class LogsController extends AbstractAdminController {
 		echo '<td>' . esc_html( $order_display ) . '</td>';
 		echo '<td>' . esc_html( (string) $row['phone_e164'] ) . '</td>';
 		echo '<td>' . esc_html( (string) $row['template_name'] ) . '</td>';
+		$source_display = ! empty( $row['trigger_source'] ) ? str_replace( '_', ' ', (string) $row['trigger_source'] ) : '-';
+		echo '<td>' . esc_html( ucwords( $source_display ) ) . '</td>';
 		$status_class = 'tmasd-badge tmasd-badge--' . sanitize_html_class( (string) $row['status'] );
 		echo '<td><span class="' . esc_attr( $status_class ) . '">' . esc_html( (string) $row['status'] ) . '</span></td>';
 		echo '<td class="tmasd-error-cell">' . esc_html( $error_display ) . '</td>';
-		echo '<td>' . esc_html( $wa_id_display ) . '</td>';
+		echo '<td class="tmasd-msgid-cell">' . esc_html( $wa_id_display ) . '</td>';
 		echo '<td>' . esc_html( (string) $row['created_at'] ) . '</td>';
 		echo '<td class="tmasd-row-actions">';
 		$delete_url = wp_nonce_url(
@@ -240,6 +243,15 @@ final class LogsController extends AbstractAdminController {
 		echo '<a class="tmasd-action-view" href="#" onclick="document.getElementById(\'' . esc_attr( $row_id ) . '\').style.display = document.getElementById(\'' . esc_attr( $row_id ) . '\').style.display === \'none\' ? \'table-row\' : \'none\'; return false;">';
 		echo esc_html__( 'View', 'signals-dispatch-woocommerce' );
 		echo '</a>';
+
+		// Refresh Status link — only for rows that have a wa_message_id (sent messages).
+		if ( ! empty( $row['wa_message_id'] ) ) {
+			echo '<span class="tmasd-separator">|</span>';
+			echo '<a class="tmasd-action-refresh" href="#" data-log-id="' . (int) $row['id'] . '" onclick="tmasdRefreshStatus(this,' . (int) $row['id'] . ');return false;">';
+			echo esc_html__( 'Refresh Status', 'signals-dispatch-woocommerce' );
+			echo '</a>';
+		}
+
 		echo '<span class="tmasd-separator">|</span>';
 		echo '<a class="tmasd-action-delete" href="' . esc_url( $delete_url ) . '" onclick="return confirm(\'' . esc_js( __( 'Delete this log entry?', 'signals-dispatch-woocommerce' ) ) . '\');">';
 		echo esc_html__( 'Delete', 'signals-dispatch-woocommerce' );
@@ -282,7 +294,7 @@ final class LogsController extends AbstractAdminController {
 		$response = $this->format_json( $row['response_json'] ?? '{}' );
 
 		echo '<tr id="' . esc_attr( $row_id ) . '" class="tmasd-detail-row" style="display:none;">';
-		echo '<td colspan="9">';
+		echo '<td colspan="10">';
 
 		if ( ! empty( $row['error_code'] ) ) {
 			echo '<span class="tmasd-error-badge">';
@@ -363,5 +375,86 @@ final class LogsController extends AbstractAdminController {
 		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- paginate_links returns safe HTML.
 		echo $pagination;
 		echo '</div></div>';
+	}
+
+	/**
+	 * Handle AJAX refresh status request.
+	 *
+	 * Reads the current status from the database and returns it.
+	 *
+	 * @return void
+	 */
+	public function handle_refresh_status(): void {
+		if ( ! current_user_can( \TMASD_CAPABILITY ) ) {
+			wp_send_json_error( array( 'message' => __( 'Permission denied.', 'signals-dispatch-woocommerce' ) ), 403 );
+		}
+
+		$log_id = (int) ( $_POST['log_id'] ?? 0 );
+
+		if ( $log_id <= 0 ) {
+			wp_send_json_error( array( 'message' => __( 'Invalid log ID.', 'signals-dispatch-woocommerce' ) ) );
+		}
+
+		check_ajax_referer( 'tmasd_refresh_status' );
+
+		$row = $this->log_repo->find( $log_id );
+
+		if ( null === $row ) {
+			wp_send_json_error( array( 'message' => __( 'Log entry not found.', 'signals-dispatch-woocommerce' ) ) );
+		}
+
+		wp_send_json_success( array( 'status' => $row['status'] ) );
+	}
+
+	/**
+	 * Render inline JS for the refresh status button.
+	 *
+	 * @return void
+	 */
+	public function render_refresh_script(): void {
+		$screen = get_current_screen();
+		if ( ! $screen || false === strpos( $screen->id, 'tmasd-logs' ) ) {
+			return;
+		}
+		?>
+		<script>
+		function tmasdRefreshStatus(link, logId) {
+			var origText = link.textContent;
+			link.textContent = <?php echo wp_json_encode( __( 'Refreshing…', 'signals-dispatch-woocommerce' ) ); ?>;
+			link.style.pointerEvents = 'none';
+			var formData = new FormData();
+			formData.append('action', 'tmasd_refresh_status');
+			formData.append('log_id', logId);
+			formData.append('_ajax_nonce', <?php echo wp_json_encode( wp_create_nonce( 'tmasd_refresh_status' ) ); ?>);
+			fetch(ajaxurl, { method: 'POST', body: formData })
+				.then(function(r){ return r.json(); })
+				.then(function(data){
+					if (data.success) {
+						var row = link.closest('tr');
+						var badge = row.querySelector('.tmasd-badge');
+						if (badge) {
+							var oldStatus = badge.textContent.trim();
+							badge.textContent = data.data.status;
+							badge.className = 'tmasd-badge tmasd-badge--' + data.data.status;
+							if (oldStatus !== data.data.status) {
+								link.textContent = <?php echo wp_json_encode( __( 'Updated!', 'signals-dispatch-woocommerce' ) ); ?>;
+							} else {
+								link.textContent = <?php echo wp_json_encode( __( 'No change', 'signals-dispatch-woocommerce' ) ); ?>;
+							}
+						}
+					} else {
+						link.textContent = <?php echo wp_json_encode( __( 'Error', 'signals-dispatch-woocommerce' ) ); ?>;
+					}
+					link.style.pointerEvents = '';
+					setTimeout(function(){ link.textContent = origText; }, 2000);
+				})
+				.catch(function(){
+					link.textContent = <?php echo wp_json_encode( __( 'Error', 'signals-dispatch-woocommerce' ) ); ?>;
+					link.style.pointerEvents = '';
+					setTimeout(function(){ link.textContent = origText; }, 2000);
+				});
+		}
+		</script>
+		<?php
 	}
 }

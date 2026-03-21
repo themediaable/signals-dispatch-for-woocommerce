@@ -33,7 +33,7 @@ final class WebhookController extends AbstractService {
 	 *
 	 * @var string
 	 */
-	private const API_NAMESPACE = 'signals/v1';
+	private const API_NAMESPACE = 'tmasignals/v1';
 
 	/**
 	 * REST API route.
@@ -157,21 +157,30 @@ final class WebhookController extends AbstractService {
 	/**
 	 * Handle incoming webhook (POST request).
 	 *
+	 * Webhook delivery status tracking (sent, delivered, read, failed) is
+	 * a free feature — no plan or tier gating is applied here.
+	 *
 	 * @param WP_REST_Request $request REST request object.
 	 * @return WP_REST_Response Response object.
 	 */
 	public function handle_webhook( WP_REST_Request $request ): WP_REST_Response {
+		error_log( '[Signals Webhook] POST received. Headers: X-Hub-Signature-256=' . ( $request->get_header( 'X-Hub-Signature-256' ) ?? 'MISSING' ) );
+
 		if ( ! $this->verify_signature( $request ) ) {
+			error_log( '[Signals Webhook] Signature verification FAILED.' );
 			return new WP_REST_Response( 'Unauthorized', 401 );
 		}
 
 		$body = $request->get_json_params();
+		error_log( '[Signals Webhook] Body: ' . wp_json_encode( $body ) );
 
 		if ( ! $this->is_valid_webhook_body( $body ) ) {
+			error_log( '[Signals Webhook] Invalid body structure — returning OK.' );
 			return new WP_REST_Response( 'OK', 200 );
 		}
 
 		$this->process_webhook_entries( $body );
+		error_log( '[Signals Webhook] Processed successfully.' );
 
 		return new WP_REST_Response( 'OK', 200 );
 	}
@@ -187,12 +196,15 @@ final class WebhookController extends AbstractService {
 
 		// Fail closed: reject all POST requests when app secret is not configured.
 		if ( '' === $app_secret ) {
+			error_log( '[Signals Webhook] App secret is empty — rejecting.' );
 			return false;
 		}
 
 		$signature_header = $request->get_header( 'X-Hub-Signature-256' );
+		error_log( '[Signals Webhook] Signature header: ' . ( $signature_header ?? 'NULL' ) );
 
 		if ( empty( $signature_header ) ) {
+			error_log( '[Signals Webhook] No signature header — rejecting.' );
 			return false;
 		}
 
@@ -200,7 +212,10 @@ final class WebhookController extends AbstractService {
 		$expected_hash = hash_hmac( 'sha256', $raw_body, $app_secret );
 		$expected_sig  = 'sha256=' . $expected_hash;
 
-		return hash_equals( $expected_sig, $signature_header );
+		$match = hash_equals( $expected_sig, $signature_header );
+		error_log( '[Signals Webhook] Signature match: ' . ( $match ? 'YES' : 'NO' ) . ' (expected=' . $expected_sig . ')' );
+
+		return $match;
 	}
 
 	/**
@@ -281,13 +296,16 @@ final class WebhookController extends AbstractService {
 		$new_status    = $this->map_whatsapp_status( (string) $status['status'] );
 
 		if ( '' === $new_status ) {
+			error_log( '[Signals Webhook] Unknown status: ' . $status['status'] . ' for message ' . $wa_message_id );
 			return;
 		}
 
-		$this->log_repo->update_by_message_id(
+		error_log( '[Signals Webhook] Updating message ' . $wa_message_id . ' to status: ' . $new_status );
+		$updated = $this->log_repo->update_by_message_id(
 			$wa_message_id,
 			array( 'status' => $new_status )
 		);
+		error_log( '[Signals Webhook] Update result: ' . ( $updated ? 'success' : 'no matching row' ) );
 	}
 
 	/**

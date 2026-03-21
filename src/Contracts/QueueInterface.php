@@ -45,9 +45,9 @@ interface QueueInterface {
 	 * @param int    $order_id  Order ID.
 	 * @param string $event_key Event key.
 	 * @param int    $attempts  Retry attempt count.
-	 * @return void
+	 * @return bool True if the job was enqueued, false otherwise.
 	 */
-	public function schedule_send( int $order_id, string $event_key, int $attempts = 0 ): void;
+	public function schedule_send( int $order_id, string $event_key, int $attempts = 0 ): bool;
 
 	/**
 	 * Process the send template message action.

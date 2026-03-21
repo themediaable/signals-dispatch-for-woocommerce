@@ -237,6 +237,15 @@
 	border-bottom: 1px solid #f0f0f0;
 }
 
+.tmasd-admin .tmasd-msgid-cell {
+	max-width: 120px;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	font-size: 12px;
+	font-family: monospace;
+}
+
 .tmasd-admin table.widefat tbody tr:last-child td {
 	border-bottom: none;
 }
@@ -261,11 +270,19 @@
 	white-space: nowrap;
 }
 
-.tmasd-badge--sent,
-.tmasd-badge--delivered,
-.tmasd-badge--read {
+.tmasd-badge--sent {
+	background: #dbeafe;
+	color: #1d4ed8;
+}
+
+.tmasd-badge--delivered {
 	background: var(--tmasd-green-light);
 	color: var(--tmasd-green-dark);
+}
+
+.tmasd-badge--read {
+	background: #e0e7ff;
+	color: #4338ca;
 }
 
 .tmasd-badge--failed {
@@ -623,4 +640,340 @@
         color: var(--tmasd-red);
         font-weight: 700;
         margin-left: 2px;
+
+/* ==========================================================================
+   Upgrade Page
+   ========================================================================== */
+
+/* ---------- Upgrade Hero ---------- */
+.tmasd-upgrade-hero {
+	background: linear-gradient(135deg, var(--tmasd-green-dark), var(--tmasd-green));
+	color: #fff;
+	padding: 40px;
+	border-radius: var(--tmasd-radius);
+	margin-bottom: 24px;
+	text-align: center;
+}
+
+.tmasd-upgrade-hero h2 {
+	font-size: 28px;
+	font-weight: 700;
+	margin: 0 0 8px;
+	color: #fff;
+}
+
+.tmasd-upgrade-hero p {
+	font-size: 16px;
+	opacity: 0.9;
+	margin: 0;
+}
+
+/* ---------- Coming Soon Badge ---------- */
+.tmasd-coming-soon-badge {
+	display: inline-block;
+	background: rgba(255, 255, 255, 0.25);
+	color: #fff;
+	font-size: 12px;
+	font-weight: 700;
+	text-transform: uppercase;
+	letter-spacing: 1.5px;
+	padding: 5px 16px;
+	border-radius: 20px;
+	margin-bottom: 12px;
+}
+
+/* ---------- Coming Soon Feature Cards ---------- */
+.tmasd-coming-grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+	gap: 20px;
+}
+
+.tmasd-coming-card {
+	text-align: center;
+	padding: 28px 20px;
+}
+
+.tmasd-coming-icon {
+	font-size: 32px;
+	width: 56px;
+	height: 56px;
+	line-height: 56px;
+	display: inline-block;
+	background: linear-gradient(135deg, #f0faf4, #e8f5e9);
+	border-radius: 50%;
+	color: var(--tmasd-green);
+	margin-bottom: 12px;
+}
+
+/* ---------- Comparison Table ---------- */
+.tmasd-comparison-table {
+	width: 100%;
+	border-collapse: collapse;
+	background: var(--tmasd-surface);
+	border-radius: var(--tmasd-radius);
+	box-shadow: var(--tmasd-shadow);
+	margin-bottom: 24px;
+	overflow: hidden;
+}
+
+.tmasd-comparison-table th,
+.tmasd-comparison-table td {
+	padding: 14px 20px;
+	text-align: left;
+	border-bottom: 1px solid var(--tmasd-border);
+}
+
+.tmasd-comparison-table thead th {
+	background: #f8f9fa;
+	font-weight: 600;
+	font-size: 14px;
+	color: var(--tmasd-text);
+}
+
+.tmasd-comparison-table thead th:not(:first-child) {
+	text-align: center;
+	min-width: 120px;
+}
+
+.tmasd-comparison-table td:not(:first-child) {
+	text-align: center;
+}
+
+.tmasd-comparison-table tbody tr:hover {
+	background: #f8fdf8;
+}
+
+.tmasd-comparison-table tbody tr:last-child td {
+	border-bottom: none;
+}
+
+/* ---------- Feature Cards Grid ---------- */
+.tmasd-upgrade-features {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+	gap: 20px;
+	margin-bottom: 24px;
+}
+
+.tmasd-feature-card {
+	background: var(--tmasd-surface);
+	border-radius: var(--tmasd-radius);
+	box-shadow: var(--tmasd-shadow);
+	padding: 24px;
+	transition: box-shadow 0.2s;
+}
+
+.tmasd-feature-card:hover {
+	box-shadow: var(--tmasd-shadow-hover);
+}
+
+.tmasd-feature-card h3 {
+	font-size: 16px;
+	font-weight: 600;
+	margin: 0 0 8px;
+	color: var(--tmasd-text);
+}
+
+.tmasd-feature-card p {
+	font-size: 14px;
+	color: var(--tmasd-text-muted);
+	margin: 0;
+	line-height: 1.5;
+}
+
+/* ---------- CTA Footer ---------- */
+.tmasd-upgrade-cta,
+.tmasd-upgrade-cta-footer {
+	background: var(--tmasd-surface);
+	border-radius: var(--tmasd-radius);
+	box-shadow: var(--tmasd-shadow);
+	padding: 32px;
+	text-align: center;
+	margin-bottom: 24px;
+}
+
+.tmasd-upgrade-cta h2,
+.tmasd-upgrade-cta-footer h2 {
+	font-size: 22px;
+	font-weight: 700;
+	margin: 0 0 8px;
+}
+
+.tmasd-upgrade-cta p,
+.tmasd-upgrade-cta-footer p {
+	font-size: 14px;
+	color: var(--tmasd-text-muted);
+	margin: 0 0 20px;
+}
+
+.tmasd-upgrade-cta .button-hero,
+.tmasd-upgrade-cta-footer .button-hero {
+	font-size: 16px;
+	padding: 10px 32px;
+	height: auto;
+	line-height: 1.5;
+	border-radius: 6px;
+}
+
+.tmasd-upgrade-cta .button-primary.button-hero,
+.tmasd-upgrade-cta-footer .button-primary.button-hero {
+	background: var(--tmasd-green);
+	border-color: var(--tmasd-green-dark);
+}
+
+.tmasd-upgrade-cta .button-primary.button-hero:hover,
+.tmasd-upgrade-cta-footer .button-primary.button-hero:hover {
+	background: var(--tmasd-green-dark);
+}
+
+.tmasd-upgrade-cta .tmasd-cta-buttons,
+.tmasd-upgrade-cta-footer .tmasd-cta-buttons {
+	display: flex;
+	gap: 12px;
+	justify-content: center;
+	flex-wrap: wrap;
+}
+
+/* ---------- Upgrade FAQ ---------- */
+.tmasd-upgrade-faq {
+	margin-bottom: 24px;
+}
+
+.tmasd-upgrade-faq details {
+	background: var(--tmasd-surface);
+	border-radius: var(--tmasd-radius);
+	box-shadow: var(--tmasd-shadow);
+	margin-bottom: 8px;
+	overflow: hidden;
+}
+
+.tmasd-upgrade-faq summary {
+	padding: 16px 20px;
+	font-weight: 600;
+	cursor: pointer;
+	list-style: none;
+	display: flex;
+	align-items: center;
+	gap: 8px;
+}
+
+.tmasd-upgrade-faq summary::-webkit-details-marker {
+	display: none;
+}
+
+.tmasd-upgrade-faq summary::before {
+	content: "\25B6";
+	font-size: 10px;
+	transition: transform 0.2s;
+}
+
+.tmasd-upgrade-faq details[open] summary::before {
+	transform: rotate(90deg);
+}
+
+.tmasd-upgrade-faq details p {
+	padding: 0 20px 16px;
+	margin: 0;
+	color: var(--tmasd-text-muted);
+	line-height: 1.6;
+}
+
+/* ==========================================================================
+   Help Page – Upgrade Card
+   ========================================================================== */
+.tmasd-upgrade-card {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 20px;
+	background: linear-gradient(135deg, #f0faf4, #e8f5e9);
+	border: 1px solid var(--tmasd-green);
+	border-radius: var(--tmasd-radius);
+	padding: 16px 24px;
+	margin-bottom: 20px;
+}
+
+.tmasd-upgrade-card h3 {
+	font-size: 15px;
+	font-weight: 600;
+	margin: 0 0 4px;
+	color: var(--tmasd-text);
+}
+
+.tmasd-upgrade-card p {
+	font-size: 13px;
+	color: var(--tmasd-text-muted);
+	margin: 0;
+}
+
+.tmasd-upgrade-card__action .button-primary {
+	background: var(--tmasd-green);
+	border-color: var(--tmasd-green-dark);
+	white-space: nowrap;
+}
+
+.tmasd-upgrade-card__action .button-primary:hover {
+	background: var(--tmasd-green-dark);
+}
+
+/* ==========================================================================
+   Order Page – Manual Send Meta Box
+   ========================================================================== */
+#tmasd-manual-send .inside {
+	padding: 12px;
+}
+
+#tmasd-manual-send select {
+	width: 100%;
+	margin-bottom: 10px;
+}
+
+#tmasd-manual-send .button {
+	width: 100%;
+	text-align: center;
+}
+
+#tmasd-manual-send .tmasd-metabox-notice {
+	background: #f0faf4;
+	border-left: 3px solid var(--tmasd-green);
+	padding: 8px 12px;
+	margin-bottom: 10px;
+	font-size: 13px;
+	border-radius: 0 4px 4px 0;
+}
+
+#tmasd-manual-send .tmasd-metabox-notice.error {
+	background: #fef2f2;
+	border-left-color: var(--tmasd-red);
+}
+
+/* ---------- Responsive – Upgrade ---------- */
+@media screen and (max-width: 782px) {
+	.tmasd-upgrade-hero {
+		padding: 24px;
+	}
+
+	.tmasd-upgrade-hero h2 {
+		font-size: 22px;
+	}
+
+	.tmasd-upgrade-card {
+		flex-direction: column;
+		align-items: flex-start;
+	}
+
+	.tmasd-upgrade-features {
+		grid-template-columns: 1fr;
+	}
+
+	.tmasd-comparison-table {
+		font-size: 13px;
+	}
+
+	.tmasd-comparison-table th,
+	.tmasd-comparison-table td {
+		padding: 10px 12px;
+	}
+}
 }

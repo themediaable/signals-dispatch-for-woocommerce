@@ -12,6 +12,7 @@ namespace TMASD\Signals\Dispatch\Admin;
 use TMASD\Signals\Dispatch\Contracts\ApiClientInterface;
 use TMASD\Signals\Dispatch\Database\LogRepository;
 use TMASD\Signals\Dispatch\Database\MappingRepository;
+use TMASD\Signals\Dispatch\Queue\QueueService;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -84,16 +85,32 @@ final class AdminController extends AbstractAdminController {
 	private HelpController $help_controller;
 
 	/**
+	 * Upgrade page controller.
+	 *
+	 * @var UpgradeController
+	 */
+	private UpgradeController $upgrade_controller;
+
+	/**
+	 * Order page controller.
+	 *
+	 * @var OrderController
+	 */
+	private OrderController $order_controller;
+
+	/**
 	 * Constructor.
 	 *
-	 * @param LogRepository      $log_repo     Log repository.
-	 * @param MappingRepository  $mapping_repo Mapping repository.
-	 * @param ApiClientInterface $api_client   API client.
+	 * @param LogRepository      $log_repo         Log repository.
+	 * @param MappingRepository  $mapping_repo     Mapping repository.
+	 * @param ApiClientInterface $api_client       API client.
+	 * @param OrderController    $order_controller Order controller.
 	 */
 	public function __construct(
 		LogRepository $log_repo,
 		MappingRepository $mapping_repo,
-		ApiClientInterface $api_client
+		ApiClientInterface $api_client,
+		OrderController $order_controller
 	) {
 		$this->log_repo     = $log_repo;
 		$this->mapping_repo = $mapping_repo;
@@ -104,6 +121,8 @@ final class AdminController extends AbstractAdminController {
 		$this->logs_controller     = new LogsController( $log_repo );
 		$this->health_controller   = new HealthController( $log_repo );
 		$this->help_controller     = new HelpController();
+		$this->upgrade_controller  = new UpgradeController();
+		$this->order_controller    = $order_controller;
 	}
 
 	/**
@@ -121,6 +140,11 @@ final class AdminController extends AbstractAdminController {
 		add_action( 'admin_post_tmasd_delete_mapping', array( $this->dispatch_controller, 'handle_delete' ) );
 		add_action( 'admin_post_tmasd_delete_log', array( $this->logs_controller, 'handle_delete' ) );
 		add_action( 'admin_post_tmasd_delete_all_logs', array( $this->logs_controller, 'handle_delete_all' ) );
+		add_action( 'wp_ajax_tmasd_refresh_status', array( $this->logs_controller, 'handle_refresh_status' ) );
+		add_action( 'admin_footer', array( $this->logs_controller, 'render_refresh_script' ) );
+		add_action( 'wp_ajax_tmasd_manual_send', array( $this->order_controller, 'handle_manual_send' ) );
+		error_log( '[Signals Debug] wp_ajax_tmasd_manual_send hook registered.' );
+		add_action( 'admin_notices', array( $this, 'render_upgrade_notice' ) );
 	}
 
 	/**
@@ -183,6 +207,15 @@ final class AdminController extends AbstractAdminController {
 			$cap,
 			'tmasd-help',
 			array( $this->help_controller, 'render' )
+		);
+
+		add_submenu_page(
+			'tmasd-setup',
+			__( 'Pro — Coming Soon', 'signals-dispatch-woocommerce' ),
+			__( 'Coming Soon ★', 'signals-dispatch-woocommerce' ),
+			$cap,
+			'tmasd-upgrade',
+			array( $this->upgrade_controller, 'render' )
 		);
 	}
 
@@ -247,5 +280,36 @@ final class AdminController extends AbstractAdminController {
 	 */
 	public function render(): void {
 		// Main controller delegates to sub-controllers.
+	}
+
+	/**
+	 * Render a dismissible upgrade notice on plugin admin pages.
+	 *
+	 * @return void
+	 */
+	public function render_upgrade_notice(): void {
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Display only.
+		$page = isset( $_GET['page'] ) ? sanitize_key( $_GET['page'] ) : '';
+
+		if ( strpos( $page, 'tmasd' ) === false ) {
+			return;
+		}
+
+		// Don't show on the upgrade page itself.
+		if ( 'tmasd-upgrade' === $page ) {
+			return;
+		}
+
+		echo '<div class="notice notice-info tmasd-notice is-dismissible" data-dismiss-key="tmasd-upgrade-notice">';
+		echo '<p>';
+		printf(
+			/* translators: 1: opening anchor tag, 2: closing anchor tag */
+			esc_html__( 'Signals Pro is coming soon! %1$sSee what\'s planned%2$s — unlimited dispatch rules, automatic retries, and priority support.', 'signals-dispatch-woocommerce' ),
+			'<a href="' . esc_url( admin_url( 'admin.php?page=tmasd-upgrade' ) ) . '"><strong>',
+			'</strong></a>'
+		);
+		echo '</p>';
+		echo '<button class="tmasd-notice-dismiss">&times;</button>';
+		echo '</div>';
 	}
 }

@@ -39,6 +39,7 @@ final class HelpController extends AbstractAdminController {
 		$this->assert_access();
 
 		$this->render_page_header();
+		$this->render_upgrade_card();
 		$this->render_tabs();
 		$this->render_tab_content();
 
@@ -57,6 +58,28 @@ final class HelpController extends AbstractAdminController {
 		$valid_tabs = array( 'setup', 'templates', 'faq', 'troubleshooting' );
 
 		return in_array( $tab, $valid_tabs, true ) ? $tab : 'setup';
+	}
+
+	/**
+	 * Render upgrade promotion card.
+	 *
+	 * @return void
+	 */
+	private function render_upgrade_card(): void {
+		$upgrade_page = admin_url( 'admin.php?page=tmasd-upgrade' );
+		?>
+		<div class="tmasd-upgrade-card">
+			<div class="tmasd-upgrade-card__body">
+				<h3><?php esc_html_e( 'Want more automation?', 'signals-dispatch-woocommerce' ); ?></h3>
+				<p><?php esc_html_e( 'Auto-retries, bulk messaging, advanced analytics, and priority support are available with Signals Pro.', 'signals-dispatch-woocommerce' ); ?></p>
+			</div>
+			<div class="tmasd-upgrade-card__action">
+				<a href="<?php echo esc_url( $upgrade_page ); ?>" class="button button-primary">
+					<?php esc_html_e( 'View Pro Features', 'signals-dispatch-woocommerce' ); ?>
+				</a>
+			</div>
+		</div>
+		<?php
 	}
 
 	/**
@@ -212,7 +235,7 @@ final class HelpController extends AbstractAdminController {
 				<li><?php esc_html_e( 'Click "Edit" on the Webhook section', 'signals-dispatch-woocommerce' ); ?></li>
 				<li>
 					<?php esc_html_e( 'Enter your callback URL:', 'signals-dispatch-woocommerce' ); ?>
-					<code><?php echo esc_html( home_url( '/wp-json/signals/v1/webhook' ) ); ?></code>
+					<code><?php echo esc_html( home_url( '/wp-json/tmasignals/v1/webhook' ) ); ?></code>
 				</li>
 				<li><?php esc_html_e( 'Enter the Verify Token you configured in this plugin', 'signals-dispatch-woocommerce' ); ?></li>
 				<li><?php esc_html_e( 'Click "Verify and Save"', 'signals-dispatch-woocommerce' ); ?></li>
@@ -309,7 +332,7 @@ final class HelpController extends AbstractAdminController {
 			),
 			array(
 				'question' => __( 'Does the plugin support customer consent management?', 'signals-dispatch-woocommerce' ),
-				'answer'   => __( 'The plugin enforces opt-in/opt-out records when they exist. Consent records can be created by the site owner or via a custom integration. When consent enforcement is enabled and a customer has opted out, messages will not be sent to that customer.', 'signals-dispatch-woocommerce' ),
+				'answer'   => __( 'Yes. A "Send me order updates on WhatsApp" checkbox is displayed at checkout. When checked, a consent record is saved automatically. You can also enable consent enforcement in Settings to ensure messages are only sent to customers who opted in.', 'signals-dispatch-woocommerce' ),
 			),
 			array(
 				'question' => __( 'How many test recipients can I add?', 'signals-dispatch-woocommerce' ),
@@ -325,7 +348,7 @@ final class HelpController extends AbstractAdminController {
 			),
 			array(
 				'question' => __( 'What happens if a message fails?', 'signals-dispatch-woocommerce' ),
-				'answer'   => __( 'Failed messages are automatically retried up to 3 times using WooCommerce Action Scheduler. You can view failed messages and their error details in the Logs page.', 'signals-dispatch-woocommerce' ),
+				'answer'   => __( 'Failed messages are logged with error details on the Logs page. With Signals Pro, failed messages are automatically retried using WooCommerce Action Scheduler.', 'signals-dispatch-woocommerce' ),
 			),
 			array(
 				'question' => __( 'Do I need WooCommerce installed?', 'signals-dispatch-woocommerce' ),

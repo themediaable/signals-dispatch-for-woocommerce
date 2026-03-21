@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Signals Dispatch for WooCommerce
  * Description: Sends WooCommerce order update notifications via templated utility messages with logs, queueing, and webhooks.
- * Version: 0.2.0
+ * Version: 1.0.0
  * Author: TheMediaAble
  * License: GPLv2 or later
  * Text Domain: signals-dispatch-woocommerce
@@ -17,7 +17,7 @@ declare(strict_types=1);
 defined( 'ABSPATH' ) || exit;
 
 // Define plugin constants in global namespace.
-define( 'TMASD_VERSION', '0.2.0' );
+define( 'TMASD_VERSION', '1.0.0' );
 define( 'TMASD_PLUGIN_FILE', __FILE__ );
 define( 'TMASD_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 define( 'TMASD_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
@@ -30,6 +30,16 @@ define( 'TMASD_OPTION_APP_SECRET', 'tmasd_app_secret' );
 define( 'TMASD_OPTION_REQUIRE_CONSENT', 'tmasd_require_consent' );
 define( 'TMASD_ACTION_SEND_TEMPLATE', 'tmasd_send_template_message' );
 define( 'TMASD_CAPABILITY', 'manage_woocommerce' );
+define( 'TMASD_UPGRADE_URL', 'https://themediaablesignals.com/pricing' );
+
+/**
+ * Get the upgrade URL, filterable for future payment integration.
+ *
+ * @return string Upgrade URL.
+ */
+function tmasd_get_upgrade_url(): string {
+	return (string) apply_filters( 'tmasd_upgrade_url', TMASD_UPGRADE_URL );
+}
 
 // Load Composer autoloader.
 $tmasd_autoload = TMASD_PLUGIN_DIR . 'vendor/autoload.php';
