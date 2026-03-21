@@ -71,7 +71,7 @@ final class HealthController extends AbstractAdminController {
 	private function render_page_header(): void {
 		echo '<div class="wrap tmasd-admin">';
 		echo '<h1 class="wp-heading-inline">';
-		echo esc_html__( 'Health Check', 'signals-dispatch-woocommerce' );
+		echo esc_html__( 'Health Check', 'signals-dispatch-for-woocommerce' );
 		echo '</h1>';
 		echo '<hr class="wp-header-end" />';
 	}
@@ -99,11 +99,11 @@ final class HealthController extends AbstractAdminController {
 
 		$class = $configured ? 'tmasd-card tmasd-card--ok' : 'tmasd-card tmasd-card--error';
 		echo '<div class="' . esc_attr( $class ) . '">';
-		echo '<h2>' . esc_html__( 'Configuration', 'signals-dispatch-woocommerce' ) . '</h2>';
+		echo '<h2>' . esc_html__( 'Configuration', 'signals-dispatch-for-woocommerce' ) . '</h2>';
 		echo '<p>';
 		echo $configured
-			? esc_html__( 'Configured', 'signals-dispatch-woocommerce' )
-			: esc_html__( 'Missing credentials', 'signals-dispatch-woocommerce' );
+			? esc_html__( 'Configured', 'signals-dispatch-for-woocommerce' )
+			: esc_html__( 'Missing credentials', 'signals-dispatch-for-woocommerce' );
 		echo '</p>';
 		echo '</div>';
 	}
@@ -131,11 +131,11 @@ final class HealthController extends AbstractAdminController {
 
 		$class = $has_token ? 'tmasd-card tmasd-card--ok' : 'tmasd-card tmasd-card--error';
 		echo '<div class="' . esc_attr( $class ) . '">';
-		echo '<h2>' . esc_html__( 'Webhook Token', 'signals-dispatch-woocommerce' ) . '</h2>';
+		echo '<h2>' . esc_html__( 'Webhook Token', 'signals-dispatch-for-woocommerce' ) . '</h2>';
 		echo '<p>';
 		echo $has_token
-			? esc_html__( 'Set', 'signals-dispatch-woocommerce' )
-			: esc_html__( 'Missing', 'signals-dispatch-woocommerce' );
+			? esc_html__( 'Set', 'signals-dispatch-for-woocommerce' )
+			: esc_html__( 'Missing', 'signals-dispatch-for-woocommerce' );
 		echo '</p>';
 		echo '</div>';
 	}
@@ -150,11 +150,11 @@ final class HealthController extends AbstractAdminController {
 
 		$class = $available ? 'tmasd-card tmasd-card--ok' : 'tmasd-card tmasd-card--error';
 		echo '<div class="' . esc_attr( $class ) . '">';
-		echo '<h2>' . esc_html__( 'Action Scheduler', 'signals-dispatch-woocommerce' ) . '</h2>';
+		echo '<h2>' . esc_html__( 'Action Scheduler', 'signals-dispatch-for-woocommerce' ) . '</h2>';
 		echo '<p>';
 		echo $available
-			? esc_html__( 'Available', 'signals-dispatch-woocommerce' )
-			: esc_html__( 'Unavailable', 'signals-dispatch-woocommerce' );
+			? esc_html__( 'Available', 'signals-dispatch-for-woocommerce' )
+			: esc_html__( 'Unavailable', 'signals-dispatch-for-woocommerce' );
 		echo '</p>';
 		echo '</div>';
 	}
@@ -177,17 +177,17 @@ final class HealthController extends AbstractAdminController {
 	private function render_statistics(): void {
 		$counts = $this->log_repo->get_status_counts_last_24h();
 
-		echo '<h2>' . esc_html__( 'Last 24 Hours', 'signals-dispatch-woocommerce' ) . '</h2>';
+		echo '<h2>' . esc_html__( 'Last 24 Hours', 'signals-dispatch-for-woocommerce' ) . '</h2>';
 		echo '<table class="widefat striped">';
 		echo '<thead><tr>';
-		echo '<th>' . esc_html__( 'Status', 'signals-dispatch-woocommerce' ) . '</th>';
-		echo '<th>' . esc_html__( 'Count', 'signals-dispatch-woocommerce' ) . '</th>';
+		echo '<th>' . esc_html__( 'Status', 'signals-dispatch-for-woocommerce' ) . '</th>';
+		echo '<th>' . esc_html__( 'Count', 'signals-dispatch-for-woocommerce' ) . '</th>';
 		echo '</tr></thead>';
 		echo '<tbody>';
 
 		if ( empty( $counts ) ) {
 			echo '<tr><td colspan="2">';
-			echo esc_html__( 'No log entries.', 'signals-dispatch-woocommerce' );
+			echo esc_html__( 'No log entries.', 'signals-dispatch-for-woocommerce' );
 			echo '</td></tr>';
 		} else {
 			foreach ( $counts as $status => $count ) {

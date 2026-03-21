@@ -47,7 +47,7 @@ final class UpgradeController extends AbstractAdminController {
 
 		echo '<div class="wrap tmasd-admin tmasd-upgrade-page">';
 		echo '<h1 class="wp-heading-inline">';
-		echo esc_html__( 'Pro Features — Coming Soon', 'signals-dispatch-woocommerce' );
+		echo esc_html__( 'Pro Features — Coming Soon', 'signals-dispatch-for-woocommerce' );
 		echo '</h1>';
 		echo '<hr class="wp-header-end" />';
 
@@ -69,12 +69,12 @@ final class UpgradeController extends AbstractAdminController {
 		$mailto = $this->get_mailto_url();
 		?>
 		<div class="tmasd-panel tmasd-upgrade-hero">
-			<span class="tmasd-coming-soon-badge"><?php esc_html_e( 'Coming Soon', 'signals-dispatch-woocommerce' ); ?></span>
-			<h2><?php esc_html_e( 'Signals Pro is on the Way', 'signals-dispatch-woocommerce' ); ?></h2>
-			<p><?php esc_html_e( 'We\'re building powerful new features — unlimited dispatch rules, automatic retries, COD confirmation, extended log retention, and priority support. Be the first to know when it launches.', 'signals-dispatch-woocommerce' ); ?></p>
+			<span class="tmasd-coming-soon-badge"><?php esc_html_e( 'Coming Soon', 'signals-dispatch-for-woocommerce' ); ?></span>
+			<h2><?php esc_html_e( 'Signals Pro is on the Way', 'signals-dispatch-for-woocommerce' ); ?></h2>
+			<p><?php esc_html_e( 'We\'re building powerful new features — automatic retries, COD confirmation, scheduled log cleanup, and priority support. Be the first to know when it launches.', 'signals-dispatch-for-woocommerce' ); ?></p>
 			<p>
 				<a href="<?php echo esc_url( $mailto ); ?>" class="button button-primary button-hero">
-					<?php esc_html_e( 'Notify Me at Launch', 'signals-dispatch-woocommerce' ); ?>
+					<?php esc_html_e( 'Notify Me at Launch', 'signals-dispatch-for-woocommerce' ); ?>
 				</a>
 			</p>
 		</div>
@@ -89,34 +89,29 @@ final class UpgradeController extends AbstractAdminController {
 	private function render_coming_soon_features(): void {
 		$features = array(
 			array(
-				'icon'        => 'dashicons-networking',
-				'title'       => __( 'Unlimited Dispatch Rules', 'signals-dispatch-woocommerce' ),
-				'description' => __( 'Create as many dispatch rules as you need — map every order status to a dedicated WhatsApp template.', 'signals-dispatch-woocommerce' ),
-			),
-			array(
 				'icon'        => 'dashicons-money-alt',
-				'title'       => __( 'COD Confirmation', 'signals-dispatch-woocommerce' ),
-				'description' => __( 'Send automated Cash on Delivery order confirmations to reduce RTOs and improve delivery success.', 'signals-dispatch-woocommerce' ),
+				'title'       => __( 'COD Confirmation', 'signals-dispatch-for-woocommerce' ),
+				'description' => __( 'Send automated Cash on Delivery order confirmations to reduce RTOs and improve delivery success.', 'signals-dispatch-for-woocommerce' ),
 			),
 			array(
 				'icon'        => 'dashicons-update',
-				'title'       => __( 'Automatic Retries', 'signals-dispatch-woocommerce' ),
-				'description' => __( 'Failed messages are automatically retried with intelligent backoff, ensuring maximum delivery rates.', 'signals-dispatch-woocommerce' ),
+				'title'       => __( 'Automatic Retries', 'signals-dispatch-for-woocommerce' ),
+				'description' => __( 'Failed messages are automatically retried with intelligent backoff, ensuring maximum delivery rates.', 'signals-dispatch-for-woocommerce' ),
 			),
 			array(
 				'icon'        => 'dashicons-database',
-				'title'       => __( 'Extended Log Retention', 'signals-dispatch-woocommerce' ),
-				'description' => __( 'Keep your message history longer for auditing, analytics, and customer support reference.', 'signals-dispatch-woocommerce' ),
+				'title'       => __( 'Scheduled Log Cleanup', 'signals-dispatch-for-woocommerce' ),
+				'description' => __( 'Automatically purge old logs on a configurable schedule — keep your database lean while retaining what matters.', 'signals-dispatch-for-woocommerce' ),
 			),
 			array(
 				'icon'        => 'dashicons-sos',
-				'title'       => __( 'Priority Support', 'signals-dispatch-woocommerce' ),
-				'description' => __( 'Get fast, dedicated support from our team to help with setup, template approval, and troubleshooting.', 'signals-dispatch-woocommerce' ),
+				'title'       => __( 'Priority Support', 'signals-dispatch-for-woocommerce' ),
+				'description' => __( 'Get fast, dedicated support from our team to help with setup, template approval, and troubleshooting.', 'signals-dispatch-for-woocommerce' ),
 			),
 		);
 
 		echo '<div class="tmasd-panel">';
-		echo '<h2>' . esc_html__( 'What\'s Coming in Pro', 'signals-dispatch-woocommerce' ) . '</h2>';
+		echo '<h2>' . esc_html__( 'What\'s Coming in Pro', 'signals-dispatch-for-woocommerce' ) . '</h2>';
 		echo '<div class="tmasd-cards tmasd-coming-grid">';
 
 		foreach ( $features as $feature ) {
@@ -141,13 +136,13 @@ final class UpgradeController extends AbstractAdminController {
 
 		?>
 		<div class="tmasd-panel">
-			<h2><?php esc_html_e( 'Free vs Pro Comparison', 'signals-dispatch-woocommerce' ); ?></h2>
+			<h2><?php esc_html_e( 'Free vs Pro Comparison', 'signals-dispatch-for-woocommerce' ); ?></h2>
 			<table class="widefat striped tmasd-comparison-table">
 				<thead>
 					<tr>
-						<th><?php esc_html_e( 'Feature', 'signals-dispatch-woocommerce' ); ?></th>
-						<th><?php esc_html_e( 'Free', 'signals-dispatch-woocommerce' ); ?></th>
-						<th><?php esc_html_e( 'Pro (Coming Soon)', 'signals-dispatch-woocommerce' ); ?></th>
+						<th><?php esc_html_e( 'Feature', 'signals-dispatch-for-woocommerce' ); ?></th>
+						<th><?php esc_html_e( 'Free', 'signals-dispatch-for-woocommerce' ); ?></th>
+						<th><?php esc_html_e( 'Pro (Coming Soon)', 'signals-dispatch-for-woocommerce' ); ?></th>
 					</tr>
 				</thead>
 				<tbody>
@@ -156,16 +151,16 @@ final class UpgradeController extends AbstractAdminController {
 						<td><?php echo esc_html( $feature['name'] ); ?></td>
 						<td>
 							<?php if ( $feature['free'] ) : ?>
-								<span class="tmasd-badge tmasd-badge--yes"><?php echo esc_html( is_string( $feature['free'] ) ? $feature['free'] : __( 'Yes', 'signals-dispatch-woocommerce' ) ); ?></span>
+								<span class="tmasd-badge tmasd-badge--yes"><?php echo esc_html( is_string( $feature['free'] ) ? $feature['free'] : __( 'Yes', 'signals-dispatch-for-woocommerce' ) ); ?></span>
 							<?php else : ?>
-								<span class="tmasd-badge tmasd-badge--no"><?php esc_html_e( 'No', 'signals-dispatch-woocommerce' ); ?></span>
+								<span class="tmasd-badge tmasd-badge--no"><?php esc_html_e( 'No', 'signals-dispatch-for-woocommerce' ); ?></span>
 							<?php endif; ?>
 						</td>
 						<td>
 							<?php if ( $feature['pro'] ) : ?>
-								<span class="tmasd-badge tmasd-badge--yes"><?php echo esc_html( is_string( $feature['pro'] ) ? $feature['pro'] : __( 'Yes', 'signals-dispatch-woocommerce' ) ); ?></span>
+								<span class="tmasd-badge tmasd-badge--yes"><?php echo esc_html( is_string( $feature['pro'] ) ? $feature['pro'] : __( 'Yes', 'signals-dispatch-for-woocommerce' ) ); ?></span>
 							<?php else : ?>
-								<span class="tmasd-badge tmasd-badge--no"><?php esc_html_e( 'No', 'signals-dispatch-woocommerce' ); ?></span>
+								<span class="tmasd-badge tmasd-badge--no"><?php esc_html_e( 'No', 'signals-dispatch-for-woocommerce' ); ?></span>
 							<?php endif; ?>
 						</td>
 					</tr>
@@ -184,52 +179,52 @@ final class UpgradeController extends AbstractAdminController {
 	private function get_comparison_features(): array {
 		return array(
 			array(
-				'name' => __( 'Setup Wizard', 'signals-dispatch-woocommerce' ),
+				'name' => __( 'Setup Wizard', 'signals-dispatch-for-woocommerce' ),
 				'free' => true,
 				'pro'  => true,
 			),
 			array(
-				'name' => __( 'Dispatch Rules', 'signals-dispatch-woocommerce' ),
-				'free' => __( 'Up to 2', 'signals-dispatch-woocommerce' ),
-				'pro'  => __( 'Unlimited', 'signals-dispatch-woocommerce' ),
-			),
-			array(
-				'name' => __( 'Automated Order Notifications', 'signals-dispatch-woocommerce' ),
+				'name' => __( 'Dispatch Rules', 'signals-dispatch-for-woocommerce' ),
 				'free' => true,
 				'pro'  => true,
 			),
 			array(
-				'name' => __( 'Checkout Opt-In Checkbox', 'signals-dispatch-woocommerce' ),
+				'name' => __( 'Automated Order Notifications', 'signals-dispatch-for-woocommerce' ),
 				'free' => true,
 				'pro'  => true,
 			),
 			array(
-				'name' => __( 'Webhook Delivery Status Tracking', 'signals-dispatch-woocommerce' ),
+				'name' => __( 'Checkout Opt-In Checkbox', 'signals-dispatch-for-woocommerce' ),
 				'free' => true,
 				'pro'  => true,
 			),
 			array(
-				'name' => __( 'Manual Send on Order Page', 'signals-dispatch-woocommerce' ),
+				'name' => __( 'Webhook Delivery Status Tracking', 'signals-dispatch-for-woocommerce' ),
 				'free' => true,
 				'pro'  => true,
 			),
 			array(
-				'name' => __( 'Log Retention', 'signals-dispatch-woocommerce' ),
-				'free' => __( '7 days', 'signals-dispatch-woocommerce' ),
-				'pro'  => __( 'Extended', 'signals-dispatch-woocommerce' ),
+				'name' => __( 'Manual Send on Order Page', 'signals-dispatch-for-woocommerce' ),
+				'free' => true,
+				'pro'  => true,
 			),
 			array(
-				'name' => __( 'COD Confirmation', 'signals-dispatch-woocommerce' ),
+				'name' => __( 'Log Retention', 'signals-dispatch-for-woocommerce' ),
+				'free' => __( 'Manual cleanup', 'signals-dispatch-for-woocommerce' ),
+				'pro'  => __( 'Scheduled auto-cleanup', 'signals-dispatch-for-woocommerce' ),
+			),
+			array(
+				'name' => __( 'COD Confirmation', 'signals-dispatch-for-woocommerce' ),
 				'free' => false,
 				'pro'  => true,
 			),
 			array(
-				'name' => __( 'Automatic Retries', 'signals-dispatch-woocommerce' ),
+				'name' => __( 'Automatic Retries', 'signals-dispatch-for-woocommerce' ),
 				'free' => false,
 				'pro'  => true,
 			),
 			array(
-				'name' => __( 'Priority Support', 'signals-dispatch-woocommerce' ),
+				'name' => __( 'Priority Support', 'signals-dispatch-for-woocommerce' ),
 				'free' => false,
 				'pro'  => true,
 			),
@@ -244,25 +239,25 @@ final class UpgradeController extends AbstractAdminController {
 	private function render_faq(): void {
 		$faqs = array(
 			array(
-				'question' => __( 'When will Pro be available?', 'signals-dispatch-woocommerce' ),
-				'answer'   => __( 'We\'re actively working on Pro features. Send us an enquiry to be notified the moment it launches.', 'signals-dispatch-woocommerce' ),
+				'question' => __( 'When will Pro be available?', 'signals-dispatch-for-woocommerce' ),
+				'answer'   => __( 'We\'re actively working on Pro features. Send us an enquiry to be notified the moment it launches.', 'signals-dispatch-for-woocommerce' ),
 			),
 			array(
-				'question' => __( 'Will I lose my existing data when I upgrade?', 'signals-dispatch-woocommerce' ),
-				'answer'   => __( 'No. Upgrading will preserve all your dispatch rules, logs, consent records, and settings. It only adds new capabilities.', 'signals-dispatch-woocommerce' ),
+				'question' => __( 'Will I lose my existing data when I upgrade?', 'signals-dispatch-for-woocommerce' ),
+				'answer'   => __( 'No. Upgrading will preserve all your dispatch rules, logs, consent records, and settings. It only adds new capabilities.', 'signals-dispatch-for-woocommerce' ),
 			),
 			array(
-				'question' => __( 'Can I request a specific feature?', 'signals-dispatch-woocommerce' ),
-				'answer'   => __( 'Absolutely! Send us an email with your feature request and we\'ll prioritize based on community feedback.', 'signals-dispatch-woocommerce' ),
+				'question' => __( 'Can I request a specific feature?', 'signals-dispatch-for-woocommerce' ),
+				'answer'   => __( 'Absolutely! Send us an email with your feature request and we\'ll prioritize based on community feedback.', 'signals-dispatch-for-woocommerce' ),
 			),
 			array(
-				'question' => __( 'Is the free version going away?', 'signals-dispatch-woocommerce' ),
-				'answer'   => __( 'No. The free version will always be available with all current features. Pro simply adds more power on top.', 'signals-dispatch-woocommerce' ),
+				'question' => __( 'Is the free version going away?', 'signals-dispatch-for-woocommerce' ),
+				'answer'   => __( 'No. The free version will always be available with all current features. Pro simply adds more power on top.', 'signals-dispatch-for-woocommerce' ),
 			),
 		);
 
 		echo '<div class="tmasd-panel tmasd-upgrade-faq">';
-		echo '<h2>' . esc_html__( 'Frequently Asked Questions', 'signals-dispatch-woocommerce' ) . '</h2>';
+		echo '<h2>' . esc_html__( 'Frequently Asked Questions', 'signals-dispatch-for-woocommerce' ) . '</h2>';
 
 		foreach ( $faqs as $faq ) {
 			echo '<details>';
@@ -283,11 +278,11 @@ final class UpgradeController extends AbstractAdminController {
 		$mailto = $this->get_mailto_url();
 		?>
 		<div class="tmasd-panel tmasd-upgrade-cta-footer" style="text-align:center;">
-			<h2><?php esc_html_e( 'Interested in Signals Pro?', 'signals-dispatch-woocommerce' ); ?></h2>
-			<p><?php esc_html_e( 'Drop us a line and we\'ll keep you in the loop. Early enquirers get priority access.', 'signals-dispatch-woocommerce' ); ?></p>
+			<h2><?php esc_html_e( 'Interested in Signals Pro?', 'signals-dispatch-for-woocommerce' ); ?></h2>
+			<p><?php esc_html_e( 'Drop us a line and we\'ll keep you in the loop. Early enquirers get priority access.', 'signals-dispatch-for-woocommerce' ); ?></p>
 			<div class="tmasd-cta-buttons">
 				<a href="<?php echo esc_url( $mailto ); ?>" class="button button-primary button-hero">
-					<?php esc_html_e( 'Enquire Now', 'signals-dispatch-woocommerce' ); ?>
+					<?php esc_html_e( 'Enquire Now', 'signals-dispatch-for-woocommerce' ); ?>
 				</a>
 			</div>
 		</div>
@@ -303,10 +298,10 @@ final class UpgradeController extends AbstractAdminController {
 		$site_name = get_bloginfo( 'name' );
 		$subject   = sprintf(
 			/* translators: %s: site name */
-			__( 'Signals Pro Enquiry — %s', 'signals-dispatch-woocommerce' ),
+			__( 'Signals Pro Enquiry — %s', 'signals-dispatch-for-woocommerce' ),
 			$site_name
 		);
-		$body = __( 'Hi, I\'m interested in Signals Pro. Please notify me when it launches.', 'signals-dispatch-woocommerce' );
+		$body = __( 'Hi, I\'m interested in Signals Pro. Please notify me when it launches.', 'signals-dispatch-for-woocommerce' );
 
 		return 'mailto:' . self::CONTACT_EMAIL
 			. '?subject=' . rawurlencode( $subject )

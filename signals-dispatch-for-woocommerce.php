@@ -5,7 +5,7 @@
  * Version: 1.0.0
  * Author: TheMediaAble
  * License: GPLv2 or later
- * Text Domain: signals-dispatch-woocommerce
+ * Text Domain: signals-dispatch-for-woocommerce
  * Requires PHP: 7.4
  * Requires at least: 6.0
  *
@@ -76,7 +76,7 @@ add_action(
 				'admin_notices',
 				static function (): void {
 					echo '<div class="notice notice-error"><p>';
-					echo esc_html__( 'Signals Dispatch for WooCommerce requires WooCommerce to be installed and active.', 'signals-dispatch-woocommerce' );
+					echo esc_html__( 'Signals Dispatch for WooCommerce requires WooCommerce to be installed and active.', 'signals-dispatch-for-woocommerce' );
 					echo '</p></div>';
 				}
 			);

@@ -112,7 +112,7 @@ final class CheckoutController extends AbstractService {
 		woocommerce_register_additional_checkout_field(
 			array(
 				'id'       => 'tmasd/whatsapp-optin',
-				'label'    => __( 'Send me order updates on WhatsApp', 'signals-dispatch-woocommerce' ),
+				'label'    => __( 'Send me order updates on WhatsApp', 'signals-dispatch-for-woocommerce' ),
 				'location' => 'order',
 				'type'     => 'checkbox',
 			)
@@ -130,7 +130,7 @@ final class CheckoutController extends AbstractService {
 			array(
 				'type'  => 'checkbox',
 				'class' => array( 'form-row-wide' ),
-				'label' => esc_html__( 'Send me order updates on WhatsApp', 'signals-dispatch-woocommerce' ),
+				'label' => esc_html__( 'Send me order updates on WhatsApp', 'signals-dispatch-for-woocommerce' ),
 			)
 		);
 	}

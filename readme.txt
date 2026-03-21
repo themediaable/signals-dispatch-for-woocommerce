@@ -23,14 +23,13 @@ Signals Dispatch for WooCommerce integrates your WooCommerce store with the What
 * **Comprehensive Logs** – Full message history with payload and response details
 * **Checkout Opt-in** – WhatsApp consent checkbox on checkout (classic and block checkout)
 * **Manual Send** – Send a template message from any WooCommerce order page
-* **Consent Enforcement** – Honors opt-in/opt-out records, with built-in checkout opt-in capture
+* **Consent Enforcement** – Honors opt-in consent records, with built-in checkout opt-in capture
 
 = Pro Features (Coming Soon) =
 
-* **Unlimited Dispatch Rules** – Create as many event-to-template mappings as you need
 * **Auto Retries** – Failed messages are automatically retried with intelligent backoff
 * **COD Confirmation** – Automated Cash on Delivery order confirmations
-* **Extended Log Retention** – Keep message history longer for auditing and analytics
+* **Scheduled Log Cleanup** – Automatically purge old logs on a configurable schedule
 * **Priority Support** – Dedicated support channel
 
 = Requirements =
@@ -50,13 +49,13 @@ This plugin connects to the Meta WhatsApp Business Cloud API to send messages. B
 
 == Installation ==
 
-1. Upload the `signals-dispatch-woocommerce` folder to the `/wp-content/plugins/` directory
+1. Upload the `signals-dispatch-for-woocommerce` folder to the `/wp-content/plugins/` directory
 2. Activate the plugin through the 'Plugins' menu in WordPress
 3. Navigate to **Signals → Setup** to configure your WhatsApp Business API credentials
 
 = Configuration =
 
-For detailed instructions on obtaining your WhatsApp Business API credentials, see the [WhatsApp API Setup Guide](https://github.com/themediaable/signals-dispatch-woocommerce/blob/main/docs/whatsapp-api-setup.md).
+For detailed instructions on obtaining your WhatsApp Business API credentials, see the [WhatsApp API Setup Guide](https://github.com/themediaable/signals-dispatch-for-woocommerce/blob/main/docs/whatsapp-api-setup.md).
 
 **Step 1: API Credentials**
 
@@ -123,40 +122,21 @@ Yes. A "Send WhatsApp Message" meta box appears on the WooCommerce order page. C
 == Changelog ==
 
 = 1.0.0 =
-* Added WhatsApp opt-in checkbox on checkout (classic and block checkout)
+* Added WhatsApp opt-in consent checkbox on checkout (classic and block checkout)
 * Added manual send meta box on WooCommerce order page
 * Added Coming Soon page showcasing planned Pro features with email enquiry
 * Added upgrade promotion card on Help page
 * Added Refresh Status button on Logs page for on-demand delivery status check
 * Added trigger source column to logs (automatic vs manual)
+* Added GDPR personal data export and erasure with guest customer support
 * Renamed REST API namespace to tmasignals/v1 for uniqueness
 * Differentiated status badge colours (sent/delivered/read/failed)
 * Webhook delivery status tracking confirmed as free feature
+* Hardened AJAX nonce validation and admin JavaScript against XSS
 * Retry logic reserved for Pro (disabled in free tier)
-* HPOS (High-Performance Order Storage) compatible
-
-= 0.2.0 =
-* Refactored to OOP architecture with proper abstraction and encapsulation
-* Implemented Repository pattern for database operations
-* Split admin into separate controllers following Single Responsibility Principle
-* Added PSR-4 autoloading for all classes
-* Full WordPress Coding Standards compliance
-
-= 0.1.0 =
-* Initial release
-* WhatsApp Cloud API integration
-* Order status change notifications
-* Message queue with retry logic
-* Webhook status updates
-* Admin setup wizard
+* HPOS (High-Performance Order Storage) fully compatible
 
 == Upgrade Notice ==
 
 = 1.0.0 =
-New: checkout opt-in, manual send from order page, Coming Soon page, Refresh Status, and trigger source tracking. Safe to update.
-
-= 0.2.0 =
-Major refactoring with improved code architecture. Database structure unchanged – safe to update.
-
-= 0.1.0 =
-Initial release.
+Initial release with checkout opt-in, manual send from order page, Coming Soon page, Refresh Status, trigger source tracking, and GDPR guest support.

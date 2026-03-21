@@ -62,7 +62,7 @@ final class MappingRepository extends AbstractRepository {
 			"SELECT * FROM {$table} WHERE event_key = %s AND enabled = 1",
 			$event_key
 		);
-		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- SQL is prepared above.
+		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- SQL is prepared above.
 		$row = $this->wpdb->get_row( $sql, ARRAY_A );
 
 		return is_array( $row ) ? $row : null;
@@ -120,10 +120,10 @@ final class MappingRepository extends AbstractRepository {
 	 */
 	public function get_available_events(): array {
 		return array(
-			'order_status_processing' => __( 'Order Processing', 'signals-dispatch-woocommerce' ),
-			'order_status_completed'  => __( 'Order Completed', 'signals-dispatch-woocommerce' ),
-			'order_status_on_hold'    => __( 'Order On Hold', 'signals-dispatch-woocommerce' ),
-			'order_status_cancelled'  => __( 'Order Cancelled', 'signals-dispatch-woocommerce' ),
+			'order_status_processing' => __( 'Order Processing', 'signals-dispatch-for-woocommerce' ),
+			'order_status_completed'  => __( 'Order Completed', 'signals-dispatch-for-woocommerce' ),
+			'order_status_on_hold'    => __( 'Order On Hold', 'signals-dispatch-for-woocommerce' ),
+			'order_status_cancelled'  => __( 'Order Cancelled', 'signals-dispatch-for-woocommerce' ),
 		);
 	}
 
@@ -134,18 +134,18 @@ final class MappingRepository extends AbstractRepository {
 	 */
 	public function get_available_variables(): array {
 		return array(
-			'order_id'            => __( 'Order ID', 'signals-dispatch-woocommerce' ),
-			'order_number'        => __( 'Order Number', 'signals-dispatch-woocommerce' ),
-			'order_total'         => __( 'Order Total', 'signals-dispatch-woocommerce' ),
-			'order_currency'      => __( 'Currency', 'signals-dispatch-woocommerce' ),
-			'billing_first_name'  => __( 'Billing First Name', 'signals-dispatch-woocommerce' ),
-			'billing_last_name'   => __( 'Billing Last Name', 'signals-dispatch-woocommerce' ),
-			'billing_phone'       => __( 'Billing Phone', 'signals-dispatch-woocommerce' ),
-			'billing_email'       => __( 'Billing Email', 'signals-dispatch-woocommerce' ),
-			'shipping_first_name' => __( 'Shipping First Name', 'signals-dispatch-woocommerce' ),
-			'shipping_last_name'  => __( 'Shipping Last Name', 'signals-dispatch-woocommerce' ),
-			'status'              => __( 'Order Status', 'signals-dispatch-woocommerce' ),
-			'site_name'           => __( 'Site Name', 'signals-dispatch-woocommerce' ),
+			'order_id'            => __( 'Order ID', 'signals-dispatch-for-woocommerce' ),
+			'order_number'        => __( 'Order Number', 'signals-dispatch-for-woocommerce' ),
+			'order_total'         => __( 'Order Total', 'signals-dispatch-for-woocommerce' ),
+			'order_currency'      => __( 'Currency', 'signals-dispatch-for-woocommerce' ),
+			'billing_first_name'  => __( 'Billing First Name', 'signals-dispatch-for-woocommerce' ),
+			'billing_last_name'   => __( 'Billing Last Name', 'signals-dispatch-for-woocommerce' ),
+			'billing_phone'       => __( 'Billing Phone', 'signals-dispatch-for-woocommerce' ),
+			'billing_email'       => __( 'Billing Email', 'signals-dispatch-for-woocommerce' ),
+			'shipping_first_name' => __( 'Shipping First Name', 'signals-dispatch-for-woocommerce' ),
+			'shipping_last_name'  => __( 'Shipping Last Name', 'signals-dispatch-for-woocommerce' ),
+			'status'              => __( 'Order Status', 'signals-dispatch-for-woocommerce' ),
+			'site_name'           => __( 'Site Name', 'signals-dispatch-for-woocommerce' ),
 		);
 	}
 }

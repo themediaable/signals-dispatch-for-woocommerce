@@ -80,7 +80,7 @@ final class DispatchController extends AbstractAdminController {
 	private function render_page_header(): void {
 		echo '<div class="wrap tmasd-admin">';
 		echo '<h1 class="wp-heading-inline">';
-		echo esc_html__( 'Dispatch Rules', 'signals-dispatch-woocommerce' );
+		echo esc_html__( 'Dispatch Rules', 'signals-dispatch-for-woocommerce' );
 		echo '</h1>';
 		echo '<hr class="wp-header-end" />';
 	}
@@ -93,11 +93,11 @@ final class DispatchController extends AbstractAdminController {
 	private function render_notices(): void {
 		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Display only.
 		if ( isset( $_GET['saved'] ) ) {
-			$this->render_notice_success( __( 'Mapping saved.', 'signals-dispatch-woocommerce' ) );
+			$this->render_notice_success( __( 'Mapping saved.', 'signals-dispatch-for-woocommerce' ) );
 		}
 		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Display only.
 		if ( isset( $_GET['deleted'] ) ) {
-			$this->render_notice_success( __( 'Mapping deleted.', 'signals-dispatch-woocommerce' ) );
+			$this->render_notice_success( __( 'Mapping deleted.', 'signals-dispatch-for-woocommerce' ) );
 		}
 	}
 
@@ -110,22 +110,22 @@ final class DispatchController extends AbstractAdminController {
 		$mappings = $this->mapping_repo->all();
 
 		echo '<p><a href="' . esc_url( admin_url( 'admin.php?page=tmasd-dispatch&action=add' ) ) . '" class="button button-primary">';
-		echo esc_html__( 'Add New Mapping', 'signals-dispatch-woocommerce' );
+		echo esc_html__( 'Add New Mapping', 'signals-dispatch-for-woocommerce' );
 		echo '</a></p>';
 
 		echo '<table class="widefat striped">';
 		echo '<thead><tr>';
-		echo '<th>' . esc_html__( 'ID', 'signals-dispatch-woocommerce' ) . '</th>';
-		echo '<th>' . esc_html__( 'Event', 'signals-dispatch-woocommerce' ) . '</th>';
-		echo '<th>' . esc_html__( 'Template', 'signals-dispatch-woocommerce' ) . '</th>';
-		echo '<th>' . esc_html__( 'Language', 'signals-dispatch-woocommerce' ) . '</th>';
-		echo '<th>' . esc_html__( 'Enabled', 'signals-dispatch-woocommerce' ) . '</th>';
-		echo '<th>' . esc_html__( 'Actions', 'signals-dispatch-woocommerce' ) . '</th>';
+		echo '<th>' . esc_html__( 'ID', 'signals-dispatch-for-woocommerce' ) . '</th>';
+		echo '<th>' . esc_html__( 'Event', 'signals-dispatch-for-woocommerce' ) . '</th>';
+		echo '<th>' . esc_html__( 'Template', 'signals-dispatch-for-woocommerce' ) . '</th>';
+		echo '<th>' . esc_html__( 'Language', 'signals-dispatch-for-woocommerce' ) . '</th>';
+		echo '<th>' . esc_html__( 'Enabled', 'signals-dispatch-for-woocommerce' ) . '</th>';
+		echo '<th>' . esc_html__( 'Actions', 'signals-dispatch-for-woocommerce' ) . '</th>';
 		echo '</tr></thead>';
 		echo '<tbody>';
 
 		if ( empty( $mappings ) ) {
-			echo '<tr><td colspan="6">' . esc_html__( 'No mappings found.', 'signals-dispatch-woocommerce' ) . '</td></tr>';
+			echo '<tr><td colspan="6">' . esc_html__( 'No mappings found.', 'signals-dispatch-for-woocommerce' ) . '</td></tr>';
 		} else {
 			foreach ( $mappings as $mapping ) {
 				$this->render_mapping_row( $mapping );
@@ -149,8 +149,8 @@ final class DispatchController extends AbstractAdminController {
 		);
 
 		$enabled_text = ! empty( $mapping['enabled'] )
-			? __( 'Yes', 'signals-dispatch-woocommerce' )
-			: __( 'No', 'signals-dispatch-woocommerce' );
+			? __( 'Yes', 'signals-dispatch-for-woocommerce' )
+			: __( 'No', 'signals-dispatch-for-woocommerce' );
 
 		echo '<tr>';
 		echo '<td>' . esc_html( (string) $mapping['id'] ) . '</td>';
@@ -160,10 +160,10 @@ final class DispatchController extends AbstractAdminController {
 		$badge_class = ! empty( $mapping['enabled'] ) ? 'tmasd-badge tmasd-badge--yes' : 'tmasd-badge tmasd-badge--no';
 		echo '<td><span class="' . esc_attr( $badge_class ) . '">' . esc_html( $enabled_text ) . '</span></td>';
 		echo '<td class="tmasd-row-actions">';
-		echo '<a class="tmasd-action-edit" href="' . esc_url( $edit_url ) . '">' . esc_html__( 'Edit', 'signals-dispatch-woocommerce' ) . '</a>';
+		echo '<a class="tmasd-action-edit" href="' . esc_url( $edit_url ) . '">' . esc_html__( 'Edit', 'signals-dispatch-for-woocommerce' ) . '</a>';
 		echo '<span class="tmasd-separator">|</span>';
-		echo '<a class="tmasd-action-delete" href="' . esc_url( $delete_url ) . '" onclick="return confirm(\'' . esc_js( __( 'Delete this mapping?', 'signals-dispatch-woocommerce' ) ) . '\')">';
-		echo esc_html__( 'Delete', 'signals-dispatch-woocommerce' );
+		echo '<a class="tmasd-action-delete" href="' . esc_url( $delete_url ) . '" onclick="return confirm(\'' . esc_js( __( 'Delete this mapping?', 'signals-dispatch-for-woocommerce' ) ) . '\')">';
+		echo esc_html__( 'Delete', 'signals-dispatch-for-woocommerce' );
 		echo '</a>';
 		echo '</td>';
 		echo '</tr>';
@@ -194,7 +194,7 @@ final class DispatchController extends AbstractAdminController {
 		echo '<table class="form-table">';
 
 		// Event select.
-		echo '<tr><th scope="row"><label for="event_key">' . esc_html__( 'Event', 'signals-dispatch-woocommerce' ) . '</label></th>';
+		echo '<tr><th scope="row"><label for="event_key">' . esc_html__( 'Event', 'signals-dispatch-for-woocommerce' ) . '</label></th>';
 		echo '<td><select id="event_key" name="event_key">';
 		foreach ( $events as $key => $label ) {
 			$selected = $key === $event_key ? 'selected' : '';
@@ -203,30 +203,30 @@ final class DispatchController extends AbstractAdminController {
 		echo '</select></td></tr>';
 
 		// Template name.
-		echo '<tr><th scope="row"><label for="template_name">' . esc_html__( 'Template Name', 'signals-dispatch-woocommerce' ) . '</label></th>';
+		echo '<tr><th scope="row"><label for="template_name">' . esc_html__( 'Template Name', 'signals-dispatch-for-woocommerce' ) . '</label></th>';
 		echo '<td><input type="text" id="template_name" name="template_name" value="' . esc_attr( $template_name ) . '" class="regular-text" /></td></tr>';
 
 		// Language.
-		echo '<tr><th scope="row"><label for="language">' . esc_html__( 'Language', 'signals-dispatch-woocommerce' ) . '</label></th>';
+		echo '<tr><th scope="row"><label for="language">' . esc_html__( 'Language', 'signals-dispatch-for-woocommerce' ) . '</label></th>';
 		echo '<td><input type="text" id="language" name="language" value="' . esc_attr( $language ) . '" class="regular-text" /></td></tr>';
 
 		// Mapping JSON.
-		echo '<tr><th scope="row"><label for="mapping_json">' . esc_html__( 'Variable Mapping (JSON)', 'signals-dispatch-woocommerce' ) . '</label></th>';
+		echo '<tr><th scope="row"><label for="mapping_json">' . esc_html__( 'Variable Mapping (JSON)', 'signals-dispatch-for-woocommerce' ) . '</label></th>';
 		echo '<td><textarea id="mapping_json" name="mapping_json" rows="4" class="large-text">' . esc_textarea( $mapping_json ) . '</textarea>';
-		echo '<p class="description">' . esc_html__( 'Available variables:', 'signals-dispatch-woocommerce' ) . ' ';
+		echo '<p class="description">' . esc_html__( 'Available variables:', 'signals-dispatch-for-woocommerce' ) . ' ';
 		echo esc_html( implode( ', ', array_keys( $variables ) ) );
 		echo '</p></td></tr>';
 
 		// Enabled.
 		$checked = $enabled ? 'checked' : '';
-		echo '<tr><th scope="row">' . esc_html__( 'Enabled', 'signals-dispatch-woocommerce' ) . '</th>';
+		echo '<tr><th scope="row">' . esc_html__( 'Enabled', 'signals-dispatch-for-woocommerce' ) . '</th>';
 		echo '<td><label><input type="checkbox" name="enabled" value="1" ' . esc_attr( $checked ) . ' /> ';
-		echo esc_html__( 'Enable this mapping', 'signals-dispatch-woocommerce' );
+		echo esc_html__( 'Enable this mapping', 'signals-dispatch-for-woocommerce' );
 		echo '</label></td></tr>';
 
 		echo '</table>';
 
-		submit_button( $id > 0 ? __( 'Update Mapping', 'signals-dispatch-woocommerce' ) : __( 'Create Mapping', 'signals-dispatch-woocommerce' ) );
+		submit_button( $id > 0 ? __( 'Update Mapping', 'signals-dispatch-for-woocommerce' ) : __( 'Create Mapping', 'signals-dispatch-for-woocommerce' ) );
 		echo '</form>';
 	}
 

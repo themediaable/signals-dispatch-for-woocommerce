@@ -59,7 +59,7 @@ final class OptinRepository extends AbstractRepository {
 			"SELECT * FROM {$table} WHERE phone_e164 = %s ORDER BY id DESC LIMIT 1",
 			$phone_e164
 		);
-		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- SQL is prepared above.
+		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- SQL is prepared above.
 		$row = $this->wpdb->get_row( $sql, ARRAY_A );
 
 		return is_array( $row ) ? $row : null;
@@ -125,7 +125,7 @@ final class OptinRepository extends AbstractRepository {
 			SUM(CASE WHEN consent = 0 THEN 1 ELSE 0 END) as opted_out
 			FROM {$table}";
 
-		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- SQL has no user input.
+		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- SQL has no user input.
 		$row = $this->wpdb->get_row( $sql, ARRAY_A );
 
 		if ( ! is_array( $row ) ) {
@@ -156,7 +156,7 @@ final class OptinRepository extends AbstractRepository {
 			"SELECT * FROM {$table} WHERE user_id = %d ORDER BY id DESC",
 			$user_id
 		);
-		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- SQL is prepared above.
+		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- SQL is prepared above.
 		$rows = $this->wpdb->get_results( $sql, ARRAY_A );
 
 		return is_array( $rows ) ? $rows : array();
@@ -175,7 +175,7 @@ final class OptinRepository extends AbstractRepository {
 			"SELECT * FROM {$table} WHERE order_id = %d ORDER BY id DESC LIMIT 1",
 			$order_id
 		);
-		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- SQL is prepared above.
+		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- SQL is prepared above.
 		$row = $this->wpdb->get_row( $sql, ARRAY_A );
 
 		return is_array( $row ) ? $row : null;
@@ -195,5 +195,111 @@ final class OptinRepository extends AbstractRepository {
 		);
 
 		return is_int( $result ) ? $result : 0;
+	}
+
+	/**
+	 * Find consent records by customer email.
+	 *
+	 * Combines user-based and order-based lookup for HPOS compatibility
+	 * and guest customer support.
+	 *
+	 * @param string $email Customer email address.
+	 * @return array<int, array<string, mixed>> Consent records.
+	 */
+	public function find_by_email( string $email ): array {
+		$seen_ids = array();
+		$records  = array();
+
+		// Registered user lookup.
+		$user = get_user_by( 'email', $email );
+		if ( $user ) {
+			foreach ( $this->find_by_user_id( $user->ID ) as $row ) {
+				$seen_ids[ (int) $row['id'] ] = true;
+				$records[]                     = $row;
+			}
+		}
+
+		// Order-based lookup (catches guests + HPOS).
+		if ( function_exists( 'wc_get_orders' ) ) {
+			$order_ids = wc_get_orders(
+				array(
+					'customer' => $email,
+					'return'   => 'ids',
+					'limit'    => -1,
+				)
+			);
+
+			if ( ! empty( $order_ids ) ) {
+				$table        = $this->get_table_name();
+				$placeholders = implode( ',', array_fill( 0, count( $order_ids ), '%d' ) );
+
+				$sql = $this->wpdb->prepare(
+					// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare -- Table name and placeholders are safe.
+					"SELECT * FROM {$table} WHERE order_id IN ({$placeholders}) ORDER BY id DESC",
+					$order_ids
+				);
+
+				// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- SQL is prepared above.
+				$order_rows = $this->wpdb->get_results( $sql, ARRAY_A );
+
+				if ( is_array( $order_rows ) ) {
+					foreach ( $order_rows as $row ) {
+						if ( ! isset( $seen_ids[ (int) $row['id'] ] ) ) {
+							$seen_ids[ (int) $row['id'] ] = true;
+							$records[]                     = $row;
+						}
+					}
+				}
+			}
+		}
+
+		return $records;
+	}
+
+	/**
+	 * Delete consent records by customer email.
+	 *
+	 * Combines user-based and order-based deletion for HPOS compatibility
+	 * and guest customer support.
+	 *
+	 * @param string $email Customer email address.
+	 * @return int Number of rows deleted.
+	 */
+	public function delete_by_email( string $email ): int {
+		$total = 0;
+
+		// Delete by user ID for registered users.
+		$user = get_user_by( 'email', $email );
+		if ( $user ) {
+			$total += $this->delete_by_user_id( $user->ID );
+		}
+
+		// Delete by order IDs (catches guests + HPOS).
+		if ( function_exists( 'wc_get_orders' ) ) {
+			$order_ids = wc_get_orders(
+				array(
+					'customer' => $email,
+					'return'   => 'ids',
+					'limit'    => -1,
+				)
+			);
+
+			if ( ! empty( $order_ids ) ) {
+				$table        = $this->get_table_name();
+				$placeholders = implode( ',', array_fill( 0, count( $order_ids ), '%d' ) );
+
+				$sql = $this->wpdb->prepare(
+					// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare -- Table name and placeholders are safe.
+					"DELETE FROM {$table} WHERE order_id IN ({$placeholders})",
+					$order_ids
+				);
+
+				// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- SQL is prepared above.
+				$result = $this->wpdb->query( $sql );
+				$total += is_int( $result ) ? $result : 0;
+			}
+		}
+
+		return $total;
 	}
 }

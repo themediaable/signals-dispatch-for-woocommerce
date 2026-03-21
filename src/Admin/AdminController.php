@@ -155,8 +155,8 @@ final class AdminController extends AbstractAdminController {
 		$cap = $this->get_capability();
 
 		add_menu_page(
-			__( 'Signals', 'signals-dispatch-woocommerce' ),
-			__( 'Signals', 'signals-dispatch-woocommerce' ),
+			__( 'Signals', 'signals-dispatch-for-woocommerce' ),
+			__( 'Signals', 'signals-dispatch-for-woocommerce' ),
 			$cap,
 			'tmasd-setup',
 			array( $this->setup_controller, 'render' ),
@@ -165,8 +165,8 @@ final class AdminController extends AbstractAdminController {
 
 		add_submenu_page(
 			'tmasd-setup',
-			__( 'Setup', 'signals-dispatch-woocommerce' ),
-			__( 'Setup', 'signals-dispatch-woocommerce' ),
+			__( 'Setup', 'signals-dispatch-for-woocommerce' ),
+			__( 'Setup', 'signals-dispatch-for-woocommerce' ),
 			$cap,
 			'tmasd-setup',
 			array( $this->setup_controller, 'render' )
@@ -174,8 +174,8 @@ final class AdminController extends AbstractAdminController {
 
 		add_submenu_page(
 			'tmasd-setup',
-			__( 'Dispatch Rules', 'signals-dispatch-woocommerce' ),
-			__( 'Dispatch', 'signals-dispatch-woocommerce' ),
+			__( 'Dispatch Rules', 'signals-dispatch-for-woocommerce' ),
+			__( 'Dispatch', 'signals-dispatch-for-woocommerce' ),
 			$cap,
 			'tmasd-dispatch',
 			array( $this->dispatch_controller, 'render' )
@@ -183,8 +183,8 @@ final class AdminController extends AbstractAdminController {
 
 		add_submenu_page(
 			'tmasd-setup',
-			__( 'Logs', 'signals-dispatch-woocommerce' ),
-			__( 'Logs', 'signals-dispatch-woocommerce' ),
+			__( 'Logs', 'signals-dispatch-for-woocommerce' ),
+			__( 'Logs', 'signals-dispatch-for-woocommerce' ),
 			$cap,
 			'tmasd-logs',
 			array( $this->logs_controller, 'render' )
@@ -192,8 +192,8 @@ final class AdminController extends AbstractAdminController {
 
 		add_submenu_page(
 			'tmasd-setup',
-			__( 'Health Check', 'signals-dispatch-woocommerce' ),
-			__( 'Health Check', 'signals-dispatch-woocommerce' ),
+			__( 'Health Check', 'signals-dispatch-for-woocommerce' ),
+			__( 'Health Check', 'signals-dispatch-for-woocommerce' ),
 			$cap,
 			'tmasd-health',
 			array( $this->health_controller, 'render' )
@@ -201,8 +201,8 @@ final class AdminController extends AbstractAdminController {
 
 		add_submenu_page(
 			'tmasd-setup',
-			__( 'Help & Documentation', 'signals-dispatch-woocommerce' ),
-			__( 'Help', 'signals-dispatch-woocommerce' ),
+			__( 'Help & Documentation', 'signals-dispatch-for-woocommerce' ),
+			__( 'Help', 'signals-dispatch-for-woocommerce' ),
 			$cap,
 			'tmasd-help',
 			array( $this->help_controller, 'render' )
@@ -210,8 +210,8 @@ final class AdminController extends AbstractAdminController {
 
 		add_submenu_page(
 			'tmasd-setup',
-			__( 'Pro — Coming Soon', 'signals-dispatch-woocommerce' ),
-			__( 'Coming Soon ★', 'signals-dispatch-woocommerce' ),
+			__( 'Pro — Coming Soon', 'signals-dispatch-for-woocommerce' ),
+			__( 'Coming Soon ★', 'signals-dispatch-for-woocommerce' ),
 			$cap,
 			'tmasd-upgrade',
 			array( $this->upgrade_controller, 'render' )
@@ -303,7 +303,7 @@ final class AdminController extends AbstractAdminController {
 		echo '<p>';
 		printf(
 			/* translators: 1: opening anchor tag, 2: closing anchor tag */
-			esc_html__( 'Signals Pro is coming soon! %1$sSee what\'s planned%2$s — unlimited dispatch rules, automatic retries, and priority support.', 'signals-dispatch-woocommerce' ),
+			esc_html__( 'Signals Pro is coming soon! %1$sSee what\'s planned%2$s — unlimited dispatch rules, automatic retries, and priority support.', 'signals-dispatch-for-woocommerce' ),
 			'<a href="' . esc_url( admin_url( 'admin.php?page=tmasd-upgrade' ) ) . '"><strong>',
 			'</strong></a>'
 		);

@@ -64,7 +64,7 @@ final class LogRepository extends AbstractRepository {
 		$table = $this->get_table_name();
 		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Table name is safe.
 		$sql = $this->wpdb->prepare( "SELECT * FROM {$table} WHERE order_id = %d ORDER BY id DESC LIMIT 1", $order_id );
-		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- SQL is prepared above.
+		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- SQL is prepared above.
 		$row = $this->wpdb->get_row( $sql, ARRAY_A );
 
 		return is_array( $row ) ? $row : null;
@@ -80,7 +80,7 @@ final class LogRepository extends AbstractRepository {
 		$table = $this->get_table_name();
 		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Table name is safe.
 		$sql = $this->wpdb->prepare( "SELECT * FROM {$table} WHERE wa_message_id = %s", $wa_message_id );
-		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- SQL is prepared above.
+		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- SQL is prepared above.
 		$row = $this->wpdb->get_row( $sql, ARRAY_A );
 
 		return is_array( $row ) ? $row : null;
@@ -185,11 +185,11 @@ final class LogRepository extends AbstractRepository {
 		$sql = "SELECT * FROM {$table} {$where} ORDER BY id DESC";
 
 		if ( ! empty( $params ) ) {
-			// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- SQL is dynamic with safe values.
+			// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- SQL is dynamic with safe values.
 			$sql = $this->wpdb->prepare( $sql, $params );
 		}
 
-		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- SQL and limit are prepared above.
+		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- SQL and limit are prepared above.
 		$rows = $this->wpdb->get_results( $sql . $limit_sql, ARRAY_A );
 
 		return is_array( $rows ) ? $rows : array();
@@ -209,11 +209,11 @@ final class LogRepository extends AbstractRepository {
 		$sql = "SELECT COUNT(*) FROM {$table} {$where}";
 
 		if ( ! empty( $params ) ) {
-			// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- SQL is dynamic with safe values.
+			// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- SQL is dynamic with safe values.
 			$sql = $this->wpdb->prepare( $sql, $params );
 		}
 
-		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- SQL is prepared above.
+		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- SQL is prepared above.
 		return (int) $this->wpdb->get_var( $sql );
 	}
 
@@ -231,7 +231,7 @@ final class LogRepository extends AbstractRepository {
 			"SELECT status, COUNT(*) as count FROM {$table} WHERE created_at >= %s GROUP BY status",
 			$since
 		);
-		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- SQL is prepared above.
+		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- SQL is prepared above.
 		$rows = $this->wpdb->get_results( $sql, ARRAY_A );
 
 		$counts = array();
@@ -252,56 +252,88 @@ final class LogRepository extends AbstractRepository {
 	public function delete_all(): int {
 		$table = $this->get_table_name();
 
-		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Table name is safe internal value.
+		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- Table name is safe internal value.
 		return (int) $this->wpdb->query( "DELETE FROM {$table}" );
 	}
 
 	/**
-	 * Find log rows associated with WooCommerce orders belonging to a user.
+	 * Find log rows for orders belonging to a customer email.
 	 *
-	 * @param int $user_id WordPress user ID.
+	 * Uses wc_get_orders() for HPOS compatibility and guest customer support.
+	 *
+	 * @param string $email Customer email address.
 	 * @return array<int, array<string, mixed>> Log rows.
 	 */
-	public function find_by_user_id( int $user_id ): array {
-		$table = $this->get_table_name();
-		$sql   = $this->wpdb->prepare(
-			// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Table name is safe.
-			"SELECT l.* FROM {$table} l
-			INNER JOIN {$this->wpdb->posts} p ON p.ID = l.order_id
-			WHERE p.post_author = %d AND l.order_id > 0
-			ORDER BY l.id DESC",
-			$user_id
+	public function find_by_email( string $email ): array {
+		if ( ! function_exists( 'wc_get_orders' ) ) {
+			return array();
+		}
+
+		$order_ids = wc_get_orders(
+			array(
+				'customer' => $email,
+				'return'   => 'ids',
+				'limit'    => -1,
+			)
 		);
-		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- SQL is prepared above.
+
+		if ( empty( $order_ids ) ) {
+			return array();
+		}
+
+		$table        = $this->get_table_name();
+		$placeholders = implode( ',', array_fill( 0, count( $order_ids ), '%d' ) );
+
+		$sql = $this->wpdb->prepare(
+			// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare -- Table name and placeholders are safe.
+			"SELECT * FROM {$table} WHERE order_id IN ({$placeholders}) ORDER BY id DESC",
+			$order_ids
+		);
+
+		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- SQL is prepared above.
 		$rows = $this->wpdb->get_results( $sql, ARRAY_A );
 
 		return is_array( $rows ) ? $rows : array();
 	}
 
 	/**
-	 * Anonymise the phone_e164 field in log rows owned by a user.
+	 * Anonymise phone_e164 in log rows for orders belonging to a customer email.
 	 *
+	 * Uses wc_get_orders() for HPOS compatibility and guest customer support.
 	 * The order records are retained for business/accounting purposes;
 	 * only the personal phone number is anonymised.
 	 *
-	 * @param int $user_id WordPress user ID.
+	 * @param string $email Customer email address.
 	 * @return int Number of rows updated.
 	 */
-	public function anonymise_phone_by_user_id( int $user_id ): int {
-		$table   = $this->get_table_name();
-		$wp_posts = $this->wpdb->posts;
+	public function anonymise_phone_by_email( string $email ): int {
+		if ( ! function_exists( 'wc_get_orders' ) ) {
+			return 0;
+		}
 
-		$sql = $this->wpdb->prepare(
-			// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Table names are safe internal values.
-			"UPDATE {$table} l
-			INNER JOIN {$wp_posts} p ON p.ID = l.order_id
-			SET l.phone_e164 = 'ANONYMISED', l.updated_at = %s
-			WHERE p.post_author = %d AND l.order_id > 0 AND l.phone_e164 != 'ANONYMISED'",
-			current_time( 'mysql' ),
-			$user_id
+		$order_ids = wc_get_orders(
+			array(
+				'customer' => $email,
+				'return'   => 'ids',
+				'limit'    => -1,
+			)
 		);
 
-		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- SQL is prepared above.
+		if ( empty( $order_ids ) ) {
+			return 0;
+		}
+
+		$table        = $this->get_table_name();
+		$placeholders = implode( ',', array_fill( 0, count( $order_ids ), '%d' ) );
+		$now          = current_time( 'mysql' );
+
+		$sql = $this->wpdb->prepare(
+			// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare -- Table name and placeholders are safe.
+			"UPDATE {$table} SET phone_e164 = 'ANONYMISED', updated_at = %s WHERE order_id IN ({$placeholders}) AND phone_e164 != 'ANONYMISED'",
+			array_merge( array( $now ), $order_ids )
+		);
+
+		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- SQL is prepared above.
 		$result = $this->wpdb->query( $sql );
 
 		return is_int( $result ) ? $result : 0;

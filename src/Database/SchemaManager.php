@@ -182,7 +182,7 @@ final class SchemaManager {
 		);
 
 		foreach ( $tables as $table ) {
-			// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Table name is from internal source.
+			// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- Table name is from internal source.
 			$this->wpdb->query( "DROP TABLE IF EXISTS {$table}" );
 		}
 	}

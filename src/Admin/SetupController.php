@@ -83,7 +83,7 @@ final class SetupController extends AbstractAdminController {
 	private function render_page_header(): void {
 		echo '<div class="wrap tmasd-admin">';
 		echo '<h1 class="wp-heading-inline">';
-		echo esc_html__( 'Signals Dispatch Setup', 'signals-dispatch-woocommerce' );
+		echo esc_html__( 'Signals Dispatch Setup', 'signals-dispatch-for-woocommerce' );
 		echo '</h1>';
 		echo '<hr class="wp-header-end" />';
 	}
@@ -96,10 +96,10 @@ final class SetupController extends AbstractAdminController {
 	 */
 	private function render_tabs( string $active_tab ): void {
 		$tabs = array(
-			'credentials' => __( 'Step 1: Credentials', 'signals-dispatch-woocommerce' ),
-			'webhook'     => __( 'Step 2: Webhook', 'signals-dispatch-woocommerce' ),
-			'test'        => __( 'Step 3: Test', 'signals-dispatch-woocommerce' ),
-			'done'        => __( 'Step 4: Done', 'signals-dispatch-woocommerce' ),
+			'credentials' => __( 'Step 1: Credentials', 'signals-dispatch-for-woocommerce' ),
+			'webhook'     => __( 'Step 2: Webhook', 'signals-dispatch-for-woocommerce' ),
+			'test'        => __( 'Step 3: Test', 'signals-dispatch-for-woocommerce' ),
+			'done'        => __( 'Step 4: Done', 'signals-dispatch-for-woocommerce' ),
 		);
 
 		echo '<h2 class="nav-tab-wrapper">';
@@ -144,7 +144,7 @@ final class SetupController extends AbstractAdminController {
 	private function render_notices(): void {
 		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Display only.
 		if ( isset( $_GET['updated'] ) ) {
-			$this->render_notice_success( __( 'Settings saved.', 'signals-dispatch-woocommerce' ) );
+			$this->render_notice_success( __( 'Settings saved.', 'signals-dispatch-for-woocommerce' ) );
 		}
 		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Display only.
 		if ( isset( $_GET['missing_fields'] ) ) {
@@ -162,18 +162,18 @@ final class SetupController extends AbstractAdminController {
 			$this->render_notice_error(
 				sprintf(
 					/* translators: %s: comma-separated list of required field names */
-					__( 'Please fill in the following required fields: %s', 'signals-dispatch-woocommerce' ),
+					__( 'Please fill in the following required fields: %s', 'signals-dispatch-for-woocommerce' ),
 					implode( ', ', $names )
 				)
 			);
 		}
 		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Display only.
 		if ( isset( $_GET['test_success'] ) ) {
-			$this->render_notice_success( __( 'Test message sent successfully.', 'signals-dispatch-woocommerce' ) );
+			$this->render_notice_success( __( 'Test message sent successfully.', 'signals-dispatch-for-woocommerce' ) );
 		}
 		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Display only.
 		if ( isset( $_GET['test_error'] ) ) {
-			$this->render_notice_error( __( 'Test message failed. Check logs.', 'signals-dispatch-woocommerce' ) );
+			$this->render_notice_error( __( 'Test message failed. Check logs.', 'signals-dispatch-for-woocommerce' ) );
 		}
 	}
 
@@ -184,11 +184,11 @@ final class SetupController extends AbstractAdminController {
 	 */
 	private function get_field_labels(): array {
 		return array(
-			\TMASD_OPTION_PHONE_NUMBER_ID       => __( 'Phone Number ID', 'signals-dispatch-woocommerce' ),
-			\TMASD_OPTION_WABA_ID               => __( 'WhatsApp Business Account ID', 'signals-dispatch-woocommerce' ),
-			\TMASD_OPTION_ACCESS_TOKEN          => __( 'Access Token', 'signals-dispatch-woocommerce' ),
-			\TMASD_OPTION_WEBHOOK_VERIFY_TOKEN  => __( 'Webhook Verify Token', 'signals-dispatch-woocommerce' ),
-			\TMASD_OPTION_APP_SECRET            => __( 'App Secret', 'signals-dispatch-woocommerce' ),
+			\TMASD_OPTION_PHONE_NUMBER_ID       => __( 'Phone Number ID', 'signals-dispatch-for-woocommerce' ),
+			\TMASD_OPTION_WABA_ID               => __( 'WhatsApp Business Account ID', 'signals-dispatch-for-woocommerce' ),
+			\TMASD_OPTION_ACCESS_TOKEN          => __( 'Access Token', 'signals-dispatch-for-woocommerce' ),
+			\TMASD_OPTION_WEBHOOK_VERIFY_TOKEN  => __( 'Webhook Verify Token', 'signals-dispatch-for-woocommerce' ),
+			\TMASD_OPTION_APP_SECRET            => __( 'App Secret', 'signals-dispatch-for-woocommerce' ),
 		);
 	}
 
@@ -208,9 +208,9 @@ final class SetupController extends AbstractAdminController {
 
 		echo '<p class="description">';
 		printf(
-			/* translators: %s: URL to help page */
 			wp_kses(
-				__( 'Enter your Meta WhatsApp Business API credentials below. All fields marked <span class="tmasd-required">*</span> are required. <a href="%s">Need help finding these values?</a>', 'signals-dispatch-woocommerce' ),
+				/* translators: %s: URL to help page */
+				__( 'Enter your Meta WhatsApp Business API credentials below. All fields marked <span class="tmasd-required">*</span> are required. <a href="%s">Need help finding these values?</a>', 'signals-dispatch-for-woocommerce' ),
 				array(
 					'span' => array( 'class' => array() ),
 					'a'    => array( 'href' => array() ),
@@ -228,54 +228,54 @@ final class SetupController extends AbstractAdminController {
 
 		$this->render_text_field(
 			\TMASD_OPTION_PHONE_NUMBER_ID,
-			__( 'Phone Number ID', 'signals-dispatch-woocommerce' ),
+			__( 'Phone Number ID', 'signals-dispatch-for-woocommerce' ),
 			$phone_id,
-			__( 'The numeric ID of your WhatsApp sender phone number. Found in the Meta Business Manager under WhatsApp → Phone Numbers.', 'signals-dispatch-woocommerce' ),
+			__( 'The numeric ID of your WhatsApp sender phone number. Found in the Meta Business Manager under WhatsApp → Phone Numbers.', 'signals-dispatch-for-woocommerce' ),
 			true
 		);
 
 		$this->render_text_field(
 			\TMASD_OPTION_WABA_ID,
-			__( 'WhatsApp Business Account ID', 'signals-dispatch-woocommerce' ),
+			__( 'WhatsApp Business Account ID', 'signals-dispatch-for-woocommerce' ),
 			$waba_id,
-			__( 'The numeric ID of your WhatsApp Business Account (WABA). Found in the Meta Business Manager under Accounts → WhatsApp Accounts.', 'signals-dispatch-woocommerce' ),
+			__( 'The numeric ID of your WhatsApp Business Account (WABA). Found in the Meta Business Manager under Accounts → WhatsApp Accounts.', 'signals-dispatch-for-woocommerce' ),
 			true
 		);
 
 		$this->render_secret_field(
 			\TMASD_OPTION_ACCESS_TOKEN,
-			__( 'Access Token', 'signals-dispatch-woocommerce' ),
+			__( 'Access Token', 'signals-dispatch-for-woocommerce' ),
 			$has_token,
-			__( 'A permanent or temporary system-user access token with the whatsapp_business_messaging permission. Generate one in Meta Business Manager → System Users.', 'signals-dispatch-woocommerce' ),
+			__( 'A permanent or temporary system-user access token with the whatsapp_business_messaging permission. Generate one in Meta Business Manager → System Users.', 'signals-dispatch-for-woocommerce' ),
 			true
 		);
 
 		$this->render_text_field(
 			\TMASD_OPTION_WEBHOOK_VERIFY_TOKEN,
-			__( 'Webhook Verify Token', 'signals-dispatch-woocommerce' ),
+			__( 'Webhook Verify Token', 'signals-dispatch-for-woocommerce' ),
 			$verify_token,
-			__( 'A secret string you create yourself. Enter the same value here and in the "Verify token" field when registering the webhook in Meta Business Manager. Used to confirm that webhook GET requests come from Meta.', 'signals-dispatch-woocommerce' ),
+			__( 'A secret string you create yourself. Enter the same value here and in the "Verify token" field when registering the webhook in Meta Business Manager. Used to confirm that webhook GET requests come from Meta.', 'signals-dispatch-for-woocommerce' ),
 			true
 		);
 
 		$this->render_secret_field(
 			\TMASD_OPTION_APP_SECRET,
-			__( 'App Secret', 'signals-dispatch-woocommerce' ),
+			__( 'App Secret', 'signals-dispatch-for-woocommerce' ),
 			$has_secret,
-			__( 'The App Secret of your Meta App. Found in the Meta App Dashboard under Settings → Basic. Used to verify the HMAC-SHA256 signature on incoming webhook POST requests.', 'signals-dispatch-woocommerce' ),
+			__( 'The App Secret of your Meta App. Found in the Meta App Dashboard under Settings → Basic. Used to verify the HMAC-SHA256 signature on incoming webhook POST requests.', 'signals-dispatch-for-woocommerce' ),
 			true
 		);
 
 		$this->render_checkbox_field(
 			\TMASD_OPTION_REQUIRE_CONSENT,
-			__( 'Require Consent Before Sending', 'signals-dispatch-woocommerce' ),
+			__( 'Require Consent Before Sending', 'signals-dispatch-for-woocommerce' ),
 			$require_consent,
-			__( 'When enabled, messages are only sent to phone numbers that have a local opt-in consent record stored by this plugin. Recommended for GDPR compliance.', 'signals-dispatch-woocommerce' )
+			__( 'When enabled, messages are only sent to phone numbers that have a local opt-in consent record stored by this plugin. Recommended for GDPR compliance.', 'signals-dispatch-for-woocommerce' )
 		);
 
 		echo '</table>';
 
-		submit_button( __( 'Save Settings', 'signals-dispatch-woocommerce' ) );
+		submit_button( __( 'Save Settings', 'signals-dispatch-for-woocommerce' ) );
 		echo '</form>';
 	}
 
@@ -332,7 +332,7 @@ final class SetupController extends AbstractAdminController {
 	 */
 	private function render_secret_field( string $name, string $label, bool $has_value, string $description = '', bool $required = false ): void {
 		$placeholder = $has_value
-			? esc_attr__( '•••••••• already saved — leave blank to keep', 'signals-dispatch-woocommerce' )
+			? esc_attr__( '•••••••• already saved — leave blank to keep', 'signals-dispatch-for-woocommerce' )
 			: '';
 		$label_html = esc_html( $label );
 		if ( $required ) {
@@ -384,8 +384,8 @@ final class SetupController extends AbstractAdminController {
 		$webhook_url = rest_url( 'tmasignals/v1/webhook' );
 
 		echo '<div class="tmasd-card">';
-		echo '<h2>' . esc_html__( 'Webhook Configuration', 'signals-dispatch-woocommerce' ) . '</h2>';
-		echo '<p>' . esc_html__( 'Use this URL in your WhatsApp Business App settings:', 'signals-dispatch-woocommerce' ) . '</p>';
+		echo '<h2>' . esc_html__( 'Webhook Configuration', 'signals-dispatch-for-woocommerce' ) . '</h2>';
+		echo '<p>' . esc_html__( 'Use this URL in your WhatsApp Business App settings:', 'signals-dispatch-for-woocommerce' ) . '</p>';
 		echo '<code class="tmasd-webhook-url">' . esc_url( $webhook_url ) . '</code>';
 		echo '</div>';
 	}
@@ -402,27 +402,27 @@ final class SetupController extends AbstractAdminController {
 
 		echo '<table class="form-table">';
 		echo '<tr><th scope="row"><label for="tmasd_test_phone">';
-		echo esc_html__( 'Test Phone', 'signals-dispatch-woocommerce' );
+		echo esc_html__( 'Test Phone', 'signals-dispatch-for-woocommerce' );
 		echo '</label></th>';
 		echo '<td><input type="text" id="tmasd_test_phone" name="tmasd_test_phone" class="regular-text" /></td></tr>';
 
 		echo '<tr><th scope="row"><label for="tmasd_test_template">';
-		echo esc_html__( 'Template Name', 'signals-dispatch-woocommerce' );
+		echo esc_html__( 'Template Name', 'signals-dispatch-for-woocommerce' );
 		echo '</label></th>';
 		echo '<td><input type="text" id="tmasd_test_template" name="tmasd_test_template" class="regular-text" /></td></tr>';
 
 		echo '<tr><th scope="row"><label for="tmasd_test_language">';
-		echo esc_html__( 'Language', 'signals-dispatch-woocommerce' );
+		echo esc_html__( 'Language', 'signals-dispatch-for-woocommerce' );
 		echo '</label></th>';
 		echo '<td><input type="text" id="tmasd_test_language" name="tmasd_test_language" value="en_US" class="regular-text" /></td></tr>';
 
 		echo '<tr><th scope="row"><label for="tmasd_test_vars">';
-		echo esc_html__( 'Variables (JSON array)', 'signals-dispatch-woocommerce' );
+		echo esc_html__( 'Variables (JSON array)', 'signals-dispatch-for-woocommerce' );
 		echo '</label></th>';
 		echo '<td><textarea id="tmasd_test_vars" name="tmasd_test_vars" rows="4" class="large-text">[]</textarea></td></tr>';
 		echo '</table>';
 
-		submit_button( __( 'Send Test Message', 'signals-dispatch-woocommerce' ) );
+		submit_button( __( 'Send Test Message', 'signals-dispatch-for-woocommerce' ) );
 		echo '</form>';
 	}
 
@@ -433,10 +433,10 @@ final class SetupController extends AbstractAdminController {
 	 */
 	private function render_done_panel(): void {
 		echo '<div class="tmasd-card">';
-		echo '<h2>' . esc_html__( 'Setup Complete', 'signals-dispatch-woocommerce' ) . '</h2>';
-		echo '<p>' . esc_html__( 'Your plugin is configured. Create dispatch rules to start sending messages.', 'signals-dispatch-woocommerce' ) . '</p>';
+		echo '<h2>' . esc_html__( 'Setup Complete', 'signals-dispatch-for-woocommerce' ) . '</h2>';
+		echo '<p>' . esc_html__( 'Your plugin is configured. Create dispatch rules to start sending messages.', 'signals-dispatch-for-woocommerce' ) . '</p>';
 		echo '<p><a href="' . esc_url( admin_url( 'admin.php?page=tmasd-dispatch' ) ) . '" class="button button-primary">';
-		echo esc_html__( 'Go to Dispatch Rules', 'signals-dispatch-woocommerce' );
+		echo esc_html__( 'Go to Dispatch Rules', 'signals-dispatch-for-woocommerce' );
 		echo '</a></p>';
 		echo '</div>';
 	}

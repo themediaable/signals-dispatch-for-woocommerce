@@ -60,7 +60,7 @@ abstract class AbstractAdminController {
 	 */
 	protected function assert_access(): void {
 		if ( ! current_user_can( $this->get_capability() ) ) {
-			wp_die( esc_html__( 'You do not have sufficient permissions.', 'signals-dispatch-woocommerce' ) );
+			wp_die( esc_html__( 'You do not have sufficient permissions.', 'signals-dispatch-for-woocommerce' ) );
 		}
 	}
 
@@ -165,7 +165,7 @@ abstract class AbstractAdminController {
 		}
 		echo '<div class="notice notice-' . esc_attr( $type ) . ' tmasd-notice"' . $extra . '>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $extra is built from esc_attr calls.
 		echo '<p>' . esc_html( $message ) . '</p>';
-		echo '<button type="button" class="tmasd-notice-dismiss" aria-label="' . esc_attr__( 'Dismiss', 'signals-dispatch-woocommerce' ) . '">&times;</button>';
+		echo '<button type="button" class="tmasd-notice-dismiss" aria-label="' . esc_attr__( 'Dismiss', 'signals-dispatch-for-woocommerce' ) . '">&times;</button>';
 		echo '</div>';
 	}
 

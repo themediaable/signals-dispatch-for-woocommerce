@@ -86,7 +86,7 @@ final class OrderController extends AbstractAdminController {
 		foreach ( $screens as $screen ) {
 			add_meta_box(
 				'tmasd_manual_send',
-				__( 'Send WhatsApp Update', 'signals-dispatch-woocommerce' ),
+				__( 'Send WhatsApp Update', 'signals-dispatch-for-woocommerce' ),
 				array( $this, 'render_meta_box' ),
 				$screen,
 				'side',
@@ -105,18 +105,18 @@ final class OrderController extends AbstractAdminController {
 		$order_id = $this->resolve_order_id( $post_or_order );
 
 		if ( $order_id <= 0 ) {
-			echo '<p>' . esc_html__( 'Order not found.', 'signals-dispatch-woocommerce' ) . '</p>';
+			echo '<p>' . esc_html__( 'Order not found.', 'signals-dispatch-for-woocommerce' ) . '</p>';
 			return;
 		}
 
 		$mappings = $this->get_enabled_mappings();
 
 		if ( empty( $mappings ) ) {
-			echo '<p>' . esc_html__( 'No enabled dispatch rules found. ', 'signals-dispatch-woocommerce' );
+			echo '<p>' . esc_html__( 'No enabled dispatch rules found. ', 'signals-dispatch-for-woocommerce' );
 			printf(
 				'<a href="%s">%s</a>',
 				esc_url( admin_url( 'admin.php?page=tmasd-dispatch' ) ),
-				esc_html__( 'Create a dispatch rule', 'signals-dispatch-woocommerce' )
+				esc_html__( 'Create a dispatch rule', 'signals-dispatch-for-woocommerce' )
 			);
 			echo '</p>';
 			return;
@@ -129,7 +129,7 @@ final class OrderController extends AbstractAdminController {
 
 		echo '<p>';
 		echo '<label for="tmasd_mapping_id"><strong>';
-		echo esc_html__( 'Dispatch Rule', 'signals-dispatch-woocommerce' );
+		echo esc_html__( 'Dispatch Rule', 'signals-dispatch-for-woocommerce' );
 		echo '</strong></label>';
 		echo '</p>';
 
@@ -147,13 +147,13 @@ final class OrderController extends AbstractAdminController {
 		echo '</select>';
 
 		echo '<p class="description">';
-		echo esc_html__( 'Sends the selected template to the customer\'s billing phone number.', 'signals-dispatch-woocommerce' );
+		echo esc_html__( 'Sends the selected template to the customer\'s billing phone number.', 'signals-dispatch-for-woocommerce' );
 		echo '</p>';
 
 		echo '<p>';
 		printf(
 			'<button type="button" id="tmasd-send-btn" class="button button-primary">%s</button>',
-			esc_html__( 'Send WhatsApp Update', 'signals-dispatch-woocommerce' )
+			esc_html__( 'Send WhatsApp Update', 'signals-dispatch-for-woocommerce' )
 		);
 		echo '</p>';
 
@@ -165,10 +165,20 @@ final class OrderController extends AbstractAdminController {
 			var select    = document.getElementById('tmasd_mapping_id');
 			var noticeBox = document.getElementById('tmasd-send-notice');
 
+			function showNotice(cls, message) {
+				noticeBox.textContent = '';
+				var div = document.createElement('div');
+				div.className = 'notice ' + cls + ' inline';
+				var p = document.createElement('p');
+				p.textContent = message;
+				div.appendChild(p);
+				noticeBox.appendChild(div);
+			}
+
 			btn.addEventListener('click', function(){
 				btn.disabled = true;
-				btn.textContent = <?php echo wp_json_encode( __( 'Sending…', 'signals-dispatch-woocommerce' ) ); ?>;
-				noticeBox.innerHTML = '';
+				btn.textContent = <?php echo wp_json_encode( __( 'Sending…', 'signals-dispatch-for-woocommerce' ) ); ?>;
+				noticeBox.textContent = '';
 
 				var data = new FormData();
 				data.append('action',     'tmasd_manual_send');
@@ -184,14 +194,14 @@ final class OrderController extends AbstractAdminController {
 				.then(function(r){ return r.json(); })
 				.then(function(res){
 					var cls = res.success ? 'notice-success' : 'notice-error';
-					noticeBox.innerHTML = '<div class="notice ' + cls + ' inline"><p>' + res.data.message + '</p></div>';
+					showNotice(cls, res.data.message);
 					btn.disabled    = false;
-					btn.textContent = <?php echo wp_json_encode( __( 'Send WhatsApp Update', 'signals-dispatch-woocommerce' ) ); ?>;
+					btn.textContent = <?php echo wp_json_encode( __( 'Send WhatsApp Update', 'signals-dispatch-for-woocommerce' ) ); ?>;
 				})
 				.catch(function(){
-					noticeBox.innerHTML = '<div class="notice notice-error inline"><p><?php echo esc_js( __( 'Request failed. Please try again.', 'signals-dispatch-woocommerce' ) ); ?></p></div>';
+					showNotice('notice-error', <?php echo wp_json_encode( __( 'Request failed. Please try again.', 'signals-dispatch-for-woocommerce' ) ); ?>);
 					btn.disabled    = false;
-					btn.textContent = <?php echo wp_json_encode( __( 'Send WhatsApp Update', 'signals-dispatch-woocommerce' ) ); ?>;
+					btn.textContent = <?php echo wp_json_encode( __( 'Send WhatsApp Update', 'signals-dispatch-for-woocommerce' ) ); ?>;
 				});
 			});
 		})();
@@ -209,32 +219,34 @@ final class OrderController extends AbstractAdminController {
 	 */
 	public function handle_manual_send(): void {
 		if ( ! current_user_can( $this->get_capability() ) ) {
-			wp_send_json_error( array( 'message' => __( 'You do not have sufficient permissions.', 'signals-dispatch-woocommerce' ) ), 403 );
+			wp_send_json_error( array( 'message' => __( 'You do not have sufficient permissions.', 'signals-dispatch-for-woocommerce' ) ), 403 );
 		}
 
 		$order_id   = (int) $this->get_post_param( 'order_id', '0' );
 		$mapping_id = (int) $this->get_post_param( 'mapping_id', '0' );
 
-		if ( $order_id <= 0 || $mapping_id <= 0 ) {
-			if ( $order_id > 0 ) {
-				$this->log_manual_send_failure( $order_id, 'Invalid request: missing order ID or mapping ID.' );
-			}
-			wp_send_json_error( array( 'message' => __( 'Invalid request.', 'signals-dispatch-woocommerce' ) ) );
+		if ( $order_id <= 0 ) {
+			wp_send_json_error( array( 'message' => __( 'Invalid request.', 'signals-dispatch-for-woocommerce' ) ) );
 		}
 
 		check_ajax_referer( 'tmasd_manual_send_' . $order_id );
 
+		if ( $mapping_id <= 0 ) {
+			$this->log_manual_send_failure( $order_id, 'Invalid request: missing mapping ID.' );
+			wp_send_json_error( array( 'message' => __( 'Invalid request.', 'signals-dispatch-for-woocommerce' ) ) );
+		}
+
 		// Prevent duplicate sends within 30 seconds.
 		$transient_key = 'tmasd_manual_send_' . $order_id;
 		if ( false !== get_transient( $transient_key ) ) {
-			wp_send_json_error( array( 'message' => __( 'A message was already sent recently. Please wait before sending again.', 'signals-dispatch-woocommerce' ) ) );
+			wp_send_json_error( array( 'message' => __( 'A message was already sent recently. Please wait before sending again.', 'signals-dispatch-for-woocommerce' ) ) );
 		}
 
 		$mapping = $this->mapping_repo->find( $mapping_id );
 
 		if ( null === $mapping || empty( $mapping['enabled'] ) ) {
 			$this->log_manual_send_failure( $order_id, 'Selected dispatch rule is disabled or does not exist.' );
-			wp_send_json_error( array( 'message' => __( 'Selected dispatch rule is disabled or does not exist.', 'signals-dispatch-woocommerce' ) ) );
+			wp_send_json_error( array( 'message' => __( 'Selected dispatch rule is disabled or does not exist.', 'signals-dispatch-for-woocommerce' ) ) );
 		}
 
 		// Send synchronously so the log entry and result are immediate.
@@ -253,23 +265,23 @@ final class OrderController extends AbstractAdminController {
 
 		if ( $order instanceof WC_Order ) {
 			$current_user = wp_get_current_user();
-			$user_display = $current_user->exists() ? $current_user->user_login : __( 'Unknown', 'signals-dispatch-woocommerce' );
+			$user_display = $current_user->exists() ? $current_user->user_login : __( 'Unknown', 'signals-dispatch-for-woocommerce' );
 
 			if ( ! $is_failed ) {
 				$order->add_order_note(
 					sprintf(
 						/* translators: 1: template name, 2: admin user login */
-						__( 'Signals: WhatsApp message "%1$s" sent manually by %2$s.', 'signals-dispatch-woocommerce' ),
+						__( 'Signals: WhatsApp message "%1$s" sent manually by %2$s.', 'signals-dispatch-for-woocommerce' ),
 						$mapping['template_name'],
 						$user_display
 					)
 				);
 			} else {
-				$error_msg = $last_log['error_message'] ?? __( 'Unknown error', 'signals-dispatch-woocommerce' );
+				$error_msg = $last_log['error_message'] ?? __( 'Unknown error', 'signals-dispatch-for-woocommerce' );
 				$order->add_order_note(
 					sprintf(
 						/* translators: 1: template name, 2: admin user login, 3: error message */
-						__( 'Signals: WhatsApp message "%1$s" failed (sent by %2$s). Error: %3$s', 'signals-dispatch-woocommerce' ),
+						__( 'Signals: WhatsApp message "%1$s" failed (sent by %2$s). Error: %3$s', 'signals-dispatch-for-woocommerce' ),
 						$mapping['template_name'],
 						$user_display,
 						$error_msg
@@ -279,11 +291,11 @@ final class OrderController extends AbstractAdminController {
 		}
 
 		if ( $is_failed ) {
-			$error_msg = $last_log['error_message'] ?? __( 'Unknown error', 'signals-dispatch-woocommerce' );
-			wp_send_json_error( array( 'message' => __( 'Failed to send WhatsApp message.', 'signals-dispatch-woocommerce' ) . ' ' . $error_msg ) );
+			$error_msg = $last_log['error_message'] ?? __( 'Unknown error', 'signals-dispatch-for-woocommerce' );
+			wp_send_json_error( array( 'message' => __( 'Failed to send WhatsApp message.', 'signals-dispatch-for-woocommerce' ) . ' ' . $error_msg ) );
 		}
 
-		wp_send_json_success( array( 'message' => __( 'WhatsApp message sent successfully.', 'signals-dispatch-woocommerce' ) ) );
+		wp_send_json_success( array( 'message' => __( 'WhatsApp message sent successfully.', 'signals-dispatch-for-woocommerce' ) ) );
 	}
 
 	/**

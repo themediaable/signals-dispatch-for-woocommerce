@@ -70,12 +70,12 @@ final class HelpController extends AbstractAdminController {
 		?>
 		<div class="tmasd-upgrade-card">
 			<div class="tmasd-upgrade-card__body">
-				<h3><?php esc_html_e( 'Want more automation?', 'signals-dispatch-woocommerce' ); ?></h3>
-				<p><?php esc_html_e( 'Auto-retries, bulk messaging, advanced analytics, and priority support are available with Signals Pro.', 'signals-dispatch-woocommerce' ); ?></p>
+				<h3><?php esc_html_e( 'Want more automation?', 'signals-dispatch-for-woocommerce' ); ?></h3>
+				<p><?php esc_html_e( 'Auto-retries, bulk messaging, advanced analytics, and priority support are available with Signals Pro.', 'signals-dispatch-for-woocommerce' ); ?></p>
 			</div>
 			<div class="tmasd-upgrade-card__action">
 				<a href="<?php echo esc_url( $upgrade_page ); ?>" class="button button-primary">
-					<?php esc_html_e( 'View Pro Features', 'signals-dispatch-woocommerce' ); ?>
+					<?php esc_html_e( 'View Pro Features', 'signals-dispatch-for-woocommerce' ); ?>
 				</a>
 			</div>
 		</div>
@@ -90,7 +90,7 @@ final class HelpController extends AbstractAdminController {
 	private function render_page_header(): void {
 		echo '<div class="wrap tmasd-admin">';
 		echo '<h1 class="wp-heading-inline">';
-		echo esc_html__( 'Help & Documentation', 'signals-dispatch-woocommerce' );
+		echo esc_html__( 'Help & Documentation', 'signals-dispatch-for-woocommerce' );
 		echo '</h1>';
 		echo '<hr class="wp-header-end" />';
 	}
@@ -104,10 +104,10 @@ final class HelpController extends AbstractAdminController {
 		$current_tab = $this->get_current_tab();
 
 		$tabs = array(
-			'setup'           => __( 'API Setup', 'signals-dispatch-woocommerce' ),
-			'templates'       => __( 'Message Templates', 'signals-dispatch-woocommerce' ),
-			'faq'             => __( 'FAQ', 'signals-dispatch-woocommerce' ),
-			'troubleshooting' => __( 'Troubleshooting', 'signals-dispatch-woocommerce' ),
+			'setup'           => __( 'API Setup', 'signals-dispatch-for-woocommerce' ),
+			'templates'       => __( 'Message Templates', 'signals-dispatch-for-woocommerce' ),
+			'faq'             => __( 'FAQ', 'signals-dispatch-for-woocommerce' ),
+			'troubleshooting' => __( 'Troubleshooting', 'signals-dispatch-for-woocommerce' ),
 		);
 
 		echo '<nav class="nav-tab-wrapper">';
@@ -160,92 +160,92 @@ final class HelpController extends AbstractAdminController {
 	private function render_setup_tab(): void {
 		?>
 		<div class="card">
-			<h2><?php esc_html_e( 'WhatsApp Business API Setup', 'signals-dispatch-woocommerce' ); ?></h2>
+			<h2><?php esc_html_e( 'WhatsApp Business API Setup', 'signals-dispatch-for-woocommerce' ); ?></h2>
 			
-			<h3><?php esc_html_e( 'Step 1: Create a Meta Developer Account', 'signals-dispatch-woocommerce' ); ?></h3>
+			<h3><?php esc_html_e( 'Step 1: Create a Meta Developer Account', 'signals-dispatch-for-woocommerce' ); ?></h3>
 			<ol>
-				<li><?php esc_html_e( 'Go to developers.facebook.com', 'signals-dispatch-woocommerce' ); ?></li>
-				<li><?php esc_html_e( 'Click "Get Started" and log in with your Facebook account', 'signals-dispatch-woocommerce' ); ?></li>
-				<li><?php esc_html_e( 'Complete the developer registration process', 'signals-dispatch-woocommerce' ); ?></li>
+				<li><?php esc_html_e( 'Go to developers.facebook.com', 'signals-dispatch-for-woocommerce' ); ?></li>
+				<li><?php esc_html_e( 'Click "Get Started" and log in with your Facebook account', 'signals-dispatch-for-woocommerce' ); ?></li>
+				<li><?php esc_html_e( 'Complete the developer registration process', 'signals-dispatch-for-woocommerce' ); ?></li>
 			</ol>
 
-			<h3><?php esc_html_e( 'Step 2: Create a Meta App', 'signals-dispatch-woocommerce' ); ?></h3>
+			<h3><?php esc_html_e( 'Step 2: Create a Meta App', 'signals-dispatch-for-woocommerce' ); ?></h3>
 			<ol>
-				<li><?php esc_html_e( 'Go to developers.facebook.com/apps', 'signals-dispatch-woocommerce' ); ?></li>
-				<li><?php esc_html_e( 'Click "Create App"', 'signals-dispatch-woocommerce' ); ?></li>
-				<li><?php esc_html_e( 'Select "Other" for use case, then click "Next"', 'signals-dispatch-woocommerce' ); ?></li>
-				<li><?php esc_html_e( 'Select "Business" as the app type', 'signals-dispatch-woocommerce' ); ?></li>
-				<li><?php esc_html_e( 'Enter your app name (e.g., "My Store Notifications")', 'signals-dispatch-woocommerce' ); ?></li>
-				<li><?php esc_html_e( 'Select or create a Business Portfolio', 'signals-dispatch-woocommerce' ); ?></li>
-				<li><?php esc_html_e( 'Click "Create App"', 'signals-dispatch-woocommerce' ); ?></li>
+				<li><?php esc_html_e( 'Go to developers.facebook.com/apps', 'signals-dispatch-for-woocommerce' ); ?></li>
+				<li><?php esc_html_e( 'Click "Create App"', 'signals-dispatch-for-woocommerce' ); ?></li>
+				<li><?php esc_html_e( 'Select "Other" for use case, then click "Next"', 'signals-dispatch-for-woocommerce' ); ?></li>
+				<li><?php esc_html_e( 'Select "Business" as the app type', 'signals-dispatch-for-woocommerce' ); ?></li>
+				<li><?php esc_html_e( 'Enter your app name (e.g., "My Store Notifications")', 'signals-dispatch-for-woocommerce' ); ?></li>
+				<li><?php esc_html_e( 'Select or create a Business Portfolio', 'signals-dispatch-for-woocommerce' ); ?></li>
+				<li><?php esc_html_e( 'Click "Create App"', 'signals-dispatch-for-woocommerce' ); ?></li>
 			</ol>
 
-			<h3><?php esc_html_e( 'Step 3: Add WhatsApp Product', 'signals-dispatch-woocommerce' ); ?></h3>
+			<h3><?php esc_html_e( 'Step 3: Add WhatsApp Product', 'signals-dispatch-for-woocommerce' ); ?></h3>
 			<ol>
-				<li><?php esc_html_e( 'In your app dashboard, find "WhatsApp" in the products list', 'signals-dispatch-woocommerce' ); ?></li>
-				<li><?php esc_html_e( 'Click "Set Up"', 'signals-dispatch-woocommerce' ); ?></li>
-				<li><?php esc_html_e( 'This will add WhatsApp to your app and open the API Setup page', 'signals-dispatch-woocommerce' ); ?></li>
+				<li><?php esc_html_e( 'In your app dashboard, find "WhatsApp" in the products list', 'signals-dispatch-for-woocommerce' ); ?></li>
+				<li><?php esc_html_e( 'Click "Set Up"', 'signals-dispatch-for-woocommerce' ); ?></li>
+				<li><?php esc_html_e( 'This will add WhatsApp to your app and open the API Setup page', 'signals-dispatch-for-woocommerce' ); ?></li>
 			</ol>
 
-			<h3><?php esc_html_e( 'Step 4: Get Your Credentials', 'signals-dispatch-woocommerce' ); ?></h3>
-			<p><?php esc_html_e( 'On the WhatsApp → API Setup page, you will find:', 'signals-dispatch-woocommerce' ); ?></p>
+			<h3><?php esc_html_e( 'Step 4: Get Your Credentials', 'signals-dispatch-for-woocommerce' ); ?></h3>
+			<p><?php esc_html_e( 'On the WhatsApp → API Setup page, you will find:', 'signals-dispatch-for-woocommerce' ); ?></p>
 			
 			<table class="wp-list-table widefat fixed striped">
 				<thead>
 					<tr>
-						<th><?php esc_html_e( 'Credential', 'signals-dispatch-woocommerce' ); ?></th>
-						<th><?php esc_html_e( 'Where to Find', 'signals-dispatch-woocommerce' ); ?></th>
+						<th><?php esc_html_e( 'Credential', 'signals-dispatch-for-woocommerce' ); ?></th>
+						<th><?php esc_html_e( 'Where to Find', 'signals-dispatch-for-woocommerce' ); ?></th>
 					</tr>
 				</thead>
 				<tbody>
 					<tr>
-						<td><strong><?php esc_html_e( 'Phone Number ID', 'signals-dispatch-woocommerce' ); ?></strong></td>
-						<td><?php esc_html_e( 'Under "From" phone number dropdown - a numeric ID like 1234567890123456', 'signals-dispatch-woocommerce' ); ?></td>
+						<td><strong><?php esc_html_e( 'Phone Number ID', 'signals-dispatch-for-woocommerce' ); ?></strong></td>
+						<td><?php esc_html_e( 'Under "From" phone number dropdown - a numeric ID like 1234567890123456', 'signals-dispatch-for-woocommerce' ); ?></td>
 					</tr>
 					<tr>
-						<td><strong><?php esc_html_e( 'WhatsApp Business Account ID', 'signals-dispatch-woocommerce' ); ?></strong></td>
-						<td><?php esc_html_e( 'Shown as "WhatsApp Business Account ID" on the API Setup page', 'signals-dispatch-woocommerce' ); ?></td>
+						<td><strong><?php esc_html_e( 'WhatsApp Business Account ID', 'signals-dispatch-for-woocommerce' ); ?></strong></td>
+						<td><?php esc_html_e( 'Shown as "WhatsApp Business Account ID" on the API Setup page', 'signals-dispatch-for-woocommerce' ); ?></td>
 					</tr>
 					<tr>
-						<td><strong><?php esc_html_e( 'Access Token', 'signals-dispatch-woocommerce' ); ?></strong></td>
-						<td><?php esc_html_e( 'Click "Generate" for a temporary token (24 hours), or create a permanent one via System User', 'signals-dispatch-woocommerce' ); ?></td>
+						<td><strong><?php esc_html_e( 'Access Token', 'signals-dispatch-for-woocommerce' ); ?></strong></td>
+						<td><?php esc_html_e( 'Click "Generate" for a temporary token (24 hours), or create a permanent one via System User', 'signals-dispatch-for-woocommerce' ); ?></td>
 					</tr>
 					<tr>
-						<td><strong><?php esc_html_e( 'Webhook Verify Token', 'signals-dispatch-woocommerce' ); ?></strong></td>
-						<td><?php esc_html_e( 'Create your own secret string (e.g., my_store_webhook_secret_2026)', 'signals-dispatch-woocommerce' ); ?></td>
+						<td><strong><?php esc_html_e( 'Webhook Verify Token', 'signals-dispatch-for-woocommerce' ); ?></strong></td>
+						<td><?php esc_html_e( 'Create your own secret string (e.g., my_store_webhook_secret_2026)', 'signals-dispatch-for-woocommerce' ); ?></td>
 					</tr>
 				</tbody>
 			</table>
 
-			<h3><?php esc_html_e( 'Step 5: Create a Permanent Access Token', 'signals-dispatch-woocommerce' ); ?></h3>
+			<h3><?php esc_html_e( 'Step 5: Create a Permanent Access Token', 'signals-dispatch-for-woocommerce' ); ?></h3>
 			<ol>
-				<li><?php esc_html_e( 'Go to business.facebook.com/settings', 'signals-dispatch-woocommerce' ); ?></li>
-				<li><?php esc_html_e( 'Navigate to Users → System Users', 'signals-dispatch-woocommerce' ); ?></li>
-				<li><?php esc_html_e( 'Click "Add" to create a new system user', 'signals-dispatch-woocommerce' ); ?></li>
-				<li><?php esc_html_e( 'Set role to "Admin"', 'signals-dispatch-woocommerce' ); ?></li>
-				<li><?php esc_html_e( 'Click "Add Assets" → Select your WhatsApp Business Account → Enable full control', 'signals-dispatch-woocommerce' ); ?></li>
-				<li><?php esc_html_e( 'Click "Generate New Token"', 'signals-dispatch-woocommerce' ); ?></li>
-				<li><?php esc_html_e( 'Select your app and add permissions: whatsapp_business_messaging, whatsapp_business_management', 'signals-dispatch-woocommerce' ); ?></li>
-				<li><?php esc_html_e( 'Click "Generate Token" and save it securely', 'signals-dispatch-woocommerce' ); ?></li>
+				<li><?php esc_html_e( 'Go to business.facebook.com/settings', 'signals-dispatch-for-woocommerce' ); ?></li>
+				<li><?php esc_html_e( 'Navigate to Users → System Users', 'signals-dispatch-for-woocommerce' ); ?></li>
+				<li><?php esc_html_e( 'Click "Add" to create a new system user', 'signals-dispatch-for-woocommerce' ); ?></li>
+				<li><?php esc_html_e( 'Set role to "Admin"', 'signals-dispatch-for-woocommerce' ); ?></li>
+				<li><?php esc_html_e( 'Click "Add Assets" → Select your WhatsApp Business Account → Enable full control', 'signals-dispatch-for-woocommerce' ); ?></li>
+				<li><?php esc_html_e( 'Click "Generate New Token"', 'signals-dispatch-for-woocommerce' ); ?></li>
+				<li><?php esc_html_e( 'Select your app and add permissions: whatsapp_business_messaging, whatsapp_business_management', 'signals-dispatch-for-woocommerce' ); ?></li>
+				<li><?php esc_html_e( 'Click "Generate Token" and save it securely', 'signals-dispatch-for-woocommerce' ); ?></li>
 			</ol>
 
-			<h3><?php esc_html_e( 'Step 6: Configure Webhook', 'signals-dispatch-woocommerce' ); ?></h3>
+			<h3><?php esc_html_e( 'Step 6: Configure Webhook', 'signals-dispatch-for-woocommerce' ); ?></h3>
 			<ol>
-				<li><?php esc_html_e( 'In your Meta App, go to WhatsApp → Configuration', 'signals-dispatch-woocommerce' ); ?></li>
-				<li><?php esc_html_e( 'Click "Edit" on the Webhook section', 'signals-dispatch-woocommerce' ); ?></li>
+				<li><?php esc_html_e( 'In your Meta App, go to WhatsApp → Configuration', 'signals-dispatch-for-woocommerce' ); ?></li>
+				<li><?php esc_html_e( 'Click "Edit" on the Webhook section', 'signals-dispatch-for-woocommerce' ); ?></li>
 				<li>
-					<?php esc_html_e( 'Enter your callback URL:', 'signals-dispatch-woocommerce' ); ?>
+					<?php esc_html_e( 'Enter your callback URL:', 'signals-dispatch-for-woocommerce' ); ?>
 					<code><?php echo esc_html( home_url( '/wp-json/tmasignals/v1/webhook' ) ); ?></code>
 				</li>
-				<li><?php esc_html_e( 'Enter the Verify Token you configured in this plugin', 'signals-dispatch-woocommerce' ); ?></li>
-				<li><?php esc_html_e( 'Click "Verify and Save"', 'signals-dispatch-woocommerce' ); ?></li>
-				<li><?php esc_html_e( 'Subscribe to webhook field: messages', 'signals-dispatch-woocommerce' ); ?></li>
+				<li><?php esc_html_e( 'Enter the Verify Token you configured in this plugin', 'signals-dispatch-for-woocommerce' ); ?></li>
+				<li><?php esc_html_e( 'Click "Verify and Save"', 'signals-dispatch-for-woocommerce' ); ?></li>
+				<li><?php esc_html_e( 'Subscribe to webhook field: messages', 'signals-dispatch-for-woocommerce' ); ?></li>
 			</ol>
 
 			<div class="notice notice-info inline">
 				<p>
-					<strong><?php esc_html_e( 'Tip:', 'signals-dispatch-woocommerce' ); ?></strong>
-					<?php esc_html_e( 'For local development, use a tunneling service like ngrok to expose your local WordPress to the internet.', 'signals-dispatch-woocommerce' ); ?>
+					<strong><?php esc_html_e( 'Tip:', 'signals-dispatch-for-woocommerce' ); ?></strong>
+					<?php esc_html_e( 'For local development, use a tunneling service like ngrok to expose your local WordPress to the internet.', 'signals-dispatch-for-woocommerce' ); ?>
 				</p>
 			</div>
 		</div>
@@ -260,55 +260,55 @@ final class HelpController extends AbstractAdminController {
 	private function render_templates_tab(): void {
 		?>
 		<div class="card">
-			<h2><?php esc_html_e( 'Creating WhatsApp Message Templates', 'signals-dispatch-woocommerce' ); ?></h2>
+			<h2><?php esc_html_e( 'Creating WhatsApp Message Templates', 'signals-dispatch-for-woocommerce' ); ?></h2>
 			
-			<p><?php esc_html_e( 'WhatsApp requires pre-approved templates for business-initiated messages. Here\'s how to create them:', 'signals-dispatch-woocommerce' ); ?></p>
+			<p><?php esc_html_e( 'WhatsApp requires pre-approved templates for business-initiated messages. Here\'s how to create them:', 'signals-dispatch-for-woocommerce' ); ?></p>
 
-			<h3><?php esc_html_e( 'Creating a Template', 'signals-dispatch-woocommerce' ); ?></h3>
+			<h3><?php esc_html_e( 'Creating a Template', 'signals-dispatch-for-woocommerce' ); ?></h3>
 			<ol>
-				<li><?php esc_html_e( 'Go to WhatsApp → Message Templates in your Meta App', 'signals-dispatch-woocommerce' ); ?></li>
-				<li><?php esc_html_e( 'Click "Create Template"', 'signals-dispatch-woocommerce' ); ?></li>
-				<li><?php esc_html_e( 'Select "Utility" category (for order notifications)', 'signals-dispatch-woocommerce' ); ?></li>
-				<li><?php esc_html_e( 'Name your template (e.g., order_confirmation)', 'signals-dispatch-woocommerce' ); ?></li>
-				<li><?php esc_html_e( 'Add your message with variables', 'signals-dispatch-woocommerce' ); ?></li>
-				<li><?php esc_html_e( 'Submit for approval (usually takes minutes to hours)', 'signals-dispatch-woocommerce' ); ?></li>
+				<li><?php esc_html_e( 'Go to WhatsApp → Message Templates in your Meta App', 'signals-dispatch-for-woocommerce' ); ?></li>
+				<li><?php esc_html_e( 'Click "Create Template"', 'signals-dispatch-for-woocommerce' ); ?></li>
+				<li><?php esc_html_e( 'Select "Utility" category (for order notifications)', 'signals-dispatch-for-woocommerce' ); ?></li>
+				<li><?php esc_html_e( 'Name your template (e.g., order_confirmation)', 'signals-dispatch-for-woocommerce' ); ?></li>
+				<li><?php esc_html_e( 'Add your message with variables', 'signals-dispatch-for-woocommerce' ); ?></li>
+				<li><?php esc_html_e( 'Submit for approval (usually takes minutes to hours)', 'signals-dispatch-for-woocommerce' ); ?></li>
 			</ol>
 
-			<h3><?php esc_html_e( 'Template Example', 'signals-dispatch-woocommerce' ); ?></h3>
+			<h3><?php esc_html_e( 'Template Example', 'signals-dispatch-for-woocommerce' ); ?></h3>
 			<div class="tmasd-code-block">
-				<?php esc_html_e( 'Hello {{1}}, your order #{{2}} for {{3}} has been confirmed!', 'signals-dispatch-woocommerce' ); ?>
+				<?php esc_html_e( 'Hello {{1}}, your order #{{2}} for {{3}} has been confirmed!', 'signals-dispatch-for-woocommerce' ); ?>
 			</div>
 
-			<h3><?php esc_html_e( 'Variable Mapping', 'signals-dispatch-woocommerce' ); ?></h3>
-			<p><?php esc_html_e( 'In Dispatch Rules, map variables using a JSON array:', 'signals-dispatch-woocommerce' ); ?></p>
+			<h3><?php esc_html_e( 'Variable Mapping', 'signals-dispatch-for-woocommerce' ); ?></h3>
+			<p><?php esc_html_e( 'In Dispatch Rules, map variables using a JSON array:', 'signals-dispatch-for-woocommerce' ); ?></p>
 			<div class="tmasd-code-block">
 				["billing_first_name", "order_number", "order_total"]
 			</div>
 			<p>
-				<?php esc_html_e( 'This maps: {{1}} → Customer first name, {{2}} → Order number, {{3}} → Order total', 'signals-dispatch-woocommerce' ); ?>
+				<?php esc_html_e( 'This maps: {{1}} → Customer first name, {{2}} → Order number, {{3}} → Order total', 'signals-dispatch-for-woocommerce' ); ?>
 			</p>
 
-			<h3><?php esc_html_e( 'Available Variables', 'signals-dispatch-woocommerce' ); ?></h3>
+			<h3><?php esc_html_e( 'Available Variables', 'signals-dispatch-for-woocommerce' ); ?></h3>
 			<table class="wp-list-table widefat fixed striped">
 				<thead>
 					<tr>
-						<th><?php esc_html_e( 'Variable', 'signals-dispatch-woocommerce' ); ?></th>
-						<th><?php esc_html_e( 'Description', 'signals-dispatch-woocommerce' ); ?></th>
+						<th><?php esc_html_e( 'Variable', 'signals-dispatch-for-woocommerce' ); ?></th>
+						<th><?php esc_html_e( 'Description', 'signals-dispatch-for-woocommerce' ); ?></th>
 					</tr>
 				</thead>
 				<tbody>
-					<tr><td><code>order_id</code></td><td><?php esc_html_e( 'Internal order ID', 'signals-dispatch-woocommerce' ); ?></td></tr>
-					<tr><td><code>order_number</code></td><td><?php esc_html_e( 'Display order number', 'signals-dispatch-woocommerce' ); ?></td></tr>
-					<tr><td><code>order_total</code></td><td><?php esc_html_e( 'Order total amount', 'signals-dispatch-woocommerce' ); ?></td></tr>
-					<tr><td><code>order_currency</code></td><td><?php esc_html_e( 'Currency code (e.g., USD)', 'signals-dispatch-woocommerce' ); ?></td></tr>
-					<tr><td><code>billing_first_name</code></td><td><?php esc_html_e( 'Customer first name', 'signals-dispatch-woocommerce' ); ?></td></tr>
-					<tr><td><code>billing_last_name</code></td><td><?php esc_html_e( 'Customer last name', 'signals-dispatch-woocommerce' ); ?></td></tr>
-					<tr><td><code>billing_phone</code></td><td><?php esc_html_e( 'Customer phone number', 'signals-dispatch-woocommerce' ); ?></td></tr>
-					<tr><td><code>billing_email</code></td><td><?php esc_html_e( 'Customer email', 'signals-dispatch-woocommerce' ); ?></td></tr>
-					<tr><td><code>shipping_first_name</code></td><td><?php esc_html_e( 'Shipping first name', 'signals-dispatch-woocommerce' ); ?></td></tr>
-					<tr><td><code>shipping_last_name</code></td><td><?php esc_html_e( 'Shipping last name', 'signals-dispatch-woocommerce' ); ?></td></tr>
-					<tr><td><code>status</code></td><td><?php esc_html_e( 'Current order status', 'signals-dispatch-woocommerce' ); ?></td></tr>
-					<tr><td><code>site_name</code></td><td><?php esc_html_e( 'WordPress site name', 'signals-dispatch-woocommerce' ); ?></td></tr>
+					<tr><td><code>order_id</code></td><td><?php esc_html_e( 'Internal order ID', 'signals-dispatch-for-woocommerce' ); ?></td></tr>
+					<tr><td><code>order_number</code></td><td><?php esc_html_e( 'Display order number', 'signals-dispatch-for-woocommerce' ); ?></td></tr>
+					<tr><td><code>order_total</code></td><td><?php esc_html_e( 'Order total amount', 'signals-dispatch-for-woocommerce' ); ?></td></tr>
+					<tr><td><code>order_currency</code></td><td><?php esc_html_e( 'Currency code (e.g., USD)', 'signals-dispatch-for-woocommerce' ); ?></td></tr>
+					<tr><td><code>billing_first_name</code></td><td><?php esc_html_e( 'Customer first name', 'signals-dispatch-for-woocommerce' ); ?></td></tr>
+					<tr><td><code>billing_last_name</code></td><td><?php esc_html_e( 'Customer last name', 'signals-dispatch-for-woocommerce' ); ?></td></tr>
+					<tr><td><code>billing_phone</code></td><td><?php esc_html_e( 'Customer phone number', 'signals-dispatch-for-woocommerce' ); ?></td></tr>
+					<tr><td><code>billing_email</code></td><td><?php esc_html_e( 'Customer email', 'signals-dispatch-for-woocommerce' ); ?></td></tr>
+					<tr><td><code>shipping_first_name</code></td><td><?php esc_html_e( 'Shipping first name', 'signals-dispatch-for-woocommerce' ); ?></td></tr>
+					<tr><td><code>shipping_last_name</code></td><td><?php esc_html_e( 'Shipping last name', 'signals-dispatch-for-woocommerce' ); ?></td></tr>
+					<tr><td><code>status</code></td><td><?php esc_html_e( 'Current order status', 'signals-dispatch-for-woocommerce' ); ?></td></tr>
+					<tr><td><code>site_name</code></td><td><?php esc_html_e( 'WordPress site name', 'signals-dispatch-for-woocommerce' ); ?></td></tr>
 				</tbody>
 			</table>
 		</div>
@@ -323,41 +323,41 @@ final class HelpController extends AbstractAdminController {
 	private function render_faq_tab(): void {
 		$faqs = array(
 			array(
-				'question' => __( 'What WhatsApp templates can I use?', 'signals-dispatch-woocommerce' ),
-				'answer'   => __( 'You can use any approved WhatsApp message templates from your WhatsApp Business Account. The plugin supports utility templates with dynamic variable substitution.', 'signals-dispatch-woocommerce' ),
+				'question' => __( 'What WhatsApp templates can I use?', 'signals-dispatch-for-woocommerce' ),
+				'answer'   => __( 'You can use any approved WhatsApp message templates from your WhatsApp Business Account. The plugin supports utility templates with dynamic variable substitution.', 'signals-dispatch-for-woocommerce' ),
 			),
 			array(
-				'question' => __( 'How do I get a permanent access token?', 'signals-dispatch-woocommerce' ),
-				'answer'   => __( 'Go to Business Settings → System Users → Create a new system user → Add WhatsApp Business Account assets → Generate Token with whatsapp_business_messaging and whatsapp_business_management permissions.', 'signals-dispatch-woocommerce' ),
+				'question' => __( 'How do I get a permanent access token?', 'signals-dispatch-for-woocommerce' ),
+				'answer'   => __( 'Go to Business Settings → System Users → Create a new system user → Add WhatsApp Business Account assets → Generate Token with whatsapp_business_messaging and whatsapp_business_management permissions.', 'signals-dispatch-for-woocommerce' ),
 			),
 			array(
-				'question' => __( 'Does the plugin support customer consent management?', 'signals-dispatch-woocommerce' ),
-				'answer'   => __( 'Yes. A "Send me order updates on WhatsApp" checkbox is displayed at checkout. When checked, a consent record is saved automatically. You can also enable consent enforcement in Settings to ensure messages are only sent to customers who opted in.', 'signals-dispatch-woocommerce' ),
+				'question' => __( 'Does the plugin support customer consent management?', 'signals-dispatch-for-woocommerce' ),
+				'answer'   => __( 'Yes. A "Send me order updates on WhatsApp" checkbox is displayed at checkout. When checked, a consent record is saved automatically. You can also enable consent enforcement in Settings to ensure messages are only sent to customers who opted in.', 'signals-dispatch-for-woocommerce' ),
 			),
 			array(
-				'question' => __( 'How many test recipients can I add?', 'signals-dispatch-woocommerce' ),
-				'answer'   => __( 'Before your app is approved for production, you can add up to 5 test phone numbers in the Meta Developer Console.', 'signals-dispatch-woocommerce' ),
+				'question' => __( 'How many test recipients can I add?', 'signals-dispatch-for-woocommerce' ),
+				'answer'   => __( 'Before your app is approved for production, you can add up to 5 test phone numbers in the Meta Developer Console.', 'signals-dispatch-for-woocommerce' ),
 			),
 			array(
-				'question' => __( 'What is the webhook used for?', 'signals-dispatch-woocommerce' ),
-				'answer'   => __( 'The webhook receives delivery status updates from WhatsApp (sent, delivered, read, failed) and updates the message logs automatically.', 'signals-dispatch-woocommerce' ),
+				'question' => __( 'What is the webhook used for?', 'signals-dispatch-for-woocommerce' ),
+				'answer'   => __( 'The webhook receives delivery status updates from WhatsApp (sent, delivered, read, failed) and updates the message logs automatically.', 'signals-dispatch-for-woocommerce' ),
 			),
 			array(
-				'question' => __( 'Is there a message limit?', 'signals-dispatch-woocommerce' ),
-				'answer'   => __( 'Yes, WhatsApp has rate limits based on your account tier. New accounts start at 250 business-initiated messages per 24 hours. This increases as your quality rating improves.', 'signals-dispatch-woocommerce' ),
+				'question' => __( 'Is there a message limit?', 'signals-dispatch-for-woocommerce' ),
+				'answer'   => __( 'Yes, WhatsApp has rate limits based on your account tier. New accounts start at 250 business-initiated messages per 24 hours. This increases as your quality rating improves.', 'signals-dispatch-for-woocommerce' ),
 			),
 			array(
-				'question' => __( 'What happens if a message fails?', 'signals-dispatch-woocommerce' ),
-				'answer'   => __( 'Failed messages are logged with error details on the Logs page. With Signals Pro, failed messages are automatically retried using WooCommerce Action Scheduler.', 'signals-dispatch-woocommerce' ),
+				'question' => __( 'What happens if a message fails?', 'signals-dispatch-for-woocommerce' ),
+				'answer'   => __( 'Failed messages are logged with error details on the Logs page. With Signals Pro, failed messages are automatically retried using WooCommerce Action Scheduler.', 'signals-dispatch-for-woocommerce' ),
 			),
 			array(
-				'question' => __( 'Do I need WooCommerce installed?', 'signals-dispatch-woocommerce' ),
-				'answer'   => __( 'Yes, WooCommerce 7.0 or higher is required. The plugin uses WooCommerce order data and Action Scheduler for message queuing.', 'signals-dispatch-woocommerce' ),
+				'question' => __( 'Do I need WooCommerce installed?', 'signals-dispatch-for-woocommerce' ),
+				'answer'   => __( 'Yes, WooCommerce 7.0 or higher is required. The plugin uses WooCommerce order data and Action Scheduler for message queuing.', 'signals-dispatch-for-woocommerce' ),
 			),
 		);
 
 		echo '<div class="card">';
-		echo '<h2>' . esc_html__( 'Frequently Asked Questions', 'signals-dispatch-woocommerce' ) . '</h2>';
+		echo '<h2>' . esc_html__( 'Frequently Asked Questions', 'signals-dispatch-for-woocommerce' ) . '</h2>';
 
 		foreach ( $faqs as $index => $faq ) {
 			$this->render_faq_item( $faq['question'], $faq['answer'], $index );
@@ -397,46 +397,46 @@ final class HelpController extends AbstractAdminController {
 	private function render_troubleshooting_tab(): void {
 		$issues = array(
 			array(
-				'issue'    => __( 'Messages not sending', 'signals-dispatch-woocommerce' ),
-				'solution' => __( 'Verify API credentials in Setup page. Ensure Action Scheduler is running (WooCommerce → Status → Scheduled Actions). Check that the order has a valid billing phone number.', 'signals-dispatch-woocommerce' ),
+				'issue'    => __( 'Messages not sending', 'signals-dispatch-for-woocommerce' ),
+				'solution' => __( 'Verify API credentials in Setup page. Ensure Action Scheduler is running (WooCommerce → Status → Scheduled Actions). Check that the order has a valid billing phone number.', 'signals-dispatch-for-woocommerce' ),
 			),
 			array(
-				'issue'    => __( 'Invalid Access Token error', 'signals-dispatch-woocommerce' ),
-				'solution' => __( 'Your token may have expired (temporary tokens last 24 hours). Generate a new permanent token via System User in Meta Business Settings.', 'signals-dispatch-woocommerce' ),
+				'issue'    => __( 'Invalid Access Token error', 'signals-dispatch-for-woocommerce' ),
+				'solution' => __( 'Your token may have expired (temporary tokens last 24 hours). Generate a new permanent token via System User in Meta Business Settings.', 'signals-dispatch-for-woocommerce' ),
 			),
 			array(
-				'issue'    => __( 'Webhook verification failing', 'signals-dispatch-woocommerce' ),
-				'solution' => __( 'Ensure your site is accessible from the internet. The verify token must match exactly in both places (plugin settings and Meta app). Check for trailing spaces.', 'signals-dispatch-woocommerce' ),
+				'issue'    => __( 'Webhook verification failing', 'signals-dispatch-for-woocommerce' ),
+				'solution' => __( 'Ensure your site is accessible from the internet. The verify token must match exactly in both places (plugin settings and Meta app). Check for trailing spaces.', 'signals-dispatch-for-woocommerce' ),
 			),
 			array(
-				'issue'    => __( 'Webhook updates not appearing in logs', 'signals-dispatch-woocommerce' ),
-				'solution' => __( 'Verify the webhook is subscribed to "messages" field in Meta app. Check that your callback URL is correct and SSL certificate is valid.', 'signals-dispatch-woocommerce' ),
+				'issue'    => __( 'Webhook updates not appearing in logs', 'signals-dispatch-for-woocommerce' ),
+				'solution' => __( 'Verify the webhook is subscribed to "messages" field in Meta app. Check that your callback URL is correct and SSL certificate is valid.', 'signals-dispatch-for-woocommerce' ),
 			),
 			array(
-				'issue'    => __( 'Template not found error', 'signals-dispatch-woocommerce' ),
-				'solution' => __( 'Template name is case-sensitive. Ensure template status is "Approved" in Meta dashboard. Verify you\'re using the correct language code.', 'signals-dispatch-woocommerce' ),
+				'issue'    => __( 'Template not found error', 'signals-dispatch-for-woocommerce' ),
+				'solution' => __( 'Template name is case-sensitive. Ensure template status is "Approved" in Meta dashboard. Verify you\'re using the correct language code.', 'signals-dispatch-for-woocommerce' ),
 			),
 			array(
-				'issue'    => __( 'Phone number not registered', 'signals-dispatch-woocommerce' ),
-				'solution' => __( 'Make sure you\'re using the Phone Number ID (a numeric string), not the actual phone number. Verify the number is properly set up in WhatsApp Business.', 'signals-dispatch-woocommerce' ),
+				'issue'    => __( 'Phone number not registered', 'signals-dispatch-for-woocommerce' ),
+				'solution' => __( 'Make sure you\'re using the Phone Number ID (a numeric string), not the actual phone number. Verify the number is properly set up in WhatsApp Business.', 'signals-dispatch-for-woocommerce' ),
 			),
 			array(
-				'issue'    => __( 'Logs page is empty', 'signals-dispatch-woocommerce' ),
-				'solution' => __( 'Ensure dispatch rules are enabled for the order status. Verify the order has a billing phone number. Check the Health page for system status.', 'signals-dispatch-woocommerce' ),
+				'issue'    => __( 'Logs page is empty', 'signals-dispatch-for-woocommerce' ),
+				'solution' => __( 'Ensure dispatch rules are enabled for the order status. Verify the order has a billing phone number. Check the Health page for system status.', 'signals-dispatch-for-woocommerce' ),
 			),
 			array(
-				'issue'    => __( 'Messages stuck in queue', 'signals-dispatch-woocommerce' ),
-				'solution' => __( 'Check if WP-Cron is working (install WP Crontrol plugin to debug). Ensure Action Scheduler is processing jobs in WooCommerce → Status → Scheduled Actions.', 'signals-dispatch-woocommerce' ),
+				'issue'    => __( 'Messages stuck in queue', 'signals-dispatch-for-woocommerce' ),
+				'solution' => __( 'Check if WP-Cron is working (install WP Crontrol plugin to debug). Ensure Action Scheduler is processing jobs in WooCommerce → Status → Scheduled Actions.', 'signals-dispatch-for-woocommerce' ),
 			),
 		);
 
 		echo '<div class="card">';
-		echo '<h2>' . esc_html__( 'Troubleshooting Guide', 'signals-dispatch-woocommerce' ) . '</h2>';
+		echo '<h2>' . esc_html__( 'Troubleshooting Guide', 'signals-dispatch-for-woocommerce' ) . '</h2>';
 
 		echo '<table class="wp-list-table widefat fixed striped">';
 		echo '<thead><tr>';
-		echo '<th>' . esc_html__( 'Issue', 'signals-dispatch-woocommerce' ) . '</th>';
-		echo '<th>' . esc_html__( 'Solution', 'signals-dispatch-woocommerce' ) . '</th>';
+		echo '<th>' . esc_html__( 'Issue', 'signals-dispatch-for-woocommerce' ) . '</th>';
+		echo '<th>' . esc_html__( 'Solution', 'signals-dispatch-for-woocommerce' ) . '</th>';
 		echo '</tr></thead>';
 		echo '<tbody>';
 
@@ -462,21 +462,21 @@ final class HelpController extends AbstractAdminController {
 	private function render_support_section(): void {
 		?>
 		<div class="notice notice-info inline">
-			<h3><?php esc_html_e( 'Need More Help?', 'signals-dispatch-woocommerce' ); ?></h3>
+			<h3><?php esc_html_e( 'Need More Help?', 'signals-dispatch-for-woocommerce' ); ?></h3>
 			<ul>
 				<li>
 					<a href="https://github.com/themediaable/signals-dispatch-woocommerce/issues" target="_blank">
-						<?php esc_html_e( 'Report an issue on GitHub', 'signals-dispatch-woocommerce' ); ?>
+						<?php esc_html_e( 'Report an issue on GitHub', 'signals-dispatch-for-woocommerce' ); ?>
 					</a>
 				</li>
 				<li>
 					<a href="https://developers.facebook.com/docs/whatsapp/cloud-api" target="_blank">
-						<?php esc_html_e( 'WhatsApp Cloud API Documentation', 'signals-dispatch-woocommerce' ); ?>
+						<?php esc_html_e( 'WhatsApp Cloud API Documentation', 'signals-dispatch-for-woocommerce' ); ?>
 					</a>
 				</li>
 				<li>
 					<a href="https://developers.facebook.com/docs/whatsapp/message-templates" target="_blank">
-						<?php esc_html_e( 'Message Templates Guide', 'signals-dispatch-woocommerce' ); ?>
+						<?php esc_html_e( 'Message Templates Guide', 'signals-dispatch-for-woocommerce' ); ?>
 					</a>
 				</li>
 			</ul>

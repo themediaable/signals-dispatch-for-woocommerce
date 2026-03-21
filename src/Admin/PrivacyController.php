@@ -72,7 +72,7 @@ final class PrivacyController extends AbstractService {
 	 */
 	public function register_exporter( array $exporters ): array {
 		$exporters[] = array(
-			'exporter_friendly_name' => __( 'Signals Dispatch — Message Logs & Consent', 'signals-dispatch-woocommerce' ),
+			'exporter_friendly_name' => __( 'Signals Dispatch — Message Logs & Consent', 'signals-dispatch-for-woocommerce' ),
 			'callback'               => array( $this, 'export_personal_data' ),
 		);
 
@@ -87,7 +87,7 @@ final class PrivacyController extends AbstractService {
 	 */
 	public function register_eraser( array $erasers ): array {
 		$erasers[] = array(
-			'eraser_friendly_name' => __( 'Signals Dispatch — Message Logs & Consent', 'signals-dispatch-woocommerce' ),
+			'eraser_friendly_name' => __( 'Signals Dispatch — Message Logs & Consent', 'signals-dispatch-for-woocommerce' ),
 			'callback'             => array( $this, 'erase_personal_data' ),
 		);
 
@@ -97,9 +97,8 @@ final class PrivacyController extends AbstractService {
 	/**
 	 * Export personal data for a given email address.
 	 *
-	 * WordPress calls this with the email address from the erasure request.
-	 * We look up any WP user with that email to find their phone numbers,
-	 * then export matching log and consent records.
+	 * WordPress calls this with the email address from the privacy request.
+	 * Uses WooCommerce order APIs for HPOS compatibility and guest support.
 	 *
 	 * @param string $email_address Requester email address.
 	 * @param int    $page          Page number (for pagination, 1-indexed).
@@ -108,65 +107,60 @@ final class PrivacyController extends AbstractService {
 	public function export_personal_data( string $email_address, int $page = 1 ): array {
 		$data = array();
 
-		$user = get_user_by( 'email', $email_address );
-		if ( ! $user ) {
-			return array( 'data' => $data, 'done' => true );
-		}
-
-		// Export message log rows linked to this user's orders.
-		$log_rows = $this->log_repo->find_by_user_id( $user->ID );
+		// Export message log rows linked to this customer's orders (HPOS + guest safe).
+		$log_rows = $this->log_repo->find_by_email( $email_address );
 		foreach ( $log_rows as $row ) {
 			$data[] = array(
 				'group_id'          => 'tmasd_message_logs',
-				'group_label'       => __( 'WhatsApp Message Logs', 'signals-dispatch-woocommerce' ),
+				'group_label'       => __( 'WhatsApp Message Logs', 'signals-dispatch-for-woocommerce' ),
 				'item_id'           => 'tmasd-log-' . (int) $row['id'],
 				'data'              => array(
 					array(
-						'name'  => __( 'Phone Number', 'signals-dispatch-woocommerce' ),
+						'name'  => __( 'Phone Number', 'signals-dispatch-for-woocommerce' ),
 						'value' => $this->mask_phone( (string) $row['phone_e164'] ),
 					),
 					array(
-						'name'  => __( 'Order ID', 'signals-dispatch-woocommerce' ),
+						'name'  => __( 'Order ID', 'signals-dispatch-for-woocommerce' ),
 						'value' => (int) $row['order_id'],
 					),
 					array(
-						'name'  => __( 'Template', 'signals-dispatch-woocommerce' ),
+						'name'  => __( 'Template', 'signals-dispatch-for-woocommerce' ),
 						'value' => (string) $row['template_name'],
 					),
 					array(
-						'name'  => __( 'Status', 'signals-dispatch-woocommerce' ),
+						'name'  => __( 'Status', 'signals-dispatch-for-woocommerce' ),
 						'value' => (string) $row['status'],
 					),
 					array(
-						'name'  => __( 'Date', 'signals-dispatch-woocommerce' ),
+						'name'  => __( 'Date', 'signals-dispatch-for-woocommerce' ),
 						'value' => (string) $row['created_at'],
 					),
 				),
 			);
 		}
 
-		// Export consent records linked to this user.
-		$consent_rows = $this->optin_repo->find_by_user_id( $user->ID );
+		// Export consent records linked to this customer.
+		$consent_rows = $this->optin_repo->find_by_email( $email_address );
 		foreach ( $consent_rows as $row ) {
 			$data[] = array(
 				'group_id'    => 'tmasd_consent',
-				'group_label' => __( 'WhatsApp Consent Records', 'signals-dispatch-woocommerce' ),
+				'group_label' => __( 'WhatsApp Consent Records', 'signals-dispatch-for-woocommerce' ),
 				'item_id'     => 'tmasd-consent-' . (int) $row['id'],
 				'data'        => array(
 					array(
-						'name'  => __( 'Phone Number', 'signals-dispatch-woocommerce' ),
+						'name'  => __( 'Phone Number', 'signals-dispatch-for-woocommerce' ),
 						'value' => $this->mask_phone( (string) $row['phone_e164'] ),
 					),
 					array(
-						'name'  => __( 'Consent', 'signals-dispatch-woocommerce' ),
-						'value' => ! empty( $row['consent'] ) ? __( 'Yes', 'signals-dispatch-woocommerce' ) : __( 'No', 'signals-dispatch-woocommerce' ),
+						'name'  => __( 'Consent', 'signals-dispatch-for-woocommerce' ),
+						'value' => ! empty( $row['consent'] ) ? __( 'Yes', 'signals-dispatch-for-woocommerce' ) : __( 'No', 'signals-dispatch-for-woocommerce' ),
 					),
 					array(
-						'name'  => __( 'Source', 'signals-dispatch-woocommerce' ),
+						'name'  => __( 'Source', 'signals-dispatch-for-woocommerce' ),
 						'value' => (string) $row['consent_source'],
 					),
 					array(
-						'name'  => __( 'Date', 'signals-dispatch-woocommerce' ),
+						'name'  => __( 'Date', 'signals-dispatch-for-woocommerce' ),
 						'value' => (string) $row['consent_at'],
 					),
 				),
@@ -180,7 +174,8 @@ final class PrivacyController extends AbstractService {
 	 * Erase personal data for a given email address.
 	 *
 	 * Anonymises phone numbers in the logs table and removes consent
-	 * records linked to the requesting user.
+	 * records linked to the requesting customer. Uses WooCommerce order
+	 * APIs for HPOS compatibility and guest customer support.
 	 *
 	 * @param string $email_address Requester email address.
 	 * @param int    $page          Page number (for pagination, 1-indexed).
@@ -191,34 +186,24 @@ final class PrivacyController extends AbstractService {
 		$items_retained = false;
 		$messages       = array();
 
-		$user = get_user_by( 'email', $email_address );
-		if ( ! $user ) {
-			return array(
-				'items_removed'  => false,
-				'items_retained' => false,
-				'messages'       => array(),
-				'done'           => true,
-			);
-		}
-
-		// Anonymise phone numbers in message logs (retain records for business purposes).
-		$anonymised = $this->log_repo->anonymise_phone_by_user_id( $user->ID );
+		// Anonymise phone numbers in message logs (HPOS + guest safe).
+		$anonymised = $this->log_repo->anonymise_phone_by_email( $email_address );
 		if ( $anonymised > 0 ) {
 			$items_removed = true;
 			$messages[]    = sprintf(
 				/* translators: %d: number of log rows anonymised */
-				__( 'Anonymised phone number in %d message log record(s).', 'signals-dispatch-woocommerce' ),
+				__( 'Anonymised phone number in %d message log record(s).', 'signals-dispatch-for-woocommerce' ),
 				$anonymised
 			);
 		}
 
-		// Delete consent records for this user.
-		$deleted = $this->optin_repo->delete_by_user_id( $user->ID );
+		// Delete consent records for this customer.
+		$deleted = $this->optin_repo->delete_by_email( $email_address );
 		if ( $deleted > 0 ) {
 			$items_removed = true;
 			$messages[]    = sprintf(
 				/* translators: %d: number of consent records deleted */
-				__( 'Deleted %d consent record(s).', 'signals-dispatch-woocommerce' ),
+				__( 'Deleted %d consent record(s).', 'signals-dispatch-for-woocommerce' ),
 				$deleted
 			);
 		}
@@ -241,16 +226,16 @@ final class PrivacyController extends AbstractService {
 			return;
 		}
 
-		$content = '<h2>' . __( 'Signals Dispatch for WooCommerce', 'signals-dispatch-woocommerce' ) . '</h2>'
-			. '<p>' . __( 'This plugin stores the following personal data:', 'signals-dispatch-woocommerce' ) . '</p>'
+		$content = '<h2>' . __( 'Signals Dispatch for WooCommerce', 'signals-dispatch-for-woocommerce' ) . '</h2>'
+			. '<p>' . __( 'This plugin stores the following personal data:', 'signals-dispatch-for-woocommerce' ) . '</p>'
 			. '<ul>'
-			. '<li>' . __( 'Phone numbers linked to WooCommerce orders, used to delivery WhatsApp message notifications.', 'signals-dispatch-woocommerce' ) . '</li>'
-			. '<li>' . __( 'Consent records tracking whether a customer has opted in to WhatsApp messaging.', 'signals-dispatch-woocommerce' ) . '</li>'
+			. '<li>' . __( 'Phone numbers linked to WooCommerce orders, used to delivery WhatsApp message notifications.', 'signals-dispatch-for-woocommerce' ) . '</li>'
+			. '<li>' . __( 'Consent records tracking whether a customer has opted in to WhatsApp messaging.', 'signals-dispatch-for-woocommerce' ) . '</li>'
 			. '</ul>'
-			. '<p>' . __( 'This data is stored in the site database and transmitted to the Meta WhatsApp Business Cloud API for message delivery. It is not shared with any other third party.', 'signals-dispatch-woocommerce' ) . '</p>';
+			. '<p>' . __( 'This data is stored in the site database and transmitted to the Meta WhatsApp Business Cloud API for message delivery. It is not shared with any other third party.', 'signals-dispatch-for-woocommerce' ) . '</p>';
 
 		wp_add_privacy_policy_content(
-			__( 'Signals Dispatch for WooCommerce', 'signals-dispatch-woocommerce' ),
+			__( 'Signals Dispatch for WooCommerce', 'signals-dispatch-for-woocommerce' ),
 			wp_kses_post( $content )
 		);
 	}

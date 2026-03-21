@@ -75,7 +75,7 @@ abstract class AbstractRepository implements RepositoryInterface {
 		$table = $this->get_table_name();
 		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Table name is safe.
 		$sql = $this->wpdb->prepare( "SELECT * FROM {$table} WHERE id = %d", $id );
-		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- SQL is prepared above.
+		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- SQL is prepared above.
 		$row = $this->wpdb->get_row( $sql, ARRAY_A );
 
 		return is_array( $row ) ? $row : null;
@@ -88,7 +88,7 @@ abstract class AbstractRepository implements RepositoryInterface {
 	 */
 	public function all(): array {
 		$table = $this->get_table_name();
-		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Table name is safe.
+		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- Table name is safe.
 		$results = $this->wpdb->get_results( "SELECT * FROM {$table} ORDER BY id DESC", ARRAY_A );
 
 		return is_array( $results ) ? $results : array();
@@ -144,7 +144,7 @@ abstract class AbstractRepository implements RepositoryInterface {
 	 */
 	public function count(): int {
 		$table = $this->get_table_name();
-		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Table name is safe.
+		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- Table name is safe.
 		return (int) $this->wpdb->get_var( "SELECT COUNT(*) FROM {$table}" );
 	}
 }

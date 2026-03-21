@@ -1,6 +1,6 @@
 # Signals Dispatch for WooCommerce
 
-[![WordPress Plugin Version](https://img.shields.io/badge/version-1.0.0-blue.svg)](https://github.com/themediaable/signals-dispatch-woocommerce)
+[![WordPress Plugin Version](https://img.shields.io/badge/version-1.0.0-blue.svg)](https://github.com/themediaable/signals-dispatch-for-woocommerce)
 [![PHP Version](https://img.shields.io/badge/php-%3E%3D7.4-8892BF.svg)](https://php.net/)
 [![WordPress Version](https://img.shields.io/badge/wordpress-%3E%3D6.0-21759B.svg)](https://wordpress.org/)
 [![License](https://img.shields.io/badge/license-GPL--2.0%2B-green.svg)](https://www.gnu.org/licenses/gpl-2.0.html)
@@ -18,7 +18,7 @@ Signals Dispatch for WooCommerce integrates your WooCommerce store with the What
 - **Comprehensive Logs**: Full message history with payload and response details
 - **Checkout Opt-in**: WhatsApp consent checkbox on both classic and block checkout
 - **Manual Send**: Send a template message directly from any WooCommerce order page
-- **Consent Enforcement**: Honors opt-in/opt-out records with built-in checkout capture
+- **Consent Enforcement**: Honors opt-in consent records with built-in checkout capture
 - **HPOS Compatible**: Supports WooCommerce High-Performance Order Storage
 
 ## Requirements
@@ -33,7 +33,7 @@ Signals Dispatch for WooCommerce integrates your WooCommerce store with the What
 ## Installation
 
 1. Download the plugin from GitHub or install via Composer
-2. Upload to `/wp-content/plugins/signals-dispatch-woocommerce/`
+2. Upload to `/wp-content/plugins/signals-dispatch-for-woocommerce/`
 3. Run `composer install` in the plugin directory
 4. Activate the plugin through the WordPress admin
 
@@ -130,7 +130,7 @@ composer phpcbf
 ### Project Structure
 
 ```text
-signals-dispatch-woocommerce/
+signals-dispatch-for-woocommerce/
 ├── src/
 │   ├── Admin/          # Admin UI controllers
 │   ├── API/            # REST API endpoints
@@ -143,7 +143,7 @@ signals-dispatch-woocommerce/
 ├── assets/             # CSS/JS assets
 ├── composer.json
 ├── phpcs.xml.dist
-└── signals-dispatch-woocommerce.php
+└── signals-dispatch-for-woocommerce.php
 ```
 
 ### PSR-4 Autoloading
@@ -171,32 +171,19 @@ All sub-namespaces are resolved automatically from the directory structure — n
 ## Changelog
 
 ### 1.0.0
-- Added WhatsApp opt-in checkbox on checkout (classic and block checkout)
+- Added WhatsApp opt-in consent checkbox on checkout (classic and block checkout)
 - Added manual send meta box on WooCommerce order page (HPOS compatible)
 - Added Coming Soon page showcasing planned Pro features with email enquiry
 - Added upgrade promotion card on Help page
 - Added Refresh Status button on Logs page for on-demand delivery status check
 - Added trigger source column to logs (automatic vs manual)
+- Added GDPR personal data export and erasure with guest customer support
 - Renamed REST API namespace to `tmasignals/v1` for uniqueness
 - Differentiated status badge colours (sent=blue, delivered=green, read=purple)
+- Hardened AJAX nonce validation and admin JavaScript against XSS
 - Webhook delivery status tracking confirmed as free feature
 - Retry logic reserved for Pro (disabled in free tier)
 - Optimised PSR-4 autoloading to single root namespace mapping
-
-### 0.2.0
-- Refactored to OOP architecture with proper abstraction and encapsulation
-- Implemented Repository pattern for database operations
-- Split admin into separate controllers following Single Responsibility Principle
-- Added PSR-4 autoloading for all classes
-- Full WordPress Coding Standards compliance
-
-### 0.1.0
-- Initial release
-- WhatsApp Cloud API integration
-- Order status change notifications
-- Message queue with retry logic
-- Webhook status updates
-- Admin setup wizard
 
 ## License
 

@@ -19,7 +19,7 @@ global $wpdb;
 // -------------------------------------------------------------------
 // 1. Delete plugin options.
 // -------------------------------------------------------------------
-$options = array(
+$tmasd_options = array(
 	'tmasd_phone_number_id',
 	'tmasd_waba_id',
 	'tmasd_access_token',
@@ -28,8 +28,8 @@ $options = array(
 	'tmasd_require_consent',
 );
 
-foreach ( $options as $option ) {
-	delete_option( $option );
+foreach ( $tmasd_options as $tmasd_option ) {
+	delete_option( $tmasd_option );
 }
 
 // -------------------------------------------------------------------
@@ -46,13 +46,13 @@ foreach ( $options as $option ) {
 //     return;
 // }
 
-$tables = array(
+$tmasd_tables = array(
 	$wpdb->prefix . 'tmasd_logs',
 	$wpdb->prefix . 'tmasd_template_map',
 	$wpdb->prefix . 'tmasd_optins',
 );
 
-foreach ( $tables as $table ) {
-	// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Table names are built from safe internal values.
-	$wpdb->query( "DROP TABLE IF EXISTS {$table}" );
+foreach ( $tmasd_tables as $tmasd_table ) {
+	// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.SchemaChange, PluginCheck.Security.DirectDB.UnescapedDBParameter -- Intentional table removal during uninstall.
+	$wpdb->query( "DROP TABLE IF EXISTS {$tmasd_table}" );
 }
