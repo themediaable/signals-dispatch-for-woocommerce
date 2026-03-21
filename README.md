@@ -57,7 +57,7 @@ Navigate to **Signals → Setup** and enter your WhatsApp Business API credentia
 Configure your WhatsApp Business App to send webhooks to:
 
 ```text
-https://yoursite.com/wp-json/signals/v1/webhook
+https://yoursite.com/wp-json/tmasignals/v1/webhook
 ```
 
 Use the Verify Token you configured in Step 1.
@@ -173,10 +173,14 @@ All sub-namespaces are resolved automatically from the directory structure — n
 ### 1.0.0
 - Added WhatsApp opt-in checkbox on checkout (classic and block checkout)
 - Added manual send meta box on WooCommerce order page (HPOS compatible)
-- Added Upgrade page with free vs. pro feature comparison
+- Added Coming Soon page showcasing planned Pro features with email enquiry
 - Added upgrade promotion card on Help page
-- Updated consent FAQ to reflect built-in checkout opt-in
+- Added Refresh Status button on Logs page for on-demand delivery status check
+- Added trigger source column to logs (automatic vs manual)
+- Renamed REST API namespace to `tmasignals/v1` for uniqueness
+- Differentiated status badge colours (sent=blue, delivered=green, read=purple)
 - Webhook delivery status tracking confirmed as free feature
+- Retry logic reserved for Pro (disabled in free tier)
 - Optimised PSR-4 autoloading to single root namespace mapping
 
 ### 0.2.0

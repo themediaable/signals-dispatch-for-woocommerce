@@ -143,7 +143,6 @@ final class AdminController extends AbstractAdminController {
 		add_action( 'wp_ajax_tmasd_refresh_status', array( $this->logs_controller, 'handle_refresh_status' ) );
 		add_action( 'admin_footer', array( $this->logs_controller, 'render_refresh_script' ) );
 		add_action( 'wp_ajax_tmasd_manual_send', array( $this->order_controller, 'handle_manual_send' ) );
-		error_log( '[Signals Debug] wp_ajax_tmasd_manual_send hook registered.' );
 		add_action( 'admin_notices', array( $this, 'render_upgrade_notice' ) );
 	}
 

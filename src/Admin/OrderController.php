@@ -125,8 +125,6 @@ final class OrderController extends AbstractAdminController {
 		$nonce_action = 'tmasd_manual_send_' . $order_id;
 		$nonce_value  = wp_create_nonce( $nonce_action );
 
-		error_log( '[Signals Debug] render_meta_box: order_id=' . $order_id . ', nonce_action=' . $nonce_action );
-
 		echo '<div id="tmasd-send-notice"></div>';
 
 		echo '<p>';
@@ -210,20 +208,14 @@ final class OrderController extends AbstractAdminController {
 	 * @return void
 	 */
 	public function handle_manual_send(): void {
-		error_log( '[Signals Debug] handle_manual_send() called.' );
-		error_log( '[Signals Debug] POST data: ' . wp_json_encode( array_keys( $_POST ) ) );
-
 		if ( ! current_user_can( $this->get_capability() ) ) {
-			error_log( '[Signals Debug] FAILED: User lacks capability.' );
 			wp_send_json_error( array( 'message' => __( 'You do not have sufficient permissions.', 'signals-dispatch-woocommerce' ) ), 403 );
 		}
 
 		$order_id   = (int) $this->get_post_param( 'order_id', '0' );
 		$mapping_id = (int) $this->get_post_param( 'mapping_id', '0' );
-		error_log( '[Signals Debug] order_id=' . $order_id . ', mapping_id=' . $mapping_id );
 
 		if ( $order_id <= 0 || $mapping_id <= 0 ) {
-			error_log( '[Signals Debug] FAILED: Invalid order_id or mapping_id.' );
 			if ( $order_id > 0 ) {
 				$this->log_manual_send_failure( $order_id, 'Invalid request: missing order ID or mapping ID.' );
 			}
@@ -231,33 +223,26 @@ final class OrderController extends AbstractAdminController {
 		}
 
 		check_ajax_referer( 'tmasd_manual_send_' . $order_id );
-		error_log( '[Signals Debug] Nonce verified for order_id=' . $order_id );
 
 		// Prevent duplicate sends within 30 seconds.
 		$transient_key = 'tmasd_manual_send_' . $order_id;
 		if ( false !== get_transient( $transient_key ) ) {
-			error_log( '[Signals Debug] Duplicate send blocked (transient exists) for order_id=' . $order_id );
 			wp_send_json_error( array( 'message' => __( 'A message was already sent recently. Please wait before sending again.', 'signals-dispatch-woocommerce' ) ) );
 		}
 
 		$mapping = $this->mapping_repo->find( $mapping_id );
-		error_log( '[Signals Debug] mapping_repo->find(' . $mapping_id . ') => ' . ( $mapping ? 'found (enabled=' . ( $mapping['enabled'] ?? 'null' ) . ', event_key=' . ( $mapping['event_key'] ?? 'null' ) . ')' : 'NULL' ) );
 
 		if ( null === $mapping || empty( $mapping['enabled'] ) ) {
-			error_log( '[Signals Debug] Mapping disabled or not found. Logging failure.' );
 			$this->log_manual_send_failure( $order_id, 'Selected dispatch rule is disabled or does not exist.' );
 			wp_send_json_error( array( 'message' => __( 'Selected dispatch rule is disabled or does not exist.', 'signals-dispatch-woocommerce' ) ) );
 		}
 
 		// Send synchronously so the log entry and result are immediate.
-		error_log( '[Signals Debug] Calling handle_send_template_message( ' . $order_id . ', ' . $mapping['event_key'] . ', 0 )' );
 		$this->queue->set_trigger_source( 'manual' );
 		$this->queue->handle_send_template_message( $order_id, $mapping['event_key'], 0 );
-		error_log( '[Signals Debug] handle_send_template_message() returned.' );
 
 		// Check the log to determine if it succeeded or failed.
 		$last_log = $this->log_repo->find_last_by_order_id( $order_id );
-		error_log( '[Signals Debug] find_last_by_order_id(' . $order_id . ') => ' . ( $last_log ? 'status=' . ( $last_log['status'] ?? 'null' ) : 'NULL' ) );
 
 		// Set transient to prevent rapid duplicate sends.
 		set_transient( $transient_key, '1', 30 );
@@ -295,11 +280,9 @@ final class OrderController extends AbstractAdminController {
 
 		if ( $is_failed ) {
 			$error_msg = $last_log['error_message'] ?? __( 'Unknown error', 'signals-dispatch-woocommerce' );
-			error_log( '[Signals Debug] Returning JSON error: ' . $error_msg );
 			wp_send_json_error( array( 'message' => __( 'Failed to send WhatsApp message.', 'signals-dispatch-woocommerce' ) . ' ' . $error_msg ) );
 		}
 
-		error_log( '[Signals Debug] Returning JSON success.' );
 		wp_send_json_success( array( 'message' => __( 'WhatsApp message sent successfully.', 'signals-dispatch-woocommerce' ) ) );
 	}
 

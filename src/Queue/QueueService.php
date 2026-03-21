@@ -202,28 +202,21 @@ final class QueueService extends AbstractService implements QueueInterface {
 		$event_key = (string) $event_key;
 		$attempts  = (int) $attempts;
 
-		error_log( '[Signals Debug] handle_send_template_message() entered: order_id=' . $order_id . ', event_key=' . $event_key . ', attempts=' . $attempts );
-
 		if ( ! $this->validate_send_request( $order_id, $event_key ) ) {
-			error_log( '[Signals Debug] FAILED: validate_send_request returned false.' );
 			$this->log_skipped( $order_id, $event_key, 'Invalid request: missing order ID or event key.' );
 			return;
 		}
 
 		$mapping = $this->mapping_repo->find_by_event( $event_key );
-		error_log( '[Signals Debug] find_by_event(' . $event_key . ') => ' . ( $mapping ? 'found (id=' . ( $mapping['id'] ?? '?' ) . ')' : 'NULL' ) );
 
 		if ( null === $mapping ) {
-			error_log( '[Signals Debug] FAILED: No enabled dispatch rule found for event: ' . $event_key );
 			$this->log_skipped( $order_id, $event_key, 'No enabled dispatch rule found for event: ' . $event_key );
 			return;
 		}
 
 		$payload = $this->template_mapper->build_from_order( $order_id, $mapping );
-		error_log( '[Signals Debug] build_from_order result: phone=' . ( $payload['phone_e164'] ?? 'EMPTY' ) . ', template=' . ( $payload['template_name'] ?? 'EMPTY' ) );
 
 		if ( $this->is_payload_invalid( $payload ) ) {
-			error_log( '[Signals Debug] FAILED: Payload invalid — no phone number.' );
 			$this->log_skipped(
 				$order_id,
 				$event_key,
@@ -235,7 +228,6 @@ final class QueueService extends AbstractService implements QueueInterface {
 
 		// Enforce consent when the setting is enabled.
 		$consent_needed = $this->consent_required();
-		error_log( '[Signals Debug] consent_required=' . ( $consent_needed ? 'YES' : 'NO' ) );
 		if ( $consent_needed ) {
 			// Check order-level opt-in meta (set during checkout).
 			$order = function_exists( 'wc_get_order' ) ? wc_get_order( $order_id ) : null;
@@ -256,12 +248,9 @@ final class QueueService extends AbstractService implements QueueInterface {
 				}
 			}
 
-			error_log( '[Signals Debug] order_optin=' . var_export( $order_optin, true ) );
-
 			// If order has explicit consent metadata, use it.
 			// If no metadata exists (e.g. manual send for pre-existing order), fall back to phone-level check.
 			if ( false === $order_optin ) {
-				error_log( '[Signals Debug] FAILED: Order-level consent is explicitly NO.' );
 				$this->log_skipped(
 					$order_id,
 					$event_key,
@@ -272,7 +261,6 @@ final class QueueService extends AbstractService implements QueueInterface {
 			}
 
 			if ( null === $order_optin && ! $this->optin_repo->has_consent( $payload['phone_e164'] ) ) {
-				error_log( '[Signals Debug] FAILED: No consent for phone ' . $payload['phone_e164'] );
 				$this->log_skipped(
 					$order_id,
 					$event_key,
@@ -284,13 +272,10 @@ final class QueueService extends AbstractService implements QueueInterface {
 		}
 
 		$log_id = $this->create_log_entry( $order_id, $payload, $event_key );
-		error_log( '[Signals Debug] Log entry created: log_id=' . $log_id );
 
 		$result = $this->send_message( $payload );
-		error_log( '[Signals Debug] send_message result: success=' . ( ! empty( $result['success'] ) ? 'YES' : 'NO' ) . ', error=' . ( $result['error'] ?? 'none' ) );
 
 		$this->update_log_with_result( $log_id, $result, $order_id, $event_key, $attempts );
-		error_log( '[Signals Debug] Log updated with result. Done.' );
 
 		// Reset trigger source override after use.
 		$this->trigger_source_override = '';
