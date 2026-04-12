@@ -22,9 +22,9 @@ Signals Dispatch for WooCommerce integrates your WooCommerce store with the What
 * **Message Queue** – Reliable message delivery using WooCommerce Action Scheduler with automatic retries for transient failures
 * **Delivery Tracking** – Real-time message status updates via webhooks (sent, delivered, read, failed)
 * **Comprehensive Logs** – Full message history with payload and response details
-* **Checkout Opt-in** – WhatsApp consent checkbox on checkout (classic and block checkout)
+* **Checkout Opt-in** – When Require Consent is enabled, a WhatsApp opt-in checkbox is shown at checkout (classic and block checkout)
 * **Manual Send** – Send a template message from any WooCommerce order page
-* **Consent Enforcement** – Honors opt-in consent records, with built-in checkout opt-in capture
+* **Consent Enforcement** – Only send messages to customers who opted in, with locally stored consent records
 
 = Pro Features (Coming Soon) =
 
@@ -106,7 +106,7 @@ Configure your WhatsApp Business App to send webhooks to your site's endpoint. T
 
 = Does the plugin support customer consent management? =
 
-Yes. A "Send me order updates on WhatsApp" checkbox is displayed at checkout. When checked, a consent record is saved automatically. You can also enable consent enforcement in Settings to ensure messages are only sent to customers who opted in.
+Yes. When Require Consent is enabled in Settings, a WhatsApp opt-in checkbox is shown at checkout and messages are only sent to customers who opted in. Consent records are stored locally for GDPR compliance.
 
 = Can I manually send a WhatsApp message from an order? =
 

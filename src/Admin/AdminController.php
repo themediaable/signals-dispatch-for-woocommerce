@@ -143,7 +143,6 @@ final class AdminController extends AbstractAdminController {
 		add_action( 'wp_ajax_tmasd_refresh_status', array( $this->logs_controller, 'handle_refresh_status' ) );
 		add_action( 'admin_enqueue_scripts', array( $this->logs_controller, 'enqueue_refresh_config' ) );
 		add_action( 'wp_ajax_tmasd_manual_send', array( $this->order_controller, 'handle_manual_send' ) );
-		add_action( 'admin_notices', array( $this, 'render_upgrade_notice' ) );
 	}
 
 	/**
@@ -210,8 +209,8 @@ final class AdminController extends AbstractAdminController {
 
 		add_submenu_page(
 			'tmasd-setup',
-			__( 'Pro — Coming Soon', 'signals-dispatch-for-woocommerce' ),
-			__( 'Coming Soon ★', 'signals-dispatch-for-woocommerce' ),
+			__( 'Upgrade', 'signals-dispatch-for-woocommerce' ),
+			__( 'Upgrade', 'signals-dispatch-for-woocommerce' ),
 			$cap,
 			'tmasd-upgrade',
 			array( $this->upgrade_controller, 'render' )
@@ -279,36 +278,5 @@ final class AdminController extends AbstractAdminController {
 	 */
 	public function render(): void {
 		// Main controller delegates to sub-controllers.
-	}
-
-	/**
-	 * Render a dismissible upgrade notice on plugin admin pages.
-	 *
-	 * @return void
-	 */
-	public function render_upgrade_notice(): void {
-		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Display only.
-		$page = isset( $_GET['page'] ) ? sanitize_key( $_GET['page'] ) : '';
-
-		if ( strpos( $page, 'tmasd' ) === false ) {
-			return;
-		}
-
-		// Don't show on the upgrade page itself.
-		if ( 'tmasd-upgrade' === $page ) {
-			return;
-		}
-
-		echo '<div class="notice notice-info tmasd-notice" data-dismiss-key="tmasd-upgrade-notice">';
-		echo '<p>';
-		printf(
-			/* translators: 1: opening anchor tag, 2: closing anchor tag */
-			esc_html__( 'Signals Pro is coming soon! %1$sSee what\'s planned%2$s — COD confirmation, scheduled log cleanup, and priority support.', 'signals-dispatch-for-woocommerce' ),
-			'<a href="' . esc_url( admin_url( 'admin.php?page=tmasd-upgrade' ) ) . '"><strong>',
-			'</strong></a>'
-		);
-		echo '</p>';
-		echo '<button class="tmasd-notice-dismiss">&times;</button>';
-		echo '</div>';
 	}
 }

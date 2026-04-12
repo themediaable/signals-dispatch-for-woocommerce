@@ -161,9 +161,13 @@ abstract class AbstractAdminController {
 	private function render_notice( string $type, string $message, string $dismiss_key = '' ): void {
 		$extra = '';
 		if ( '' !== $dismiss_key ) {
-			$extra = ' data-dismiss-key="' . esc_attr( $dismiss_key ) . '" style="display:none"';
+			$extra = ' data-dismiss-key="' . esc_attr( $dismiss_key ) . '"';
 		}
-		echo '<div class="notice notice-' . esc_attr( $type ) . ' tmasd-notice"' . $extra . '>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $extra is built from esc_attr calls.
+		$classes = 'notice notice-' . esc_attr( $type ) . ' tmasd-notice';
+		if ( '' !== $dismiss_key ) {
+			$classes .= ' tmasd-notice--deferred';
+		}
+		echo '<div class="' . $classes . '"' . $extra . '>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $extra is built from esc_attr calls, $classes from esc_attr types.
 		echo '<p>' . esc_html( $message ) . '</p>';
 		echo '<button type="button" class="tmasd-notice-dismiss" aria-label="' . esc_attr__( 'Dismiss', 'signals-dispatch-for-woocommerce' ) . '">&times;</button>';
 		echo '</div>';

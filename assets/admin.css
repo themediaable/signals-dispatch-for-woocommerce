@@ -50,6 +50,10 @@
 }
 
 /* ---------- Notices ---------- */
+.tmasd-notice--deferred {
+	display: none;
+}
+
 .tmasd-admin .notice {
 	border-left-width: 4px;
 	border-radius: var(--tmasd-radius);

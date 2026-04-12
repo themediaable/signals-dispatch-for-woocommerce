@@ -31,16 +31,6 @@ define( 'TMASD_OPTION_APP_SECRET', 'tmasd_app_secret' );
 define( 'TMASD_OPTION_REQUIRE_CONSENT', 'tmasd_require_consent' );
 define( 'TMASD_ACTION_SEND_TEMPLATE', 'tmasd_send_template_message' );
 define( 'TMASD_CAPABILITY', 'manage_woocommerce' );
-define( 'TMASD_UPGRADE_URL', 'https://themediaablesignals.com/pricing' );
-
-/**
- * Get the upgrade URL, filterable for future payment integration.
- *
- * @return string Upgrade URL.
- */
-function tmasd_get_upgrade_url(): string {
-	return (string) apply_filters( 'tmasd_upgrade_url', TMASD_UPGRADE_URL );
-}
 
 // Load Composer autoloader.
 $tmasd_autoload = TMASD_PLUGIN_DIR . 'vendor/autoload.php';

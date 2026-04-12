@@ -61,25 +61,20 @@ final class HelpController extends AbstractAdminController {
 	}
 
 	/**
-	 * Render upgrade promotion card.
+	 * Render a small Pro upgrade link.
 	 *
 	 * @return void
 	 */
 	private function render_upgrade_card(): void {
 		$upgrade_page = admin_url( 'admin.php?page=tmasd-upgrade' );
-		?>
-		<div class="tmasd-upgrade-card">
-			<div class="tmasd-upgrade-card__body">
-				<h3><?php esc_html_e( 'Want more automation?', 'signals-dispatch-for-woocommerce' ); ?></h3>
-				<p><?php esc_html_e( 'Bulk messaging, advanced analytics, and priority support are coming with Signals Pro.', 'signals-dispatch-for-woocommerce' ); ?></p>
-			</div>
-			<div class="tmasd-upgrade-card__action">
-				<a href="<?php echo esc_url( $upgrade_page ); ?>" class="button button-primary">
-					<?php esc_html_e( 'View Pro Features', 'signals-dispatch-for-woocommerce' ); ?>
-				</a>
-			</div>
-		</div>
-		<?php
+		echo '<p class="tmasd-pro-link">';
+		printf(
+			/* translators: 1: opening anchor tag, 2: closing anchor tag */
+			esc_html__( 'Looking for more? %1$sExplore upcoming Pro features%2$s.', 'signals-dispatch-for-woocommerce' ),
+			'<a href="' . esc_url( $upgrade_page ) . '">',
+			'</a>'
+		);
+		echo '</p>';
 	}
 
 	/**
@@ -332,7 +327,7 @@ final class HelpController extends AbstractAdminController {
 			),
 			array(
 				'question' => __( 'Does the plugin support customer consent management?', 'signals-dispatch-for-woocommerce' ),
-				'answer'   => __( 'Yes. A "Send me order updates on WhatsApp" checkbox is displayed at checkout. When checked, a consent record is saved automatically. You can also enable consent enforcement in Settings to ensure messages are only sent to customers who opted in.', 'signals-dispatch-for-woocommerce' ),
+				'answer'   => __( 'Yes. When Require Consent is enabled in Settings, a WhatsApp opt-in checkbox is shown at checkout and messages are only sent to customers who opted in. Consent records are stored locally for GDPR compliance.', 'signals-dispatch-for-woocommerce' ),
 			),
 			array(
 				'question' => __( 'How many test recipients can I add?', 'signals-dispatch-for-woocommerce' ),
