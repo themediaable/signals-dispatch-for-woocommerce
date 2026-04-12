@@ -21,7 +21,8 @@
     "phpcs": "phpcs",
     "phpcbf": "phpcbf",
     "lint": "@phpcs",
-    "lint:fix": "@phpcbf"
+    "lint:fix": "@phpcbf",
+    "build:zip": "bash bin/build-zip.sh"
   },
   "config": {
     "optimize-autoloader": true,

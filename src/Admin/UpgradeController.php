@@ -272,7 +272,7 @@ final class UpgradeController extends AbstractAdminController {
 	private function render_cta_footer(): void {
 		$mailto = $this->get_mailto_url();
 		?>
-		<div class="tmasd-panel tmasd-upgrade-cta-footer" style="text-align:center;">
+		<div class="tmasd-panel tmasd-upgrade-cta-footer">
 			<h2><?php esc_html_e( 'Interested in Signals Pro?', 'signals-dispatch-for-woocommerce' ); ?></h2>
 			<p><?php esc_html_e( 'Drop us a line and we\'ll keep you in the loop. Early enquirers get priority access.', 'signals-dispatch-for-woocommerce' ); ?></p>
 			<div class="tmasd-cta-buttons">

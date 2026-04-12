@@ -54,6 +54,54 @@
 		}
 	}
 
+	/* -- Toggle rows (log detail / FAQ accordion) -- */
+	document.addEventListener( 'click', function ( e ) {
+		var toggle = e.target.closest( '[data-toggle-row]' );
+		if ( toggle ) {
+			e.preventDefault();
+			var targetId = toggle.getAttribute( 'data-toggle-row' );
+			var target = document.getElementById( targetId );
+			if ( target ) {
+				target.style.display = target.style.display === 'table-row' ? 'none' : 'table-row';
+			}
+			return;
+		}
+
+		var faqHeader = e.target.closest( '[data-faq-target]' );
+		if ( faqHeader ) {
+			var faqItem = faqHeader.closest( '.tmasd-faq-item' );
+			if ( faqItem ) {
+				faqItem.classList.toggle( 'is-open' );
+			}
+			return;
+		}
+	} );
+
+	/* -- Confirm prompts on delete actions -- */
+	document.addEventListener( 'click', function ( e ) {
+		var confirmEl = e.target.closest( '[data-confirm]' );
+		if ( ! confirmEl ) {
+			return;
+		}
+		var message = confirmEl.getAttribute( 'data-confirm' );
+		if ( message && ! window.confirm( message ) ) { // eslint-disable-line no-alert
+			e.preventDefault();
+		}
+	} );
+
+	/* -- Refresh Status (delegated from Logs table) -- */
+	document.addEventListener( 'click', function ( e ) {
+		var refreshLink = e.target.closest( '.tmasd-action-refresh[data-log-id]' );
+		if ( ! refreshLink ) {
+			return;
+		}
+		e.preventDefault();
+		var logId = refreshLink.getAttribute( 'data-log-id' );
+		if ( typeof window.tmasdRefreshStatus === 'function' ) {
+			window.tmasdRefreshStatus( refreshLink, parseInt( logId, 10 ) );
+		}
+	} );
+
 	/* -- Manual Send meta box (Order page) -- */
 	if ( typeof window.tmasdManualSend !== 'undefined' ) {
 		var cfg = window.tmasdManualSend;

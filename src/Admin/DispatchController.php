@@ -162,7 +162,7 @@ final class DispatchController extends AbstractAdminController {
 		echo '<td class="tmasd-row-actions">';
 		echo '<a class="tmasd-action-edit" href="' . esc_url( $edit_url ) . '">' . esc_html__( 'Edit', 'signals-dispatch-for-woocommerce' ) . '</a>';
 		echo '<span class="tmasd-separator">|</span>';
-		echo '<a class="tmasd-action-delete" href="' . esc_url( $delete_url ) . '" onclick="return confirm(\'' . esc_js( __( 'Delete this mapping?', 'signals-dispatch-for-woocommerce' ) ) . '\')">';
+		echo '<a class="tmasd-action-delete" href="' . esc_url( $delete_url ) . '" data-confirm="' . esc_attr( __( 'Delete this mapping?', 'signals-dispatch-for-woocommerce' ) ) . '">';
 		echo esc_html__( 'Delete', 'signals-dispatch-for-woocommerce' );
 		echo '</a>';
 		echo '</td>';

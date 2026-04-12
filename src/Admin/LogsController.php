@@ -240,20 +240,20 @@ final class LogsController extends AbstractAdminController {
 			'tmasd_delete_log_' . (int) $row['id']
 		);
 
-		echo '<a class="tmasd-action-view" href="#" onclick="document.getElementById(\'' . esc_attr( $row_id ) . '\').style.display = document.getElementById(\'' . esc_attr( $row_id ) . '\').style.display === \'none\' ? \'table-row\' : \'none\'; return false;">';
+		echo '<a class="tmasd-action-view" href="#" data-toggle-row="' . esc_attr( $row_id ) . '">';
 		echo esc_html__( 'View', 'signals-dispatch-for-woocommerce' );
 		echo '</a>';
 
 		// Refresh Status link — only for rows that have a wa_message_id (sent messages).
 		if ( ! empty( $row['wa_message_id'] ) ) {
 			echo '<span class="tmasd-separator">|</span>';
-			echo '<a class="tmasd-action-refresh" href="#" data-log-id="' . (int) $row['id'] . '" onclick="tmasdRefreshStatus(this,' . (int) $row['id'] . ');return false;">';
+			echo '<a class="tmasd-action-refresh" href="#" data-log-id="' . (int) $row['id'] . '">';
 			echo esc_html__( 'Refresh Status', 'signals-dispatch-for-woocommerce' );
 			echo '</a>';
 		}
 
 		echo '<span class="tmasd-separator">|</span>';
-		echo '<a class="tmasd-action-delete" href="' . esc_url( $delete_url ) . '" onclick="return confirm(\'' . esc_js( __( 'Delete this log entry?', 'signals-dispatch-for-woocommerce' ) ) . '\');">';
+		echo '<a class="tmasd-action-delete" href="' . esc_url( $delete_url ) . '" data-confirm="' . esc_attr( __( 'Delete this log entry?', 'signals-dispatch-for-woocommerce' ) ) . '">';
 		echo esc_html__( 'Delete', 'signals-dispatch-for-woocommerce' );
 		echo '</a>';
 		echo '</td>';
@@ -276,7 +276,7 @@ final class LogsController extends AbstractAdminController {
 		echo '<form method="post" action="' . esc_url( admin_url( 'admin-post.php' ) ) . '" class="tmasd-toolbar">';
 		wp_nonce_field( 'tmasd_delete_all_logs' );
 		echo '<input type="hidden" name="action" value="tmasd_delete_all_logs" />';
-		echo '<button type="submit" class="button button-link-delete" onclick="return confirm(\'' . esc_js( __( 'Delete all log entries? This cannot be undone.', 'signals-dispatch-for-woocommerce' ) ) . '\');">';
+		echo '<button type="submit" class="button button-link-delete" data-confirm="' . esc_attr( __( 'Delete all log entries? This cannot be undone.', 'signals-dispatch-for-woocommerce' ) ) . '">';
 		echo esc_html__( 'Delete All Logs', 'signals-dispatch-for-woocommerce' );
 		echo '</button>';
 		echo '</form>';
@@ -293,7 +293,7 @@ final class LogsController extends AbstractAdminController {
 		$payload  = $this->format_json( $row['payload_json'] ?? '{}' );
 		$response = $this->format_json( $row['response_json'] ?? '{}' );
 
-		echo '<tr id="' . esc_attr( $row_id ) . '" class="tmasd-detail-row" style="display:none;">';
+		echo '<tr id="' . esc_attr( $row_id ) . '" class="tmasd-detail-row tmasd-hidden">';
 		echo '<td colspan="10">';
 
 		if ( ! empty( $row['error_code'] ) ) {

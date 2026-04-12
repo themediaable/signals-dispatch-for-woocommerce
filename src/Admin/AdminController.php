@@ -299,7 +299,7 @@ final class AdminController extends AbstractAdminController {
 			return;
 		}
 
-		echo '<div class="notice notice-info tmasd-notice is-dismissible" data-dismiss-key="tmasd-upgrade-notice">';
+		echo '<div class="notice notice-info tmasd-notice" data-dismiss-key="tmasd-upgrade-notice">';
 		echo '<p>';
 		printf(
 			/* translators: 1: opening anchor tag, 2: closing anchor tag */

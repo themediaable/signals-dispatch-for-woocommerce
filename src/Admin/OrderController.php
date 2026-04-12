@@ -163,7 +163,7 @@ final class OrderController extends AbstractAdminController {
 		echo '</strong></label>';
 		echo '</p>';
 
-		echo '<select id="tmasd_mapping_id" style="width:100%;margin-bottom:10px;">';
+		echo '<select id="tmasd_mapping_id" class="tmasd-meta-box-select">';
 		foreach ( $mappings as $mapping ) {
 			$events      = $this->mapping_repo->get_available_events();
 			$event_label = $events[ $mapping['event_key'] ] ?? $mapping['event_key'];

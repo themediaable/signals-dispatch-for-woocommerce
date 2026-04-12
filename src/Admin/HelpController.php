@@ -378,7 +378,7 @@ final class HelpController extends AbstractAdminController {
 		$faq_id = 'faq-' . $index;
 		?>
 		<div class="tmasd-faq-item">
-			<h3 class="tmasd-faq-header" onclick="document.getElementById('<?php echo esc_attr( $faq_id ); ?>').style.display = document.getElementById('<?php echo esc_attr( $faq_id ); ?>').style.display === 'none' ? 'block' : 'none';">
+			<h3 class="tmasd-faq-header" data-faq-target="<?php echo esc_attr( $faq_id ); ?>">
 				<span class="dashicons dashicons-arrow-right-alt2"></span>
 				<?php echo esc_html( $question ); ?>
 			</h3>
@@ -465,17 +465,17 @@ final class HelpController extends AbstractAdminController {
 			<h3><?php esc_html_e( 'Need More Help?', 'signals-dispatch-for-woocommerce' ); ?></h3>
 			<ul>
 				<li>
-					<a href="https://github.com/themediaable/signals-dispatch-woocommerce/issues" target="_blank">
+					<a href="https://github.com/themediaable/signals-dispatch-woocommerce/issues" target="_blank" rel="noopener noreferrer">
 						<?php esc_html_e( 'Report an issue on GitHub', 'signals-dispatch-for-woocommerce' ); ?>
 					</a>
 				</li>
 				<li>
-					<a href="https://developers.facebook.com/docs/whatsapp/cloud-api" target="_blank">
+					<a href="https://developers.facebook.com/docs/whatsapp/cloud-api" target="_blank" rel="noopener noreferrer">
 						<?php esc_html_e( 'WhatsApp Cloud API Documentation', 'signals-dispatch-for-woocommerce' ); ?>
 					</a>
 				</li>
 				<li>
-					<a href="https://developers.facebook.com/docs/whatsapp/message-templates" target="_blank">
+					<a href="https://developers.facebook.com/docs/whatsapp/message-templates" target="_blank" rel="noopener noreferrer">
 						<?php esc_html_e( 'Message Templates Guide', 'signals-dispatch-for-woocommerce' ); ?>
 					</a>
 				</li>

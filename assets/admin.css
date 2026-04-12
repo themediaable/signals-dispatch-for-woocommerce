@@ -395,6 +395,10 @@
 }
 
 /* ---------- Log detail row ---------- */
+.tmasd-admin .tmasd-hidden {
+	display: none;
+}
+
 .tmasd-admin .tmasd-detail-row {
 	background: #f8f9fa !important;
 }
@@ -574,10 +578,19 @@
 	transition: transform 0.2s ease;
 }
 
+.tmasd-admin .tmasd-faq-item.is-open > .tmasd-faq-header .dashicons {
+	transform: rotate( 90deg );
+}
+
 .tmasd-admin .tmasd-faq-answer {
+	display: none;
 	margin: 0 0 16px 26px;
 	color: var(--tmasd-text-muted);
 	line-height: 1.6;
+}
+
+.tmasd-admin .tmasd-faq-item.is-open > .tmasd-faq-answer {
+	display: block;
 }
 
 .tmasd-admin .tmasd-faq-answer p {

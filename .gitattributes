@@ -26,3 +26,6 @@
 
 # Tests (not needed at runtime)
 /tests/                   export-ignore
+
+# Build scripts
+/bin/                     export-ignore
