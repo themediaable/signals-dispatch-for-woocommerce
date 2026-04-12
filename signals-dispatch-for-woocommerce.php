@@ -1,13 +1,14 @@
 <?php
 /**
  * Plugin Name: Signals Dispatch for WooCommerce
- * Description: Sends WooCommerce order update notifications via templated utility messages with logs, queueing, and webhooks.
+ * Description: Send WhatsApp order notifications to WooCommerce customers via the WhatsApp Business Cloud API with logs, queueing, and webhooks.
  * Version: 1.0.0
  * Author: TheMediaAble
  * License: GPLv2 or later
  * Text Domain: signals-dispatch-for-woocommerce
  * Requires PHP: 7.4
  * Requires at least: 6.0
+ * Requires Plugins: woocommerce
  *
  * @package TMASD\Signals\Dispatch
  */

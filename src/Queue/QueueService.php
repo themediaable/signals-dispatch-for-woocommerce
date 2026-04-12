@@ -33,18 +33,14 @@ if ( ! defined( 'ABSPATH' ) ) {
 final class QueueService extends AbstractService implements QueueInterface {
 
 	/**
-	 * Maximum retry attempts.
-	 *
-	 * Reserved for PRO version.
+	 * Maximum retry attempts for transient failures.
 	 *
 	 * @var int
 	 */
-	private const MAX_RETRY_ATTEMPTS = 0;
+	private const MAX_RETRY_ATTEMPTS = 3;
 
 	/**
 	 * Retry delay in seconds.
-	 *
-	 * Reserved for PRO version.
 	 *
 	 * @var int
 	 */
@@ -230,7 +226,7 @@ final class QueueService extends AbstractService implements QueueInterface {
 		$consent_needed = $this->consent_required();
 		if ( $consent_needed ) {
 			// Check order-level opt-in meta (set during checkout).
-			$order = function_exists( 'wc_get_order' ) ? wc_get_order( $order_id ) : null;
+			$order       = function_exists( 'wc_get_order' ) ? wc_get_order( $order_id ) : null;
 			$order_optin = null;
 
 			if ( $order instanceof \WC_Order ) {
@@ -315,13 +311,14 @@ final class QueueService extends AbstractService implements QueueInterface {
 	/**
 	 * Create initial log entry.
 	 *
-	 * @param int                  $order_id Order ID.
-	 * @param array<string, mixed> $payload  Payload data.
+	 * @param int                  $order_id  Order ID.
+	 * @param array<string, mixed> $payload   Payload data.
+	 * @param string               $event_key Event key.
 	 * @return int Log ID.
 	 */
 	private function create_log_entry( int $order_id, array $payload, string $event_key = '' ): int {
-		$payload_json  = wp_json_encode( $payload );
-		$trigger       = '' !== $this->trigger_source_override ? $this->trigger_source_override : $event_key;
+		$payload_json = wp_json_encode( $payload );
+		$trigger      = '' !== $this->trigger_source_override ? $this->trigger_source_override : $event_key;
 
 		return $this->log_repo->insert(
 			array(

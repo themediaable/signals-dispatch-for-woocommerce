@@ -71,7 +71,7 @@ final class HelpController extends AbstractAdminController {
 		<div class="tmasd-upgrade-card">
 			<div class="tmasd-upgrade-card__body">
 				<h3><?php esc_html_e( 'Want more automation?', 'signals-dispatch-for-woocommerce' ); ?></h3>
-				<p><?php esc_html_e( 'Auto-retries, bulk messaging, advanced analytics, and priority support are available with Signals Pro.', 'signals-dispatch-for-woocommerce' ); ?></p>
+				<p><?php esc_html_e( 'Bulk messaging, advanced analytics, and priority support are coming with Signals Pro.', 'signals-dispatch-for-woocommerce' ); ?></p>
 			</div>
 			<div class="tmasd-upgrade-card__action">
 				<a href="<?php echo esc_url( $upgrade_page ); ?>" class="button button-primary">
@@ -348,7 +348,7 @@ final class HelpController extends AbstractAdminController {
 			),
 			array(
 				'question' => __( 'What happens if a message fails?', 'signals-dispatch-for-woocommerce' ),
-				'answer'   => __( 'Failed messages are logged with error details on the Logs page. With Signals Pro, failed messages are automatically retried using WooCommerce Action Scheduler.', 'signals-dispatch-for-woocommerce' ),
+				'answer'   => __( 'Failed messages are logged with error details on the Logs page. Transient failures (network errors, rate limits, server errors) are automatically retried up to 3 times using WooCommerce Action Scheduler.', 'signals-dispatch-for-woocommerce' ),
 			),
 			array(
 				'question' => __( 'Do I need WooCommerce installed?', 'signals-dispatch-for-woocommerce' ),

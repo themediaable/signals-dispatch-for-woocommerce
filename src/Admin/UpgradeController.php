@@ -94,11 +94,6 @@ final class UpgradeController extends AbstractAdminController {
 				'description' => __( 'Send automated Cash on Delivery order confirmations to reduce RTOs and improve delivery success.', 'signals-dispatch-for-woocommerce' ),
 			),
 			array(
-				'icon'        => 'dashicons-update',
-				'title'       => __( 'Automatic Retries', 'signals-dispatch-for-woocommerce' ),
-				'description' => __( 'Failed messages are automatically retried with intelligent backoff, ensuring maximum delivery rates.', 'signals-dispatch-for-woocommerce' ),
-			),
-			array(
 				'icon'        => 'dashicons-database',
 				'title'       => __( 'Scheduled Log Cleanup', 'signals-dispatch-for-woocommerce' ),
 				'description' => __( 'Automatically purge old logs on a configurable schedule — keep your database lean while retaining what matters.', 'signals-dispatch-for-woocommerce' ),
@@ -220,7 +215,7 @@ final class UpgradeController extends AbstractAdminController {
 			),
 			array(
 				'name' => __( 'Automatic Retries', 'signals-dispatch-for-woocommerce' ),
-				'free' => false,
+				'free' => true,
 				'pro'  => true,
 			),
 			array(

@@ -184,11 +184,11 @@ final class SetupController extends AbstractAdminController {
 	 */
 	private function get_field_labels(): array {
 		return array(
-			\TMASD_OPTION_PHONE_NUMBER_ID       => __( 'Phone Number ID', 'signals-dispatch-for-woocommerce' ),
-			\TMASD_OPTION_WABA_ID               => __( 'WhatsApp Business Account ID', 'signals-dispatch-for-woocommerce' ),
-			\TMASD_OPTION_ACCESS_TOKEN          => __( 'Access Token', 'signals-dispatch-for-woocommerce' ),
-			\TMASD_OPTION_WEBHOOK_VERIFY_TOKEN  => __( 'Webhook Verify Token', 'signals-dispatch-for-woocommerce' ),
-			\TMASD_OPTION_APP_SECRET            => __( 'App Secret', 'signals-dispatch-for-woocommerce' ),
+			\TMASD_OPTION_PHONE_NUMBER_ID      => __( 'Phone Number ID', 'signals-dispatch-for-woocommerce' ),
+			\TMASD_OPTION_WABA_ID              => __( 'WhatsApp Business Account ID', 'signals-dispatch-for-woocommerce' ),
+			\TMASD_OPTION_ACCESS_TOKEN         => __( 'Access Token', 'signals-dispatch-for-woocommerce' ),
+			\TMASD_OPTION_WEBHOOK_VERIFY_TOKEN => __( 'Webhook Verify Token', 'signals-dispatch-for-woocommerce' ),
+			\TMASD_OPTION_APP_SECRET           => __( 'App Secret', 'signals-dispatch-for-woocommerce' ),
 		);
 	}
 
@@ -309,7 +309,7 @@ final class SetupController extends AbstractAdminController {
 	}
 
 	/**
-	 * Render a secret field row that never exposes the stored value.	 *
+	 * Render a secret field row that never exposes the stored value.    *
 	 * Leaves the input empty so the secret is not echoed into the DOM.
 	 * Shows a placeholder when a value is already saved so the admin
 	 * knows a secret is stored without revealing it. The stored value
@@ -334,7 +334,7 @@ final class SetupController extends AbstractAdminController {
 		$placeholder = $has_value
 			? esc_attr__( '•••••••• already saved — leave blank to keep', 'signals-dispatch-for-woocommerce' )
 			: '';
-		$label_html = esc_html( $label );
+		$label_html  = esc_html( $label );
 		if ( $required ) {
 			$label_html .= ' <span class="tmasd-required" aria-hidden="true">*</span>';
 		}
@@ -459,21 +459,26 @@ final class SetupController extends AbstractAdminController {
 
 		// Required field validation.
 		// Secrets count as satisfied when a value is already stored.
-		$token_ok  = '' !== $new_token  || '' !== get_option( \TMASD_OPTION_ACCESS_TOKEN, '' );
+		$token_ok  = '' !== $new_token || '' !== get_option( \TMASD_OPTION_ACCESS_TOKEN, '' );
 		$secret_ok = '' !== $new_secret || '' !== get_option( \TMASD_OPTION_APP_SECRET, '' );
 
 		$missing = array();
-		if ( '' === $phone_id )     { $missing[] = \TMASD_OPTION_PHONE_NUMBER_ID; }
-		if ( '' === $waba_id )      { $missing[] = \TMASD_OPTION_WABA_ID; }
-		if ( ! $token_ok )          { $missing[] = \TMASD_OPTION_ACCESS_TOKEN; }
-		if ( '' === $verify_token ) { $missing[] = \TMASD_OPTION_WEBHOOK_VERIFY_TOKEN; }
-		if ( ! $secret_ok )         { $missing[] = \TMASD_OPTION_APP_SECRET; }
+		if ( '' === $phone_id ) {
+			$missing[] = \TMASD_OPTION_PHONE_NUMBER_ID; }
+		if ( '' === $waba_id ) {
+			$missing[] = \TMASD_OPTION_WABA_ID; }
+		if ( ! $token_ok ) {
+			$missing[] = \TMASD_OPTION_ACCESS_TOKEN; }
+		if ( '' === $verify_token ) {
+			$missing[] = \TMASD_OPTION_WEBHOOK_VERIFY_TOKEN; }
+		if ( ! $secret_ok ) {
+			$missing[] = \TMASD_OPTION_APP_SECRET; }
 
 		if ( ! empty( $missing ) ) {
 			wp_safe_redirect(
 				add_query_arg(
 					array(
-						'page'          => 'tmasd-setup',
+						'page'           => 'tmasd-setup',
 						'missing_fields' => implode( ',', $missing ),
 					),
 					admin_url( 'admin.php' )

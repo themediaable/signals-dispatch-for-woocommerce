@@ -215,7 +215,7 @@ final class OptinRepository extends AbstractRepository {
 		if ( $user ) {
 			foreach ( $this->find_by_user_id( $user->ID ) as $row ) {
 				$seen_ids[ (int) $row['id'] ] = true;
-				$records[]                     = $row;
+				$records[]                    = $row;
 			}
 		}
 
@@ -246,7 +246,7 @@ final class OptinRepository extends AbstractRepository {
 					foreach ( $order_rows as $row ) {
 						if ( ! isset( $seen_ids[ (int) $row['id'] ] ) ) {
 							$seen_ids[ (int) $row['id'] ] = true;
-							$records[]                     = $row;
+							$records[]                    = $row;
 						}
 					}
 				}

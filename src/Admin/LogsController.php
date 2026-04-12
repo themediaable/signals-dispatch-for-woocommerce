@@ -407,54 +407,31 @@ final class LogsController extends AbstractAdminController {
 	}
 
 	/**
-	 * Render inline JS for the refresh status button.
+	 * Enqueue inline config for the refresh status button.
 	 *
+	 * @param string $hook Current admin page hook.
 	 * @return void
 	 */
-	public function render_refresh_script(): void {
-		$screen = get_current_screen();
-		if ( ! $screen || false === strpos( $screen->id, 'tmasd-logs' ) ) {
+	public function enqueue_refresh_config( string $hook ): void {
+		if ( false === strpos( $hook, 'tmasd-logs' ) ) {
 			return;
 		}
-		?>
-		<script>
-		function tmasdRefreshStatus(link, logId) {
-			var origText = link.textContent;
-			link.textContent = <?php echo wp_json_encode( __( 'Refreshing…', 'signals-dispatch-for-woocommerce' ) ); ?>;
-			link.style.pointerEvents = 'none';
-			var formData = new FormData();
-			formData.append('action', 'tmasd_refresh_status');
-			formData.append('log_id', logId);
-			formData.append('_ajax_nonce', <?php echo wp_json_encode( wp_create_nonce( 'tmasd_refresh_status' ) ); ?>);
-			fetch(ajaxurl, { method: 'POST', body: formData })
-				.then(function(r){ return r.json(); })
-				.then(function(data){
-					if (data.success) {
-						var row = link.closest('tr');
-						var badge = row.querySelector('.tmasd-badge');
-						if (badge) {
-							var oldStatus = badge.textContent.trim();
-							badge.textContent = data.data.status;
-							badge.className = 'tmasd-badge tmasd-badge--' + data.data.status;
-							if (oldStatus !== data.data.status) {
-								link.textContent = <?php echo wp_json_encode( __( 'Updated!', 'signals-dispatch-for-woocommerce' ) ); ?>;
-							} else {
-								link.textContent = <?php echo wp_json_encode( __( 'No change', 'signals-dispatch-for-woocommerce' ) ); ?>;
-							}
-						}
-					} else {
-						link.textContent = <?php echo wp_json_encode( __( 'Error', 'signals-dispatch-for-woocommerce' ) ); ?>;
-					}
-					link.style.pointerEvents = '';
-					setTimeout(function(){ link.textContent = origText; }, 2000);
-				})
-				.catch(function(){
-					link.textContent = <?php echo wp_json_encode( __( 'Error', 'signals-dispatch-for-woocommerce' ) ); ?>;
-					link.style.pointerEvents = '';
-					setTimeout(function(){ link.textContent = origText; }, 2000);
-				});
-		}
-		</script>
-		<?php
+
+		$inline_config = sprintf(
+			'window.tmasdRefresh = %s;',
+			wp_json_encode(
+				array(
+					'ajaxUrl' => admin_url( 'admin-ajax.php' ),
+					'nonce'   => wp_create_nonce( 'tmasd_refresh_status' ),
+					'i18n'    => array(
+						'refreshing' => __( 'Refreshing…', 'signals-dispatch-for-woocommerce' ),
+						'updated'    => __( 'Updated!', 'signals-dispatch-for-woocommerce' ),
+						'noChange'   => __( 'No change', 'signals-dispatch-for-woocommerce' ),
+						'error'      => __( 'Error', 'signals-dispatch-for-woocommerce' ),
+					),
+				)
+			)
+		);
+		wp_add_inline_script( 'tmasd-admin', $inline_config, 'before' );
 	}
 }

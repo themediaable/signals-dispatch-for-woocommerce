@@ -39,18 +39,18 @@ final class LogRepository extends AbstractRepository {
 		$now = current_time( 'mysql' );
 
 		return array(
-			'order_id'      => null,
-			'phone_e164'    => '',
-			'template_name' => '',
-			'payload_json'  => '{}',
-			'response_json' => '{}',
-			'status'        => 'queued',
-			'wa_message_id' => null,
-			'error_code'    => null,
+			'order_id'       => null,
+			'phone_e164'     => '',
+			'template_name'  => '',
+			'payload_json'   => '{}',
+			'response_json'  => '{}',
+			'status'         => 'queued',
+			'wa_message_id'  => null,
+			'error_code'     => null,
 			'error_message'  => null,
 			'trigger_source' => '',
 			'created_at'     => $now,
-			'updated_at'    => $now,
+			'updated_at'     => $now,
 		);
 	}
 

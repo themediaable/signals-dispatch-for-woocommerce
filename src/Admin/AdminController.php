@@ -141,7 +141,7 @@ final class AdminController extends AbstractAdminController {
 		add_action( 'admin_post_tmasd_delete_log', array( $this->logs_controller, 'handle_delete' ) );
 		add_action( 'admin_post_tmasd_delete_all_logs', array( $this->logs_controller, 'handle_delete_all' ) );
 		add_action( 'wp_ajax_tmasd_refresh_status', array( $this->logs_controller, 'handle_refresh_status' ) );
-		add_action( 'admin_footer', array( $this->logs_controller, 'render_refresh_script' ) );
+		add_action( 'admin_enqueue_scripts', array( $this->logs_controller, 'enqueue_refresh_config' ) );
 		add_action( 'wp_ajax_tmasd_manual_send', array( $this->order_controller, 'handle_manual_send' ) );
 		add_action( 'admin_notices', array( $this, 'render_upgrade_notice' ) );
 	}
@@ -303,7 +303,7 @@ final class AdminController extends AbstractAdminController {
 		echo '<p>';
 		printf(
 			/* translators: 1: opening anchor tag, 2: closing anchor tag */
-			esc_html__( 'Signals Pro is coming soon! %1$sSee what\'s planned%2$s — unlimited dispatch rules, automatic retries, and priority support.', 'signals-dispatch-for-woocommerce' ),
+			esc_html__( 'Signals Pro is coming soon! %1$sSee what\'s planned%2$s — COD confirmation, scheduled log cleanup, and priority support.', 'signals-dispatch-for-woocommerce' ),
 			'<a href="' . esc_url( admin_url( 'admin.php?page=tmasd-upgrade' ) ) . '"><strong>',
 			'</strong></a>'
 		);

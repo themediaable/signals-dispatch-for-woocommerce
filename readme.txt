@@ -4,6 +4,7 @@ Tags: woocommerce, whatsapp, notifications, order-notifications, business-api
 Requires at least: 6.0
 Tested up to: 6.9
 Requires PHP: 7.4
+Requires Plugins: woocommerce
 Stable tag: 1.0.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -18,7 +19,7 @@ Signals Dispatch for WooCommerce integrates your WooCommerce store with the What
 
 * **Automated Order Notifications** – Send WhatsApp messages when order status changes (processing, completed, on-hold, cancelled)
 * **Template-Based Messaging** – Use pre-approved WhatsApp message templates with dynamic order variables
-* **Message Queue** – Reliable message delivery using WooCommerce Action Scheduler
+* **Message Queue** – Reliable message delivery using WooCommerce Action Scheduler with automatic retries for transient failures
 * **Delivery Tracking** – Real-time message status updates via webhooks (sent, delivered, read, failed)
 * **Comprehensive Logs** – Full message history with payload and response details
 * **Checkout Opt-in** – WhatsApp consent checkbox on checkout (classic and block checkout)
@@ -27,7 +28,6 @@ Signals Dispatch for WooCommerce integrates your WooCommerce store with the What
 
 = Pro Features (Coming Soon) =
 
-* **Auto Retries** – Failed messages are automatically retried with intelligent backoff
 * **COD Confirmation** – Automated Cash on Delivery order confirmations
 * **Scheduled Log Cleanup** – Automatically purge old logs on a configurable schedule
 * **Priority Support** – Dedicated support channel
@@ -133,7 +133,7 @@ Yes. A "Send WhatsApp Message" meta box appears on the WooCommerce order page. C
 * Differentiated status badge colours (sent/delivered/read/failed)
 * Webhook delivery status tracking confirmed as free feature
 * Hardened AJAX nonce validation and admin JavaScript against XSS
-* Retry logic reserved for Pro (disabled in free tier)
+* Automatic retries for transient failures (network errors, rate limits, server errors)
 * HPOS (High-Performance Order Storage) fully compatible
 
 == Upgrade Notice ==

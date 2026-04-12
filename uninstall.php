@@ -41,10 +41,12 @@ foreach ( $tmasd_options as $tmasd_option ) {
 // uncomment the get_option() guard below.
 // -------------------------------------------------------------------
 
-// Uncomment to make table removal opt-in:
+// Uncomment to make table removal opt-in.
+// phpcs:disable
 // if ( ! get_option( 'tmasd_remove_data_on_uninstall' ) ) {
-//     return;
+// return;
 // }
+// phpcs:enable
 
 $tmasd_tables = array(
 	$wpdb->prefix . 'tmasd_logs',

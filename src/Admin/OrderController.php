@@ -73,6 +73,36 @@ final class OrderController extends AbstractAdminController {
 	 */
 	public function boot(): void {
 		add_action( 'add_meta_boxes', array( $this, 'register_meta_box' ) );
+		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_order_assets' ) );
+	}
+
+	/**
+	 * Enqueue admin assets on WooCommerce order screens.
+	 *
+	 * @param string $hook Current admin page hook.
+	 * @return void
+	 */
+	public function enqueue_order_assets( string $hook ): void {
+		$order_screens = array( 'post.php', 'woocommerce_page_wc-orders' );
+
+		if ( ! in_array( $hook, $order_screens, true ) ) {
+			return;
+		}
+
+		wp_enqueue_style(
+			'tmasd-admin',
+			\TMASD_PLUGIN_URL . 'assets/admin.css',
+			array(),
+			\TMASD_VERSION
+		);
+
+		wp_enqueue_script(
+			'tmasd-admin',
+			\TMASD_PLUGIN_URL . 'assets/admin.js',
+			array(),
+			\TMASD_VERSION,
+			true
+		);
 	}
 
 	/**
@@ -135,7 +165,7 @@ final class OrderController extends AbstractAdminController {
 
 		echo '<select id="tmasd_mapping_id" style="width:100%;margin-bottom:10px;">';
 		foreach ( $mappings as $mapping ) {
-			$events     = $this->mapping_repo->get_available_events();
+			$events      = $this->mapping_repo->get_available_events();
 			$event_label = $events[ $mapping['event_key'] ] ?? $mapping['event_key'];
 			printf(
 				'<option value="%d">%s — %s</option>',
@@ -157,56 +187,23 @@ final class OrderController extends AbstractAdminController {
 		);
 		echo '</p>';
 
-		// Inline AJAX script — avoids nested-form issue with WooCommerce order page.
-		?>
-		<script>
-		(function(){
-			var btn       = document.getElementById('tmasd-send-btn');
-			var select    = document.getElementById('tmasd_mapping_id');
-			var noticeBox = document.getElementById('tmasd-send-notice');
-
-			function showNotice(cls, message) {
-				noticeBox.textContent = '';
-				var div = document.createElement('div');
-				div.className = 'notice ' + cls + ' inline';
-				var p = document.createElement('p');
-				p.textContent = message;
-				div.appendChild(p);
-				noticeBox.appendChild(div);
-			}
-
-			btn.addEventListener('click', function(){
-				btn.disabled = true;
-				btn.textContent = <?php echo wp_json_encode( __( 'Sending…', 'signals-dispatch-for-woocommerce' ) ); ?>;
-				noticeBox.textContent = '';
-
-				var data = new FormData();
-				data.append('action',     'tmasd_manual_send');
-				data.append('order_id',   <?php echo wp_json_encode( (string) $order_id ); ?>);
-				data.append('mapping_id', select.value);
-				data.append('_ajax_nonce', <?php echo wp_json_encode( $nonce_value ); ?>);
-
-				fetch(<?php echo wp_json_encode( admin_url( 'admin-ajax.php' ) ); ?>, {
-					method: 'POST',
-					credentials: 'same-origin',
-					body: data
-				})
-				.then(function(r){ return r.json(); })
-				.then(function(res){
-					var cls = res.success ? 'notice-success' : 'notice-error';
-					showNotice(cls, res.data.message);
-					btn.disabled    = false;
-					btn.textContent = <?php echo wp_json_encode( __( 'Send WhatsApp Update', 'signals-dispatch-for-woocommerce' ) ); ?>;
-				})
-				.catch(function(){
-					showNotice('notice-error', <?php echo wp_json_encode( __( 'Request failed. Please try again.', 'signals-dispatch-for-woocommerce' ) ); ?>);
-					btn.disabled    = false;
-					btn.textContent = <?php echo wp_json_encode( __( 'Send WhatsApp Update', 'signals-dispatch-for-woocommerce' ) ); ?>;
-				});
-			});
-		})();
-		</script>
-		<?php
+		// Pass runtime config to the enqueued admin script.
+		$inline_config = sprintf(
+			'window.tmasdManualSend = %s;',
+			wp_json_encode(
+				array(
+					'orderId' => (string) $order_id,
+					'nonce'   => $nonce_value,
+					'ajaxUrl' => admin_url( 'admin-ajax.php' ),
+					'i18n'    => array(
+						'sending' => __( 'Sending…', 'signals-dispatch-for-woocommerce' ),
+						'send'    => __( 'Send WhatsApp Update', 'signals-dispatch-for-woocommerce' ),
+						'failed'  => __( 'Request failed. Please try again.', 'signals-dispatch-for-woocommerce' ),
+					),
+				)
+			)
+		);
+		wp_add_inline_script( 'tmasd-admin', $inline_config, 'before' );
 	}
 
 	/**
@@ -260,7 +257,7 @@ final class OrderController extends AbstractAdminController {
 		set_transient( $transient_key, '1', 30 );
 
 		// Add WooCommerce order note.
-		$order = function_exists( 'wc_get_order' ) ? wc_get_order( $order_id ) : null;
+		$order     = function_exists( 'wc_get_order' ) ? wc_get_order( $order_id ) : null;
 		$is_failed = $last_log && in_array( $last_log['status'], array( 'failed', 'skipped' ), true );
 
 		if ( $order instanceof WC_Order ) {

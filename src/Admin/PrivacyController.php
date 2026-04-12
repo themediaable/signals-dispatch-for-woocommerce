@@ -45,7 +45,7 @@ final class PrivacyController extends AbstractService {
 	/**
 	 * Constructor.
 	 *
-	 * @param LogRepository  $log_repo   Log repository.
+	 * @param LogRepository   $log_repo   Log repository.
 	 * @param OptinRepository $optin_repo Opt-in repository.
 	 */
 	public function __construct( LogRepository $log_repo, OptinRepository $optin_repo ) {
@@ -111,10 +111,10 @@ final class PrivacyController extends AbstractService {
 		$log_rows = $this->log_repo->find_by_email( $email_address );
 		foreach ( $log_rows as $row ) {
 			$data[] = array(
-				'group_id'          => 'tmasd_message_logs',
-				'group_label'       => __( 'WhatsApp Message Logs', 'signals-dispatch-for-woocommerce' ),
-				'item_id'           => 'tmasd-log-' . (int) $row['id'],
-				'data'              => array(
+				'group_id'    => 'tmasd_message_logs',
+				'group_label' => __( 'WhatsApp Message Logs', 'signals-dispatch-for-woocommerce' ),
+				'item_id'     => 'tmasd-log-' . (int) $row['id'],
+				'data'        => array(
 					array(
 						'name'  => __( 'Phone Number', 'signals-dispatch-for-woocommerce' ),
 						'value' => $this->mask_phone( (string) $row['phone_e164'] ),
@@ -167,7 +167,10 @@ final class PrivacyController extends AbstractService {
 			);
 		}
 
-		return array( 'data' => $data, 'done' => true );
+		return array(
+			'data' => $data,
+			'done' => true,
+		);
 	}
 
 	/**
