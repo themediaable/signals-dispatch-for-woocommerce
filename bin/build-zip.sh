@@ -35,7 +35,11 @@ echo "Building $ZIP_NAME …"
 git -C "$PLUGIN_DIR" archive --format=tar --prefix="$PLUGIN_SLUG/" HEAD \
     | tar -xf - -C "$BUILD_DIR"
 
-# 2. Install production-only Composer dependencies (autoloader + no dev).
+# 2. Copy Composer files (excluded by export-ignore but needed for install).
+cp "$PLUGIN_DIR/composer.json" "$BUILD_DIR/$PLUGIN_SLUG/"
+[[ -f "$PLUGIN_DIR/composer.lock" ]] && cp "$PLUGIN_DIR/composer.lock" "$BUILD_DIR/$PLUGIN_SLUG/"
+
+# 3. Install production-only Composer dependencies (autoloader + no dev).
 composer install \
     --working-dir="$BUILD_DIR/$PLUGIN_SLUG" \
     --no-dev \
@@ -43,7 +47,7 @@ composer install \
     --no-interaction \
     --quiet
 
-# 3. Remove Composer files that aren't needed at runtime.
+# 4. Remove Composer files that aren't needed at runtime.
 rm -f "$BUILD_DIR/$PLUGIN_SLUG/composer.json" \
       "$BUILD_DIR/$PLUGIN_SLUG/composer.lock"
 
