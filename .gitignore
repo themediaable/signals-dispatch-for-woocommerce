@@ -38,3 +38,6 @@ wp-config.php
 # Internal planning / AI dev files (tracked locally, not for public repo)
 signals-project-spec.md
 .github/copilot-instructions.md
+
+# WordPress.org release workflow
+docs/WPORG-RELEASE.md

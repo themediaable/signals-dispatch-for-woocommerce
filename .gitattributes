@@ -29,3 +29,6 @@
 
 # Build scripts
 /bin/                     export-ignore
+
+# WordPress.org assets (only needed in SVN, not in plugin ZIP)
+/.wordpress-org/          export-ignore

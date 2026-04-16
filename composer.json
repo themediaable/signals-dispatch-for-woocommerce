@@ -22,7 +22,9 @@
     "phpcbf": "phpcbf",
     "lint": "@phpcs",
     "lint:fix": "@phpcbf",
-    "build:zip": "bash bin/build-zip.sh"
+    "build:zip": "bash bin/build-zip.sh",
+    "release:init": "bash bin/wporg-svn-init.sh",
+    "release": "bash bin/wporg-release.sh"
   },
   "config": {
     "optimize-autoloader": true,
