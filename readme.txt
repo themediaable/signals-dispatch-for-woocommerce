@@ -5,7 +5,7 @@ Requires at least: 6.0
 Tested up to: 6.9
 Requires PHP: 7.4
 Requires Plugins: woocommerce
-Stable tag: 1.0.0
+Stable tag: 1.1.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -22,6 +22,7 @@ Signals Dispatch for WooCommerce integrates your WooCommerce store with the What
 * **Message Queue** – Reliable message delivery using WooCommerce Action Scheduler with automatic retries for transient failures
 * **Delivery Tracking** – Real-time message status updates via webhooks (sent, delivered, read, failed)
 * **Comprehensive Logs** – Full message history with payload and response details
+* **Guided Setup Wizard** – 8-step onboarding with credential verification, webhook instructions, and a built-in API connection test
 * **Checkout Opt-in** – When Require Consent is enabled, a WhatsApp opt-in checkbox is shown at checkout (classic and block checkout)
 * **Manual Send** – Send a template message from any WooCommerce order page
 * **Consent Enforcement** – Only send messages to customers who opted in, with locally stored consent records
@@ -121,6 +122,14 @@ Yes. A "Send WhatsApp Message" meta box appears on the WooCommerce order page. C
 
 == Changelog ==
 
+= 1.1.0 =
+* Added guided 8-step setup wizard with onboarding checklist and progress tracking
+* Added built-in Meta API connection tester to verify credentials before saving
+* Added health check improvements: 12 system checks including last API test and last webhook received timestamps
+* Added display phone number field for easy UI identification of the configured number
+* Added setup completion timestamp tracking
+* Fixed: all plugin options now correctly removed on uninstall
+
 = 1.0.0 =
 * Added WhatsApp opt-in consent checkbox on checkout (classic and block checkout)
 * Added manual send meta box on WooCommerce order page
@@ -137,6 +146,9 @@ Yes. A "Send WhatsApp Message" meta box appears on the WooCommerce order page. C
 * HPOS (High-Performance Order Storage) fully compatible
 
 == Upgrade Notice ==
+
+= 1.1.0 =
+Adds a guided 8-step setup wizard, built-in API connection tester, and improved health checks. All users are encouraged to upgrade. No database migration required.
 
 = 1.0.0 =
 Initial release with checkout opt-in, manual send from order page, Coming Soon page, Refresh Status, trigger source tracking, and GDPR guest support.

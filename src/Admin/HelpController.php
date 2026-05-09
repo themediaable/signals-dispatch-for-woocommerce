@@ -3,6 +3,7 @@
  * Help page controller.
  *
  * @package TMASD\Signals\Dispatch\Admin
+ * @since 1.0.0
  */
 
 declare(strict_types=1);
@@ -20,6 +21,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Single Responsibility: Help page rendering only.
  *
  * @final
+ * @since 1.0.0
  */
 final class HelpController extends AbstractAdminController {
 
@@ -27,6 +29,7 @@ final class HelpController extends AbstractAdminController {
 	 * Page slug.
 	 *
 	 * @var string
+	 * @since 1.0.0
 	 */
 	protected string $page_slug = 'tmasd-help';
 
@@ -34,6 +37,7 @@ final class HelpController extends AbstractAdminController {
 	 * Render the help page.
 	 *
 	 * @return void
+	 * @since 1.0.0
 	 */
 	public function render(): void {
 		$this->assert_access();
@@ -50,6 +54,7 @@ final class HelpController extends AbstractAdminController {
 	 * Get current active tab.
 	 *
 	 * @return string
+	 * @since 1.0.0
 	 */
 	private function get_current_tab(): string {
 		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Tab navigation only.
@@ -64,6 +69,7 @@ final class HelpController extends AbstractAdminController {
 	 * Render a small Pro upgrade link.
 	 *
 	 * @return void
+	 * @since 1.0.0
 	 */
 	private function render_upgrade_card(): void {
 		$upgrade_page = admin_url( 'admin.php?page=tmasd-upgrade' );
@@ -81,6 +87,7 @@ final class HelpController extends AbstractAdminController {
 	 * Render page header.
 	 *
 	 * @return void
+	 * @since 1.0.0
 	 */
 	private function render_page_header(): void {
 		echo '<div class="wrap tmasd-admin">';
@@ -94,6 +101,7 @@ final class HelpController extends AbstractAdminController {
 	 * Render navigation tabs.
 	 *
 	 * @return void
+	 * @since 1.0.0
 	 */
 	private function render_tabs(): void {
 		$current_tab = $this->get_current_tab();
@@ -123,6 +131,7 @@ final class HelpController extends AbstractAdminController {
 	 * Render tab content.
 	 *
 	 * @return void
+	 * @since 1.0.0
 	 */
 	private function render_tab_content(): void {
 		$current_tab = $this->get_current_tab();
@@ -151,6 +160,7 @@ final class HelpController extends AbstractAdminController {
 	 * Render setup tab content.
 	 *
 	 * @return void
+	 * @since 1.0.0
 	 */
 	private function render_setup_tab(): void {
 		?>
@@ -244,12 +254,70 @@ final class HelpController extends AbstractAdminController {
 				</p>
 			</div>
 		</div>
+
+		<div class="card" style="margin-top:1em">
+			<h2><?php esc_html_e( 'WhatsApp Cloud API Setup Help', 'signals-dispatch-for-woocommerce' ); ?></h2>
+			<p><?php esc_html_e( 'Common setup articles and reference links:', 'signals-dispatch-for-woocommerce' ); ?></p>
+			<ol>
+				<li>
+					<a href="https://developers.facebook.com/docs/whatsapp/cloud-api/get-started" target="_blank" rel="noopener noreferrer">
+						<?php esc_html_e( 'How to create a Meta app for WhatsApp Cloud API', 'signals-dispatch-for-woocommerce' ); ?>
+					</a>
+				</li>
+				<li>
+					<a href="https://developers.facebook.com/docs/whatsapp/business-management-api/manage-whatsapp-business-accounts" target="_blank" rel="noopener noreferrer">
+						<?php esc_html_e( 'How to find your WABA ID', 'signals-dispatch-for-woocommerce' ); ?>
+					</a>
+				</li>
+				<li>
+					<a href="https://developers.facebook.com/docs/whatsapp/cloud-api/reference/phone-numbers" target="_blank" rel="noopener noreferrer">
+						<?php esc_html_e( 'How to find your Phone Number ID', 'signals-dispatch-for-woocommerce' ); ?>
+					</a>
+				</li>
+				<li>
+					<a href="https://developers.facebook.com/docs/whatsapp/business-management-api/get-started#system-users" target="_blank" rel="noopener noreferrer">
+						<?php esc_html_e( 'How to generate a permanent system-user access token', 'signals-dispatch-for-woocommerce' ); ?>
+					</a>
+				</li>
+				<li>
+					<a href="https://developers.facebook.com/docs/whatsapp/cloud-api/guides/set-up-webhooks" target="_blank" rel="noopener noreferrer">
+						<?php esc_html_e( 'How to configure the Signals webhook in Meta', 'signals-dispatch-for-woocommerce' ); ?>
+					</a>
+				</li>
+				<li>
+					<a href="https://developers.facebook.com/docs/whatsapp/business-management-api/message-templates" target="_blank" rel="noopener noreferrer">
+						<?php esc_html_e( 'How to create Utility templates for order updates', 'signals-dispatch-for-woocommerce' ); ?>
+					</a>
+				</li>
+				<li>
+					<a href="https://developers.facebook.com/docs/whatsapp/cloud-api/guides/send-messages#troubleshooting" target="_blank" rel="noopener noreferrer">
+						<?php esc_html_e( 'Why test messages fail', 'signals-dispatch-for-woocommerce' ); ?>
+					</a>
+				</li>
+				<li>
+					<a href="https://developers.facebook.com/docs/whatsapp/cloud-api/support/error-codes" target="_blank" rel="noopener noreferrer">
+						<?php esc_html_e( 'Common Meta API errors and fixes', 'signals-dispatch-for-woocommerce' ); ?>
+					</a>
+				</li>
+				<li>
+					<a href="https://developers.facebook.com/docs/whatsapp/overview" target="_blank" rel="noopener noreferrer">
+						<?php esc_html_e( 'Difference between BYO Cloud API and Embedded Signup', 'signals-dispatch-for-woocommerce' ); ?>
+					</a>
+				</li>
+				<li>
+					<a href="<?php echo esc_url( admin_url( 'admin.php?page=tmasd-upgrade' ) ); ?>">
+						<?php esc_html_e( 'When you need the Pro/Agency plan', 'signals-dispatch-for-woocommerce' ); ?>
+					</a>
+				</li>
+			</ol>
+		</div>
 		<?php
 	}
 
 	/**
-	 * Render templates tab content.
+	 * Render the Templates help tab.
 	 *
+	 * @since 1.1.0
 	 * @return void
 	 */
 	private function render_templates_tab(): void {
@@ -314,6 +382,7 @@ final class HelpController extends AbstractAdminController {
 	 * Render FAQ tab content.
 	 *
 	 * @return void
+	 * @since 1.0.0
 	 */
 	private function render_faq_tab(): void {
 		$faqs = array(
@@ -368,6 +437,7 @@ final class HelpController extends AbstractAdminController {
 	 * @param string $answer   Answer text.
 	 * @param int    $index    Item index.
 	 * @return void
+	 * @since 1.0.0
 	 */
 	private function render_faq_item( string $question, string $answer, int $index ): void {
 		$faq_id = 'faq-' . $index;
@@ -388,6 +458,7 @@ final class HelpController extends AbstractAdminController {
 	 * Render troubleshooting tab content.
 	 *
 	 * @return void
+	 * @since 1.0.0
 	 */
 	private function render_troubleshooting_tab(): void {
 		$issues = array(
@@ -453,6 +524,7 @@ final class HelpController extends AbstractAdminController {
 	 * Render support section.
 	 *
 	 * @return void
+	 * @since 1.0.0
 	 */
 	private function render_support_section(): void {
 		?>

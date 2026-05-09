@@ -36,6 +36,7 @@ wp-config.php
 /dist/
 
 # Internal planning / AI dev files (tracked locally, not for public repo)
+/docs/internal/
 signals-project-spec.md
 .github/copilot-instructions.md
 
