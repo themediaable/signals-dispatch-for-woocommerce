@@ -3,6 +3,7 @@
  * Health check page controller.
  *
  * @package TMASD\Signals\Dispatch\Admin
+ * @since 1.1.0
  */
 
 declare(strict_types=1);
@@ -23,6 +24,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * plugin dependency and configuration item.
  *
  * @final
+ * @since 1.1.0
  */
 final class HealthController extends AbstractAdminController {
 
@@ -30,6 +32,7 @@ final class HealthController extends AbstractAdminController {
 	 * Page slug.
 	 *
 	 * @var string
+	 * @since 1.1.0
 	 */
 	protected string $page_slug = 'tmasd-health';
 
@@ -37,6 +40,7 @@ final class HealthController extends AbstractAdminController {
 	 * Log repository.
 	 *
 	 * @var LogRepository
+	 * @since 1.1.0
 	 */
 	private LogRepository $log_repo;
 
@@ -44,14 +48,16 @@ final class HealthController extends AbstractAdminController {
 	 * Mapping repository.
 	 *
 	 * @var MappingRepository
+	 * @since 1.1.0
 	 */
 	private MappingRepository $mapping_repo;
 
 	/**
 	 * Constructor.
 	 *
-	 * @param LogRepository    $log_repo     Log repository.
+	 * @param LogRepository     $log_repo     Log repository.
 	 * @param MappingRepository $mapping_repo Mapping repository.
+	 * @since 1.1.0
 	 */
 	public function __construct( LogRepository $log_repo, MappingRepository $mapping_repo ) {
 		$this->log_repo     = $log_repo;
@@ -62,6 +68,7 @@ final class HealthController extends AbstractAdminController {
 	 * Render the health check page.
 	 *
 	 * @return void
+	 * @since 1.1.0
 	 */
 	public function render(): void {
 		$this->assert_access();
@@ -77,6 +84,7 @@ final class HealthController extends AbstractAdminController {
 	 * Render page header.
 	 *
 	 * @return void
+	 * @since 1.1.0
 	 */
 	private function render_page_header(): void {
 		echo '<div class="wrap tmasd-admin">';
@@ -97,12 +105,13 @@ final class HealthController extends AbstractAdminController {
 	 *   fix_url – admin URL of the relevant setup step (optional)
 	 *
 	 * @return array<int, array<string, string>>
+	 * @since 1.1.0
 	 */
 	private function get_checks(): array {
-		$setup_url        = admin_url( 'admin.php?page=tmasd-setup' );
-		$credentials_url  = admin_url( 'admin.php?page=tmasd-setup&tab=credentials' );
-		$webhook_url      = admin_url( 'admin.php?page=tmasd-setup&tab=webhook' );
-		$dispatch_url     = admin_url( 'admin.php?page=tmasd-dispatch' );
+		$setup_url       = admin_url( 'admin.php?page=tmasd-setup' );
+		$credentials_url = admin_url( 'admin.php?page=tmasd-setup&tab=credentials' );
+		$webhook_url     = admin_url( 'admin.php?page=tmasd-setup&tab=webhook' );
+		$dispatch_url    = admin_url( 'admin.php?page=tmasd-dispatch' );
 
 		$checks = array();
 
@@ -131,9 +140,9 @@ final class HealthController extends AbstractAdminController {
 		);
 
 		// Phone Number ID.
-		$phone_id    = get_option( \TMASD_OPTION_PHONE_NUMBER_ID, '' );
-		$has_phone   = '' !== $phone_id;
-		$checks[]    = array(
+		$phone_id  = get_option( \TMASD_OPTION_PHONE_NUMBER_ID, '' );
+		$has_phone = '' !== $phone_id;
+		$checks[]  = array(
 			'label'   => __( 'Phone Number ID configured', 'signals-dispatch-for-woocommerce' ),
 			'status'  => $has_phone ? 'pass' : 'fail',
 			'detail'  => $has_phone
@@ -144,9 +153,9 @@ final class HealthController extends AbstractAdminController {
 		);
 
 		// WABA ID.
-		$waba_id    = get_option( \TMASD_OPTION_WABA_ID, '' );
-		$has_waba   = '' !== $waba_id;
-		$checks[]   = array(
+		$waba_id  = get_option( \TMASD_OPTION_WABA_ID, '' );
+		$has_waba = '' !== $waba_id;
+		$checks[] = array(
 			'label'   => __( 'WABA ID configured', 'signals-dispatch-for-woocommerce' ),
 			'status'  => $has_waba ? 'pass' : 'fail',
 			'detail'  => $has_waba
@@ -194,7 +203,7 @@ final class HealthController extends AbstractAdminController {
 				__( 'API connection passed (last tested: %s).', 'signals-dispatch-for-woocommerce' ),
 				$test_at
 			);
-			$api_fix    = '';
+			$api_fix = '';
 		} else {
 			$api_status = 'fail';
 			$api_detail = sprintf(
@@ -202,7 +211,7 @@ final class HealthController extends AbstractAdminController {
 				__( 'API connection failed (last tested: %s). Meta rejected the saved credentials.', 'signals-dispatch-for-woocommerce' ),
 				$test_at
 			);
-			$api_fix    = __( 'Check your credentials and run "Test API connection" in Step 4: API Credentials.', 'signals-dispatch-for-woocommerce' );
+			$api_fix = __( 'Check your credentials and run "Test API connection" in Step 4: API Credentials.', 'signals-dispatch-for-woocommerce' );
 		}
 
 		$checks[] = array(
@@ -239,10 +248,9 @@ final class HealthController extends AbstractAdminController {
 		);
 
 		// Dispatch rules.
-		$rules        = $this->mapping_repo->get_all();
 		$enabled_rule = false;
-		foreach ( $rules as $rule ) {
-			if ( ! empty( $rule['enabled'] ) ) {
+		foreach ( array_keys( $this->mapping_repo->get_available_events() ) as $event_key ) {
+			if ( null !== $this->mapping_repo->find_by_event( $event_key ) ) {
 				$enabled_rule = true;
 				break;
 			}
@@ -293,6 +301,7 @@ final class HealthController extends AbstractAdminController {
 	 * Render all health checks as a table.
 	 *
 	 * @return void
+	 * @since 1.1.0
 	 */
 	private function render_checks(): void {
 		$checks = $this->get_checks();
@@ -321,9 +330,9 @@ final class HealthController extends AbstractAdminController {
 		echo '<tbody>';
 
 		foreach ( $checks as $check ) {
-			$status  = $check['status'] ?? 'not_checked';
-			$class   = $status_classes[ $status ] ?? 'tmasd-status-neutral';
-			$label   = $status_labels[ $status ] ?? $status;
+			$status = $check['status'] ?? 'not_checked';
+			$class  = $status_classes[ $status ] ?? 'tmasd-status-neutral';
+			$label  = $status_labels[ $status ] ?? $status;
 
 			echo '<tr>';
 			echo '<td>' . esc_html( $check['label'] ) . '</td>';
@@ -350,6 +359,7 @@ final class HealthController extends AbstractAdminController {
 	 * Render message statistics.
 	 *
 	 * @return void
+	 * @since 1.1.0
 	 */
 	private function render_statistics(): void {
 		$counts = $this->log_repo->get_status_counts_last_24h();

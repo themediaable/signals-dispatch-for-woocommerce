@@ -26,6 +26,15 @@ $tmasd_options = array(
 	'tmasd_webhook_verify_token',
 	'tmasd_app_secret',
 	'tmasd_require_consent',
+	// v1.1 options.
+	'tmasd_setup_meta_app_confirmed',
+	'tmasd_display_phone_number',
+	'tmasd_last_api_connection_test_at',
+	'tmasd_last_api_connection_test_status',
+	'tmasd_last_api_connection_test_error',
+	'tmasd_last_webhook_received_at',
+	'tmasd_last_webhook_status_update_at',
+	'tmasd_setup_completed_at',
 );
 
 foreach ( $tmasd_options as $tmasd_option ) {

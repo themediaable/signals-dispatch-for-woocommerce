@@ -3,6 +3,7 @@
  * Webhook controller for WhatsApp callbacks.
  *
  * @package TMASD\Signals\Dispatch\API
+ * @since 1.0.0
  */
 
 declare(strict_types=1);
@@ -25,6 +26,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * and updates message delivery statuses.
  *
  * @final
+ * @since 1.0.0
  */
 final class WebhookController extends AbstractService {
 
@@ -32,6 +34,7 @@ final class WebhookController extends AbstractService {
 	 * REST API namespace.
 	 *
 	 * @var string
+	 * @since 1.0.0
 	 */
 	private const API_NAMESPACE = 'tmasignals/v1';
 
@@ -39,6 +42,7 @@ final class WebhookController extends AbstractService {
 	 * REST API route.
 	 *
 	 * @var string
+	 * @since 1.0.0
 	 */
 	private const API_ROUTE = '/webhook';
 
@@ -46,6 +50,7 @@ final class WebhookController extends AbstractService {
 	 * Log repository.
 	 *
 	 * @var LogRepository
+	 * @since 1.0.0
 	 */
 	private LogRepository $log_repo;
 
@@ -53,6 +58,7 @@ final class WebhookController extends AbstractService {
 	 * Constructor.
 	 *
 	 * @param LogRepository $log_repo Log repository.
+	 * @since 1.0.0
 	 */
 	public function __construct( LogRepository $log_repo ) {
 		$this->log_repo = $log_repo;
@@ -62,6 +68,7 @@ final class WebhookController extends AbstractService {
 	 * Boot the service and register routes.
 	 *
 	 * @return void
+	 * @since 1.0.0
 	 */
 	public function boot(): void {
 		add_action( 'rest_api_init', array( $this, 'register_routes' ) );
@@ -71,6 +78,7 @@ final class WebhookController extends AbstractService {
 	 * Register REST API routes.
 	 *
 	 * @return void
+	 * @since 1.0.0
 	 */
 	public function register_routes(): void {
 		register_rest_route(
@@ -100,6 +108,7 @@ final class WebhookController extends AbstractService {
 	 *
 	 * @param WP_REST_Request $request REST request object.
 	 * @return WP_REST_Response Response object (only on failure).
+	 * @since 1.0.0
 	 */
 	public function handle_verify( WP_REST_Request $request ): WP_REST_Response {
 		$mode      = $this->get_hub_param( $request, 'mode' );
@@ -126,6 +135,7 @@ final class WebhookController extends AbstractService {
 	 * @param WP_REST_Request $request REST request object.
 	 * @param string          $name    Parameter name without hub prefix.
 	 * @return string|null Parameter value or null.
+	 * @since 1.0.0
 	 */
 	private function get_hub_param( WP_REST_Request $request, string $name ): ?string {
 		$value = $request->get_param( 'hub_' . $name );
@@ -143,6 +153,7 @@ final class WebhookController extends AbstractService {
 	 * @param string|null $mode  Hub mode.
 	 * @param string|null $token Token to verify.
 	 * @return bool True if valid.
+	 * @since 1.0.0
 	 */
 	private function verify_token( ?string $mode, ?string $token ): bool {
 		if ( 'subscribe' !== $mode ) {
@@ -162,6 +173,7 @@ final class WebhookController extends AbstractService {
 	 *
 	 * @param WP_REST_Request $request REST request object.
 	 * @return WP_REST_Response Response object.
+	 * @since 1.0.0
 	 */
 	public function handle_webhook( WP_REST_Request $request ): WP_REST_Response {
 		if ( ! $this->verify_signature( $request ) ) {
@@ -174,6 +186,9 @@ final class WebhookController extends AbstractService {
 			return new WP_REST_Response( 'OK', 200 );
 		}
 
+		// Record that we received a valid webhook.
+		update_option( \TMASD_OPTION_LAST_WEBHOOK_RECEIVED_AT, current_time( 'mysql' ), false );
+
 		$this->process_webhook_entries( $body );
 
 		return new WP_REST_Response( 'OK', 200 );
@@ -184,6 +199,7 @@ final class WebhookController extends AbstractService {
 	 *
 	 * @param WP_REST_Request $request REST request object.
 	 * @return bool True if signature is valid or app secret is not configured.
+	 * @since 1.0.0
 	 */
 	private function verify_signature( WP_REST_Request $request ): bool {
 		$app_secret = $this->get_option( \TMASD_OPTION_APP_SECRET );
@@ -213,6 +229,7 @@ final class WebhookController extends AbstractService {
 	 *
 	 * @param array<string, mixed>|null $body Webhook body.
 	 * @return bool True if valid.
+	 * @since 1.0.0
 	 */
 	private function is_valid_webhook_body( ?array $body ): bool {
 		if ( empty( $body['entry'] ) || ! is_array( $body['entry'] ) ) {
@@ -232,6 +249,7 @@ final class WebhookController extends AbstractService {
 	 *
 	 * @param array<string, mixed> $body Webhook body.
 	 * @return void
+	 * @since 1.0.0
 	 */
 	private function process_webhook_entries( array $body ): void {
 		foreach ( $body['entry'] as $entry ) {
@@ -244,6 +262,7 @@ final class WebhookController extends AbstractService {
 	 *
 	 * @param array<string, mixed> $entry Entry data.
 	 * @return void
+	 * @since 1.0.0
 	 */
 	private function process_entry( array $entry ): void {
 		if ( empty( $entry['changes'] ) || ! is_array( $entry['changes'] ) ) {
@@ -260,6 +279,7 @@ final class WebhookController extends AbstractService {
 	 *
 	 * @param array<string, mixed> $change Change data.
 	 * @return void
+	 * @since 1.0.0
 	 */
 	private function process_change( array $change ): void {
 		if ( empty( $change['value']['statuses'] ) || ! is_array( $change['value']['statuses'] ) ) {
@@ -276,6 +296,7 @@ final class WebhookController extends AbstractService {
 	 *
 	 * @param array<string, mixed> $status Status data.
 	 * @return void
+	 * @since 1.0.0
 	 */
 	private function process_status_update( array $status ): void {
 		if ( empty( $status['id'] ) || empty( $status['status'] ) ) {
@@ -293,6 +314,10 @@ final class WebhookController extends AbstractService {
 			$wa_message_id,
 			array( 'status' => $new_status )
 		);
+
+		if ( $updated ) {
+			update_option( \TMASD_OPTION_LAST_WEBHOOK_STATUS_UPDATE_AT, current_time( 'mysql' ), false );
+		}
 	}
 
 	/**
@@ -300,6 +325,7 @@ final class WebhookController extends AbstractService {
 	 *
 	 * @param string $wa_status WhatsApp status.
 	 * @return string Internal status.
+	 * @since 1.0.0
 	 */
 	private function map_whatsapp_status( string $wa_status ): string {
 		$status_map = array(

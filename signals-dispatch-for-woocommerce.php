@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Signals Dispatch for WooCommerce
  * Description: Send WhatsApp order notifications to WooCommerce customers via the WhatsApp Business Cloud API with logs, queueing, and webhooks.
- * Version: 1.0.0
+ * Version: 1.1.0
  * Author: TheMediaAble
  * License: GPLv2 or later
  * Text Domain: signals-dispatch-for-woocommerce
@@ -18,7 +18,7 @@ declare(strict_types=1);
 defined( 'ABSPATH' ) || exit;
 
 // Define plugin constants in global namespace.
-define( 'TMASD_VERSION', '1.0.0' );
+define( 'TMASD_VERSION', '1.1.0' );
 define( 'TMASD_PLUGIN_FILE', __FILE__ );
 define( 'TMASD_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 define( 'TMASD_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
@@ -31,6 +31,16 @@ define( 'TMASD_OPTION_APP_SECRET', 'tmasd_app_secret' );
 define( 'TMASD_OPTION_REQUIRE_CONSENT', 'tmasd_require_consent' );
 define( 'TMASD_ACTION_SEND_TEMPLATE', 'tmasd_send_template_message' );
 define( 'TMASD_CAPABILITY', 'manage_woocommerce' );
+
+// v1.1 guided setup options.
+define( 'TMASD_OPTION_SETUP_META_APP_CONFIRMED', 'tmasd_setup_meta_app_confirmed' );
+define( 'TMASD_OPTION_DISPLAY_PHONE_NUMBER', 'tmasd_display_phone_number' );
+define( 'TMASD_OPTION_LAST_API_TEST_AT', 'tmasd_last_api_connection_test_at' );
+define( 'TMASD_OPTION_LAST_API_TEST_STATUS', 'tmasd_last_api_connection_test_status' );
+define( 'TMASD_OPTION_LAST_API_TEST_ERROR', 'tmasd_last_api_connection_test_error' );
+define( 'TMASD_OPTION_LAST_WEBHOOK_RECEIVED_AT', 'tmasd_last_webhook_received_at' );
+define( 'TMASD_OPTION_LAST_WEBHOOK_STATUS_UPDATE_AT', 'tmasd_last_webhook_status_update_at' );
+define( 'TMASD_OPTION_SETUP_COMPLETED_AT', 'tmasd_setup_completed_at' );
 
 // Load Composer autoloader.
 $tmasd_autoload = TMASD_PLUGIN_DIR . 'vendor/autoload.php';

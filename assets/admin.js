@@ -207,4 +207,36 @@
 				} );
 		};
 	}
+
+	/* -- Copy-to-clipboard for webhook URL -- */
+	document.addEventListener( 'click', function ( e ) {
+		var btn = e.target.closest( '.tmasd-copy-btn[data-target]' );
+		if ( ! btn ) { return; }
+		var targetId = btn.getAttribute( 'data-target' );
+		var targetEl = document.getElementById( targetId );
+		var origText = btn.textContent;
+		if ( ! targetEl ) { return; }
+		var text = targetEl.textContent || targetEl.innerText || '';
+		if ( navigator.clipboard && navigator.clipboard.writeText ) {
+			navigator.clipboard.writeText( text ).then( function () {
+				btn.textContent = '\u2713 Copied';
+				setTimeout( function () { btn.textContent = origText; }, 2000 );
+			} ).catch( function () {
+				btn.textContent = 'Error';
+				setTimeout( function () { btn.textContent = origText; }, 2000 );
+			} );
+		} else {
+			var textarea = document.createElement( 'textarea' );
+			textarea.value = text;
+			textarea.style.position = 'fixed';
+			textarea.style.opacity = '0';
+			document.body.appendChild( textarea );
+			textarea.focus();
+			textarea.select();
+			try { document.execCommand( 'copy' ); btn.textContent = '\u2713 Copied'; }
+			catch ( err ) { btn.textContent = 'Error'; }
+			document.body.removeChild( textarea );
+			setTimeout( function () { btn.textContent = origText; }, 2000 );
+		}
+	} );
 } )();

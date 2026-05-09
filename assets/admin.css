@@ -993,4 +993,67 @@
 		padding: 10px 12px;
 	}
 }
+
+/* ============================================================
+   v1.1 Guided Setup — new utility classes
+   ============================================================ */
+
+.tmasd-status-ok {
+	color: #0a7c00;
+	font-weight: 600;
+}
+
+.tmasd-status-warning {
+	color: #996800;
+	font-weight: 600;
+}
+
+.tmasd-status-error {
+	color: #cc0000;
+	font-weight: 600;
+}
+
+.tmasd-status-neutral {
+	color: #4a4a4a;
+}
+
+/* Checklist panel */
+.tmasd-checklist-panel {
+	background: #f8f9fa;
+	border: 1px solid #e0e0e0;
+	border-radius: 6px;
+	padding: 12px 16px;
+	margin-bottom: 16px;
+}
+
+.tmasd-checklist {
+	list-style: none;
+	margin: 8px 0 0;
+	padding: 0;
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px 24px;
+}
+
+.tmasd-checklist-item {
+	color: #65676b;
+	font-size: 13px;
+}
+
+.tmasd-checklist-item--done {
+	color: #0a7c00;
+}
+
+/* Copy row */
+.tmasd-copy-row {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	margin: 8px 0;
+}
+
+/* Health table */
+.tmasd-health-table th {
+	vertical-align: top;
+}
 }

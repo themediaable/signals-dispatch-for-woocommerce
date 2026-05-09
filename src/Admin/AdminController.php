@@ -3,6 +3,7 @@
  * Admin controller for menu and assets.
  *
  * @package TMASD\Signals\Dispatch\Admin
+ * @since 1.0.0
  */
 
 declare(strict_types=1);
@@ -13,6 +14,8 @@ use TMASD\Signals\Dispatch\Contracts\ApiClientInterface;
 use TMASD\Signals\Dispatch\Database\LogRepository;
 use TMASD\Signals\Dispatch\Database\MappingRepository;
 use TMASD\Signals\Dispatch\Queue\QueueService;
+use TMASD\Signals\Dispatch\Services\MetaConnectionTesterService;
+use TMASD\Signals\Dispatch\Services\SetupChecklistService;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -25,6 +28,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Single Responsibility: Menu and asset management only.
  *
  * @final
+ * @since 1.0.0
  */
 final class AdminController extends AbstractAdminController {
 
@@ -32,6 +36,7 @@ final class AdminController extends AbstractAdminController {
 	 * Log repository.
 	 *
 	 * @var LogRepository
+	 * @since 1.0.0
 	 */
 	private LogRepository $log_repo;
 
@@ -39,6 +44,7 @@ final class AdminController extends AbstractAdminController {
 	 * Mapping repository.
 	 *
 	 * @var MappingRepository
+	 * @since 1.0.0
 	 */
 	private MappingRepository $mapping_repo;
 
@@ -46,6 +52,7 @@ final class AdminController extends AbstractAdminController {
 	 * API client.
 	 *
 	 * @var ApiClientInterface
+	 * @since 1.0.0
 	 */
 	private ApiClientInterface $api_client;
 
@@ -53,6 +60,7 @@ final class AdminController extends AbstractAdminController {
 	 * Setup page controller.
 	 *
 	 * @var SetupController
+	 * @since 1.0.0
 	 */
 	private SetupController $setup_controller;
 
@@ -60,6 +68,7 @@ final class AdminController extends AbstractAdminController {
 	 * Dispatch page controller.
 	 *
 	 * @var DispatchController
+	 * @since 1.0.0
 	 */
 	private DispatchController $dispatch_controller;
 
@@ -67,6 +76,7 @@ final class AdminController extends AbstractAdminController {
 	 * Logs page controller.
 	 *
 	 * @var LogsController
+	 * @since 1.0.0
 	 */
 	private LogsController $logs_controller;
 
@@ -74,6 +84,7 @@ final class AdminController extends AbstractAdminController {
 	 * Health page controller.
 	 *
 	 * @var HealthController
+	 * @since 1.0.0
 	 */
 	private HealthController $health_controller;
 
@@ -81,6 +92,7 @@ final class AdminController extends AbstractAdminController {
 	 * Help page controller.
 	 *
 	 * @var HelpController
+	 * @since 1.0.0
 	 */
 	private HelpController $help_controller;
 
@@ -88,6 +100,7 @@ final class AdminController extends AbstractAdminController {
 	 * Upgrade page controller.
 	 *
 	 * @var UpgradeController
+	 * @since 1.0.0
 	 */
 	private UpgradeController $upgrade_controller;
 
@@ -95,6 +108,7 @@ final class AdminController extends AbstractAdminController {
 	 * Order page controller.
 	 *
 	 * @var OrderController
+	 * @since 1.0.0
 	 */
 	private OrderController $order_controller;
 
@@ -105,6 +119,7 @@ final class AdminController extends AbstractAdminController {
 	 * @param MappingRepository  $mapping_repo     Mapping repository.
 	 * @param ApiClientInterface $api_client       API client.
 	 * @param OrderController    $order_controller Order controller.
+	 * @since 1.0.0
 	 */
 	public function __construct(
 		LogRepository $log_repo,
@@ -116,10 +131,13 @@ final class AdminController extends AbstractAdminController {
 		$this->mapping_repo = $mapping_repo;
 		$this->api_client   = $api_client;
 
-		$this->setup_controller    = new SetupController( $api_client, $log_repo );
+		$checklist_service = new SetupChecklistService( $mapping_repo );
+		$meta_tester       = new MetaConnectionTesterService();
+
+		$this->setup_controller    = new SetupController( $api_client, $log_repo, $checklist_service, $meta_tester );
 		$this->dispatch_controller = new DispatchController( $mapping_repo );
 		$this->logs_controller     = new LogsController( $log_repo );
-		$this->health_controller   = new HealthController( $log_repo );
+		$this->health_controller   = new HealthController( $log_repo, $mapping_repo );
 		$this->help_controller     = new HelpController();
 		$this->upgrade_controller  = new UpgradeController();
 		$this->order_controller    = $order_controller;
@@ -129,6 +147,7 @@ final class AdminController extends AbstractAdminController {
 	 * Boot the admin controller.
 	 *
 	 * @return void
+	 * @since 1.0.0
 	 */
 	public function boot(): void {
 		add_action( 'admin_menu', array( $this, 'register_menu' ) );
@@ -136,6 +155,7 @@ final class AdminController extends AbstractAdminController {
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_assets' ) );
 		add_action( 'admin_post_tmasd_save_setup', array( $this->setup_controller, 'handle_save' ) );
 		add_action( 'admin_post_tmasd_send_test', array( $this->setup_controller, 'handle_test' ) );
+		add_action( 'admin_post_tmasd_test_connection', array( $this->setup_controller, 'handle_test_connection' ) );
 		add_action( 'admin_post_tmasd_save_mapping', array( $this->dispatch_controller, 'handle_save' ) );
 		add_action( 'admin_post_tmasd_delete_mapping', array( $this->dispatch_controller, 'handle_delete' ) );
 		add_action( 'admin_post_tmasd_delete_log', array( $this->logs_controller, 'handle_delete' ) );
@@ -149,6 +169,7 @@ final class AdminController extends AbstractAdminController {
 	 * Register admin menu.
 	 *
 	 * @return void
+	 * @since 1.0.0
 	 */
 	public function register_menu(): void {
 		$cap = $this->get_capability();
@@ -221,6 +242,7 @@ final class AdminController extends AbstractAdminController {
 	 * Register plugin settings.
 	 *
 	 * @return void
+	 * @since 1.0.0
 	 */
 	public function register_settings(): void {
 		$options = array(
@@ -249,6 +271,7 @@ final class AdminController extends AbstractAdminController {
 	 *
 	 * @param string $hook Current admin page hook.
 	 * @return void
+	 * @since 1.0.0
 	 */
 	public function enqueue_assets( string $hook ): void {
 		if ( strpos( $hook, 'tmasd' ) === false ) {
@@ -275,6 +298,7 @@ final class AdminController extends AbstractAdminController {
 	 * Render page - not used directly.
 	 *
 	 * @return void
+	 * @since 1.0.0
 	 */
 	public function render(): void {
 		// Main controller delegates to sub-controllers.
