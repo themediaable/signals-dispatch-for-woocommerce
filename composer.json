@@ -9,6 +9,7 @@
   "require-dev": {
     "dealerdirect/phpcodesniffer-composer-installer": "^1.0",
     "phpcompatibility/phpcompatibility-wp": "^2.1",
+    "phpunit/phpunit": "^9.6",
     "squizlabs/php_codesniffer": "^3.7",
     "wp-coding-standards/wpcs": "^3.0"
   },
@@ -18,8 +19,9 @@
     }
   },
   "scripts": {
-    "phpcs": "phpcs",
-    "phpcbf": "phpcbf",
+    "phpcs": "phpcs --standard=phpcs.xml.dist",
+    "phpcbf": "phpcbf --standard=phpcs.xml.dist",
+    "test": "phpunit --configuration phpunit.xml.dist",
     "lint": "@phpcs",
     "lint:fix": "@phpcbf",
     "build:zip": "bash bin/build-zip.sh",

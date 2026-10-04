@@ -1,0 +1,69 @@
+name: Plugin CI
+
+on:
+  pull_request:
+  push:
+    branches: [main, master]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  checks:
+    name: PHP ${{ matrix.php }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        php: ["7.4", "8.3"]
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - uses: shivammathur/setup-php@b604ade2a87db23f8871b7182e69ec5e75effb45 # v2
+        with:
+          php-version: ${{ matrix.php }}
+          extensions: dom, mbstring, xml, xmlwriter
+          coverage: none
+          tools: composer:v2
+      - name: Validate dependencies
+        run: composer validate --strict
+      - name: Install development dependencies
+        run: composer install --no-interaction --prefer-dist --no-progress
+      - name: Check PHP syntax
+        run: git ls-files -z '*.php' | xargs -0 -r -n 1 php -l
+      - name: Check WordPress coding standards
+        if: matrix.php == '7.4'
+        run: composer phpcs
+      - name: Run regression tests
+        run: composer test
+
+  plugin-check:
+    name: Packaged WordPress Plugin Check
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - uses: shivammathur/setup-php@b604ade2a87db23f8871b7182e69ec5e75effb45 # v2
+        with:
+          php-version: "8.3"
+          coverage: none
+          tools: composer:v2
+      - name: Build and validate release package
+        run: |
+          composer build:zip
+          bash bin/check-release.sh
+          mkdir -p "$RUNNER_TEMP/plugin-check"
+          unzip -q signals-dispatch-for-woocommerce-*.zip -d "$RUNNER_TEMP/plugin-check"
+      - uses: WordPress/plugin-check-action@10857da14b6c2246d15402b3e69f777edcf8c12e # v1
+        with:
+          build-dir: ${{ runner.temp }}/plugin-check/signals-dispatch-for-woocommerce
+          include-experimental: false

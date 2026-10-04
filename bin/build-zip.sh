@@ -28,6 +28,7 @@ fi
 
 ZIP_NAME="${PLUGIN_SLUG}-${VERSION}.zip"
 BUILD_DIR=$(mktemp -d)
+trap 'rm -rf "$BUILD_DIR"' EXIT
 
 echo "Building $ZIP_NAME …"
 
@@ -43,6 +44,8 @@ cp "$PLUGIN_DIR/composer.json" "$BUILD_DIR/$PLUGIN_SLUG/"
 composer install \
     --working-dir="$BUILD_DIR/$PLUGIN_SLUG" \
     --no-dev \
+    --no-plugins \
+    --no-scripts \
     --optimize-autoloader \
     --no-interaction \
     --quiet
@@ -52,9 +55,8 @@ rm -f "$BUILD_DIR/$PLUGIN_SLUG/composer.json" \
       "$BUILD_DIR/$PLUGIN_SLUG/composer.lock"
 
 # 4. Create ZIP.
+rm -f "$PLUGIN_DIR/$ZIP_NAME"
 (cd "$BUILD_DIR" && zip -rq "$PLUGIN_DIR/$ZIP_NAME" "$PLUGIN_SLUG")
 
 # 5. Clean up.
-rm -rf "$BUILD_DIR"
-
 echo "✔ Created $ZIP_NAME ($(du -h "$PLUGIN_DIR/$ZIP_NAME" | cut -f1 | xargs))"

@@ -125,7 +125,89 @@ composer phpcs
 
 # Auto-fix coding standards
 composer phpcbf
+
+# Run isolated regression tests (no database or API credentials needed)
+composer test
+
+# Check locked dependencies for known advisories
+composer audit --locked
 ```
+
+### GitHub Actions
+
+The first-phase automation uses standard Ubuntu runners, read-only repository
+permissions, and commit-pinned actions. No Meta credentials, WordPress.org
+credentials, staging server, or Copilot subscription is needed to execute it.
+
+| Workflow | Trigger | Checks |
+| --- | --- | --- |
+| [Plugin CI](.github/workflows/ci.yml) | Pull requests, pushes to `main`/`master`, manual | Composer validation, PHP syntax and regression tests on PHP 7.4/8.3, coding standards on PHP 7.4, packaged WordPress Plugin Check |
+| [Dependency audit](.github/workflows/dependencies.yml) | Weekly on Monday, dependency changes, manual | Known advisories in all locked dependencies, including development tools |
+| [Build release ZIP](.github/workflows/release.yml) | Manual only | Coding standards, regression tests, ZIP/version validation, packaged Plugin Check, downloadable ZIP |
+
+[Dependabot](.github/dependabot.yml) checks Composer dependencies and GitHub
+Actions weekly and groups update PRs to reduce noise. Updates are not
+automatically merged. Scheduled workflows run from the default branch.
+
+The PHPUnit suite executes the real controllers, queue service, and repositories
+with minimal WordPress/WooCommerce boundary doubles and a mocked database/API.
+It covers order/phone consent precedence, recipient validation, order event
+scheduling, transient retries and their ceiling, webhook HMAC verification and
+status updates, manual-send capabilities/nonces, and the existing 30-second
+manual-send duplicate guard. It does not prove full checkout/browser integration,
+database SQL correctness, scheduler availability, performance, or concurrent/
+automatic dispatch idempotency. Those require the next integration-test phase.
+The doubles live only in `tests/` and never ship in the plugin ZIP.
+
+#### Enabling and demonstrating the workflows
+
+1. Commit and push these files to the plugin repository, with Actions enabled.
+2. Open a pull request to see `PHP 7.4`, `PHP 8.3`, and
+   `Packaged WordPress Plugin Check` results. Dependency changes also run the audit.
+3. For a demo, change an expected value in a regression test on a temporary
+   branch, open a PR, inspect the failed job, then restore the assertion and
+   observe the next successful run. Do not merge the deliberately failing change.
+4. On supported repository plans, configure branch protection/rulesets to require
+   these checks. Merely adding workflow files does not block merging.
+
+#### Building a release
+
+In GitHub, select **Actions > Build release ZIP > Run workflow**, select the
+committed branch to build, and download the ZIP from the successful run's
+artifacts. It is retained for seven days. This does not publish a GitHub release,
+deploy to production, or upload to WordPress.org.
+
+For a local build from committed files:
+
+```bash
+composer build:zip
+bash bin/check-release.sh
+```
+
+The build exports `HEAD`, not uncommitted source changes. It excludes CI files,
+tests, and development dependencies, while retaining the production autoloader.
+The validator requires the plugin header, `TMASD_VERSION`, and readme stable tag
+to match and rejects incomplete or development-contaminated packages. The build
+replaces an existing ZIP with the same version filename.
+
+#### Keeping costs low
+
+Standard runner execution is free for public repositories. GitHub Free private
+repositories share the owner's allowance of 2,000 runner minutes/month and
+500 MB artifact storage; other repositories also consume that allowance.
+Parallel job durations add together. This small matrix deliberately does not
+certify every PHP/WordPress/WooCommerce combination.
+
+Superseded CI/audit runs are cancelled, coverage is disabled, and only manual
+release runs retain release ZIPs. Plugin Check also uploads its small report
+using the action's default retention; configure repository artifact retention
+to seven days in **Settings > Actions > General** if desired. Configure
+available Actions spending limits/budgets in the owner's billing settings and
+monitor usage; these workflows cannot enforce an account-wide billing cap.
+There are no live WhatsApp sends in the regression suite.
+
+See [GitHub Actions billing](https://docs.github.com/en/billing/concepts/product-billing/github-actions)
+for current allowances and paid usage conditions.
 
 ### Project Structure
 

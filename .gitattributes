@@ -11,6 +11,8 @@
 /composer.lock            export-ignore
 /phpcs.xml.dist           export-ignore
 /phpunit.xml              export-ignore
+/phpunit.xml.dist         export-ignore
+/.github/                 export-ignore
 /.editorconfig            export-ignore
 /.phpcs-cache             export-ignore
 

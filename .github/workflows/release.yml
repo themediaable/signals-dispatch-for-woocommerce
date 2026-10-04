@@ -1,0 +1,46 @@
+name: Build release ZIP
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - uses: shivammathur/setup-php@b604ade2a87db23f8871b7182e69ec5e75effb45 # v2
+        with:
+          php-version: "7.4"
+          extensions: dom, mbstring, xml, xmlwriter
+          coverage: none
+          tools: composer:v2
+      - run: composer validate --strict
+      - run: composer install --no-interaction --prefer-dist --no-progress
+      - run: composer phpcs
+      - run: composer test
+      - name: Build and validate release package
+        run: |
+          composer build:zip
+          bash bin/check-release.sh
+          mkdir -p "$RUNNER_TEMP/plugin-check"
+          unzip -q signals-dispatch-for-woocommerce-*.zip -d "$RUNNER_TEMP/plugin-check"
+      - uses: WordPress/plugin-check-action@10857da14b6c2246d15402b3e69f777edcf8c12e # v1
+        with:
+          build-dir: ${{ runner.temp }}/plugin-check/signals-dispatch-for-woocommerce
+          include-experimental: false
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: signals-dispatch-for-woocommerce
+          path: signals-dispatch-for-woocommerce-*.zip
+          if-no-files-found: error
+          retention-days: 7
